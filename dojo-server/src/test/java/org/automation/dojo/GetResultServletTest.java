@@ -62,7 +62,7 @@ public class GetResultServletTest {
         servlet.doPost(request, response);
 
         captureTestResultValues();
-        assertResultReported(0, "vasya", "10.10.0.1", 1, true);
+        assertResultReported("vasya", "10.10.0.1", 1, true);
     }
 
     @Test
@@ -72,7 +72,7 @@ public class GetResultServletTest {
         servlet.doPost(request, response);
 
         captureTestResultValues();
-        assertResultReported(0, "petya", "10.10.0.2", 1, false);
+        assertResultReported("petya", "10.10.0.2", 1, false);
     }
 
     @Test
@@ -82,8 +82,8 @@ public class GetResultServletTest {
         servlet.doPost(request, response);
 
         captureTestResultValues();
-        assertResultReported(0, "petya", "10.10.0.2", 1, true);
-        assertResultReported(1, "petya", "10.10.0.2", 2, false);
+        assertResultReported("petya", "10.10.0.2", 1, true);
+        assertResultReported("petya", "10.10.0.2", 2, false);
     }
 
     @Test
@@ -97,7 +97,20 @@ public class GetResultServletTest {
         assertEquals("scenario1=failed", response.getOutputStreamContent().trim());
     }
 
-    private void assertResultReported(int index, String expectedName, String expectedAddress, int scenarioNumber, boolean expectedResult) {
+    @Test
+    public void shouldReportProperlyWhenNotStandardRequestParamsReceived() throws IOException, ServletException {
+        request.setupAddParameter("scenario5", "true");
+        request.setupAddParameter("scenario11", "false");
+
+        servlet.doPost(request, response);
+
+        captureTestResultValues();
+        assertResultReported(null, "127.0.0.1", 5, true);
+        assertResultReported(null, "127.0.0.1", 11, false);
+    }
+    
+    private void assertResultReported(String expectedName, String expectedAddress, int scenarioNumber, boolean expectedResult) {
+        int index = scenarioCaptor.getAllValues().indexOf(scenarioNumber);
         assertThat(scenarioCaptor.getAllValues()).contains(scenarioNumber, Index.atIndex(index));
         assertThat(successCaptor.getAllValues()).contains(expectedResult, Index.atIndex(index));
         assertThat(nameCaptor.getAllValues()).contains(expectedName, Index.atIndex(index));

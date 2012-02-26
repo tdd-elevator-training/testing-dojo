@@ -34,7 +34,7 @@ public class GetResultServlet extends HttpServlet {
     }
 
     private boolean parseResult(String value) {
-        return value.equalsIgnoreCase("passed");
+        return value.equalsIgnoreCase("passed") || value.equalsIgnoreCase("true");
     }
 
     public void setScenarioService(ScenarioService scenarioService) {
