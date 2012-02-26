@@ -7,6 +7,7 @@
     <groupId>dojo-server</groupId>
     <artifactId>dojo-server</artifactId>
     <version>1.0</version>
+    <packaging>war</packaging>
     <dependencies>
         <dependency>
             <groupId>org.mortbay.jetty</groupId>
@@ -23,23 +24,37 @@
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>4.8.2</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
         	<groupId>com.mockrunner</groupId>
         	<artifactId>mockrunner-jdk1.5-j2ee1.3</artifactId>
         	<version>0.4</version>
+            <scope>test</scope>
+            <!-- I had to add exclusions here because they were getting from jboss repository which is not active anymore -->
+            <exclusions>
+                <exclusion>
+                    <groupId>cglib-nodep</groupId>
+                    <artifactId>cglib-nodep</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>jboss</groupId>
+                    <artifactId>jboss-jee</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-all</artifactId>
             <version>1.8.5</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.easytesting</groupId>
             <artifactId>fest-assert</artifactId>
             <version>1.4</version>
+            <scope>test</scope>
         </dependency>
-
     </dependencies>
 
     <build>

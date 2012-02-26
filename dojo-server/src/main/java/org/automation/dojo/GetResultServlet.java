@@ -10,14 +10,13 @@ import java.util.Enumeration;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-@WebServlet(name="resultServlet", urlPatterns={"/result"})
+@WebServlet(name="resultServlet", urlPatterns={"/result"}, asyncSupported = false)
 public class GetResultServlet extends HttpServlet {
-    private ScenarioService scenarioService;
+    private ScenarioService scenarioService = new DojoScenarioService();
     private Pattern pattern = Pattern.compile("scenario(\\d*)", Pattern.CASE_INSENSITIVE);
 
-    
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse resp) throws ServletException, IOException {
+    protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String name = request.getParameter("name");
         String remoteAddr = request.getRemoteAddr();
         Enumeration<String> parameterNames = request.getParameterNames();
@@ -27,10 +26,15 @@ public class GetResultServlet extends HttpServlet {
             if (matcher.find()) {
                 boolean result = scenarioService.testResult(name, remoteAddr, Integer.parseInt(matcher.group(1)),
                         parseResult(request.getParameter(parameterName)));
-                resp.getWriter().println(parameterName + "=" + (result ? "passed" : "failed"));
+                response.getWriter().println(parameterName + "=" + (result ? "passed" : "failed"));
             }
         }
-        resp.flushBuffer();
+        response.flushBuffer();
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        service(req, resp);
     }
 
     private boolean parseResult(String value) {
@@ -40,4 +44,5 @@ public class GetResultServlet extends HttpServlet {
     public void setScenarioService(ScenarioService scenarioService) {
         this.scenarioService = scenarioService;
     }
+
 }
