@@ -1,5 +1,6 @@
 package org.automation.dojo;
 
+import org.fest.assertions.ListAssert;
 import org.fest.assertions.StringAssert;
 import org.junit.After;
 import org.junit.Before;
@@ -7,11 +8,14 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.Description;
 import org.junit.runner.Result;
+import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunListener;
 import org.junit.runner.notification.RunNotifier;
 import org.junit.runners.model.InitializationError;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 import static junit.framework.Assert.fail;
 import static org.fest.assertions.Assertions.assertThat;
@@ -19,11 +23,13 @@ import static org.fest.assertions.Assertions.assertThat;
 public class DojoTestRunnerTest {
 
     private FakeHttpServer server;
+    private ArrayList<Failure> failures;
 
     @Before
     public void setUp() throws Exception {
         server = new FakeHttpServer(8888);
         server.start();
+        failures = new ArrayList<Failure>();
     }
 
     @After
@@ -83,8 +89,15 @@ public class DojoTestRunnerTest {
     } 
     
     @Test
-    @Ignore
-    public void shouldFailToRunWhenNoScenarioAnnotationGiven() throws InitializationError {
+    public void shouldReportFailureWhenNoScenarioAnnotationGiven() throws InitializationError {
+        runTests(NoScenarioAnnotation.class);
+
+        assertFailuresHasException(NotAnnotatedTestException.class);
+    }
+
+    private ListAssert assertFailuresHasException(Class<NotAnnotatedTestException> exception) {
+        return assertThat(failures).onProperty("exception").onProperty("class")
+                .isEqualTo(Arrays.asList(exception));
     }
 
     private void runTests(Class<?> klass) throws InitializationError {
@@ -92,8 +105,12 @@ public class DojoTestRunnerTest {
         RunNotifier notifier = new RunNotifier();
         notifier.addListener(new RunListener(){
             @Override
+            public void testFailure(Failure failure) throws Exception {
+                failures.add(failure);
+            }
+
+            @Override
             public void testFinished(Description description) throws Exception {
-                System.out.println("DojoTestRunnerTest.testFinished");
             }
         });
         runner.run(notifier);

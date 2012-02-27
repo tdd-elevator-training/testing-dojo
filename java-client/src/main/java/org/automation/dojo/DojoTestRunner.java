@@ -17,6 +17,7 @@ import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunListener;
 import org.junit.runner.notification.RunNotifier;
 import org.junit.runners.BlockJUnit4ClassRunner;
+import org.junit.runners.model.FrameworkMethod;
 import org.junit.runners.model.InitializationError;
 
 import java.util.ArrayList;
@@ -31,7 +32,15 @@ public class DojoTestRunner extends Runner implements Filterable {
 
 
     public DojoTestRunner(Class<?> klass) throws InitializationError {
-        runner = new BlockJUnit4ClassRunner(klass);
+        runner = new BlockJUnit4ClassRunner(klass){
+            @Override
+            protected void runChild(FrameworkMethod method, RunNotifier notifier) {
+                if (method.getAnnotation(Scenario.class) == null) {
+                    throw new NotAnnotatedTestException(method.getName());
+                }
+                super.runChild(method, notifier);
+            }
+        };
         ReportTo annotation = klass.getAnnotation(ReportTo.class);
         if (annotation == null) {
             throw new InitializationError("Annotation @" + ReportTo.class.getSimpleName() +
