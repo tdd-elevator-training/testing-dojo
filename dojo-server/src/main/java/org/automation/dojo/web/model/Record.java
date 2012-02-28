@@ -1,4 +1,4 @@
-package web.model;
+package org.automation.dojo.web.model;
 
 public class Record {
     private String description;

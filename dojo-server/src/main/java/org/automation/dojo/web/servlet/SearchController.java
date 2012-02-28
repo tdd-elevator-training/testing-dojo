@@ -1,6 +1,6 @@
-package web.servlet;
+package org.automation.dojo.web.servlet;
 
-import web.model.Record;
+import org.automation.dojo.web.model.Record;
 
 import java.io.IOException;
 import java.util.Collections;

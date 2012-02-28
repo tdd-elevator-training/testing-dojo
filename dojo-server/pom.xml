@@ -26,12 +26,12 @@
             <version>4.8.2</version>
             <scope>test</scope>
         </dependency>
-        <dependency>
+       <!-- <dependency>
         	<groupId>com.mockrunner</groupId>
         	<artifactId>mockrunner-jdk1.5-j2ee1.3</artifactId>
         	<version>0.4</version>
             <scope>test</scope>
-            <!-- I had to add exclusions here because they were getting from jboss repository which is not active anymore -->
+            &lt;!&ndash; I had to add exclusions here because they were getting from jboss repository which is not active anymore &ndash;&gt;
             <exclusions>
                 <exclusion>
                     <groupId>cglib-nodep</groupId>
@@ -42,7 +42,7 @@
                     <artifactId>jboss-jee</artifactId>
                 </exclusion>
             </exclusions>
-        </dependency>
+        </dependency>-->
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-all</artifactId>
@@ -56,15 +56,9 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>net.sourceforge.jwebunit</groupId>
-            <artifactId>jwebunit-htmlunit-plugin</artifactId>
-            <version>3.0</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>commons-lang</groupId>
-            <artifactId>commons-lang</artifactId>
-            <version>2.5</version>
+            <groupId>org.seleniumhq.selenium</groupId>
+            <artifactId>selenium-java</artifactId>
+            <version>2.16.0</version>
         </dependency>
     </dependencies>
 

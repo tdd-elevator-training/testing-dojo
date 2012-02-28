@@ -1,23 +1,24 @@
 package web;
 
-import net.sourceforge.jwebunit.junit.WebTester;
-
 import org.junit.AfterClass;
-import org.junit.BeforeClass;
+import org.junit.Before;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.htmlunit.HtmlUnitDriver;
+
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class FunctionalTestCase {
 
-	protected static WebTester tester;
 
-	@BeforeClass
-	public static void init() throws Exception {
-	    int port = ServerRunner.getInstance().start();        
-	    
-	    tester = new WebTester();
-	    tester.getTestContext().setBaseUrl(
-	            "http://localhost:" + port + "/Shop");
+	protected static WebDriver tester;
 
-        tester.beginAt("/");
+	@Before
+	public void init() throws Exception {
+	    int port = ServerRunner.getInstance().start();
+
+	    tester = new HtmlUnitDriver();
+	    tester.get("http://localhost:" + port + "/Shop");
 	}
 
 	@AfterClass
@@ -29,4 +30,19 @@ public class FunctionalTestCase {
 		super();
 	}
 
+    protected static void assertPageContain(String string) {
+        String page = getPageText();
+        assertTrue(String.format("Expected page contains '%s' but was '%s'.", string, page),
+                page.contains(string));
+    }
+
+    private static String getPageText() {
+        return tester.getPageSource().replaceAll("<.*?>", "").replaceAll("\\n", "").replaceAll("\\r", "").replaceAll("(  )+", " ");
+    }
+
+    protected void assertPageNotContain(String string) {
+        String page = getPageText();
+        assertFalse(String.format("Expected page NOT contains '%s' but was '%s'.", string, page),
+                page.contains(string));
+    }
 }
