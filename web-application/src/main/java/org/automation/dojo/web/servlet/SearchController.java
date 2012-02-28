@@ -21,8 +21,12 @@ public class SearchController extends Controller{
         list.add("Monitor 3 - the best monitor!");
 
         String foundString = request.getParameter("search_text");
-
-        request.setAttribute("records", filter(list, foundString));
+        List<String> filtered = filter(list, foundString);
+        if (filtered.isEmpty()) {
+            request.setAttribute("no_results", true);
+            filtered = list;
+        }
+        request.setAttribute("records", filtered);
 
 		return "search.jsp";
 	}

@@ -19,7 +19,14 @@
  		</form>
 
         <c:if test="${requestScope.records != null}">
-            List:
+            <c:choose>
+                <c:when test="${requestScope.no_results}">
+                    Sorry no results for your request, but we have another devices:
+                </c:when>
+                <c:otherwise>
+                    List:
+                </c:otherwise>
+            </c:choose>
             <c:forEach items="${requestScope.records}" var="record" varStatus="status">
                 <input type="radio" value="<c:out value="${status.index+1}"/>" name="record">
                 <c:out value="${record}"/>

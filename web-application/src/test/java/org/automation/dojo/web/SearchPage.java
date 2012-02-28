@@ -56,4 +56,21 @@ public class SearchPage extends FunctionalTestCase {
         tester.assertTextNotPresent("Mouse");
     }
 
+    @Test
+    public void shouldAllListWhenNotFound() {
+        tester.setTextField("search_text", "keyboard");
+        tester.submit();
+
+        assertSearchForm();
+
+        tester.assertTextPresent("Sorry no results for your request, but we have another devices:");
+        tester.assertTextPresent("Monitor 1");
+        tester.assertTextPresent("Monitor 2");
+        tester.assertTextPresent("Monitor 3 - the best monitor!");
+        tester.assertTextPresent("Mouse 1");
+        tester.assertTextPresent("Mouse 2");
+        tester.assertTextPresent("Mouse 3");
+        tester.assertTextPresent("Mouse 4 - the best mouse!");
+    }
+
 }
