@@ -27,9 +27,11 @@
                     List:
                 </c:otherwise>
             </c:choose>
+            </br>
             <c:forEach items="${requestScope.records}" var="record" varStatus="status">
                 <input type="radio" value="<c:out value="${status.index+1}"/>" name="record">
-                <c:out value="${record}"/>
+                '<c:out value="${record.description}"/>' <c:out value="${record.price}"/>$
+                </br>
             </c:forEach>
         </c:if>
 	</body>

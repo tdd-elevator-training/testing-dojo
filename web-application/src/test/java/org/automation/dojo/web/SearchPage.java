@@ -61,8 +61,6 @@ public class SearchPage extends FunctionalTestCase {
         tester.setTextField("search_text", "keyboard");
         tester.submit();
 
-        assertSearchForm();
-
         tester.assertTextPresent("Sorry no results for your request, but we have another devices:");
         tester.assertTextPresent("Monitor 1");
         tester.assertTextPresent("Monitor 2");
@@ -71,6 +69,31 @@ public class SearchPage extends FunctionalTestCase {
         tester.assertTextPresent("Mouse 2");
         tester.assertTextPresent("Mouse 3");
         tester.assertTextPresent("Mouse 4 - the best mouse!");
+    }
+
+    @Test
+    public void shouldAllElementsSortedByPrice() {
+        tester.setTextField("search_text", "");
+        tester.submit();
+
+        tester.assertTextPresent("List: " +
+                "unchecked 'Mouse 1' 30.0$ " +
+                "unchecked 'Mouse 3' 40.0$ " +
+                "unchecked 'Mouse 2' 50.0$ " +
+                "unchecked 'Mouse 4 - the best mouse!' 66.0$ " +
+                "unchecked 'Monitor 2' 120.0$ " +
+                "unchecked 'Monitor 1' 150.0$ " +
+                "unchecked 'Monitor 3 - the best monitor!' 190.0$");
+    }
+
+    @Test
+    public void shouldAllElementsSortedByPrice2() {
+        tester.setTextField("search_text", "the best");
+        tester.submit();
+
+        tester.assertTextPresent("List: " +
+                "unchecked 'Mouse 4 - the best mouse!' 66.0$ " +
+                "unchecked 'Monitor 3 - the best monitor!' 190.0$");
     }
 
 }
