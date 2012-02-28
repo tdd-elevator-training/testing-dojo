@@ -1,4 +1,4 @@
-package org.automation.dojo.web.utils;
+package web.utils;
 
 import java.lang.reflect.Field;
 

@@ -1,4 +1,4 @@
-package org.automation.dojo.web.servlet;
+package web.servlet;
 
 import java.io.IOException;
 

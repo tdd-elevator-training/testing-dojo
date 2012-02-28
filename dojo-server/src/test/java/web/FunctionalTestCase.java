@@ -1,4 +1,4 @@
-package org.automation.dojo.web;
+package web;
 
 import net.sourceforge.jwebunit.junit.WebTester;
 

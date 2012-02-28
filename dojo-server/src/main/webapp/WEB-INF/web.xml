@@ -14,7 +14,7 @@
   	<description>Search controller</description>
 	<display-name>SearchController</display-name>
     <servlet-name>SearchController</servlet-name>
-    <servlet-class>org.automation.dojo.web.servlet.SearchController</servlet-class>
+    <servlet-class>web.servlet.SearchController</servlet-class>
   </servlet>
 
   <servlet-mapping>

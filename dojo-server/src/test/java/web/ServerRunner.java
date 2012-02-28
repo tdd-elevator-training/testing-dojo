@@ -1,7 +1,7 @@
-package org.automation.dojo.web;
+package web;
 
-import org.mortbay.jetty.Server;
-import org.mortbay.jetty.webapp.WebAppContext;
+import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.webapp.WebAppContext;
 
 public class ServerRunner {
 
@@ -20,7 +20,7 @@ public class ServerRunner {
 		stop();
 		
 		server = new Server(0);
-	    server.addHandler(new WebAppContext("src/main/webapp", "/Shop"));
+	    server.setHandler(new WebAppContext("src/main/webapp", "/Shop"));
 	    server.start();
 	    return server.getConnectors()[0].getLocalPort();
 	}
