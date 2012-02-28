@@ -30,11 +30,16 @@ public class SearchPage extends FunctionalTestCase {
 
         assertSearchForm();
 
+        tester.assertTextPresent("List:");
         tester.assertTextPresent("Mouse 1");
         tester.assertTextPresent("Mouse 2");
         tester.assertTextPresent("Mouse 3");
         tester.assertTextPresent("Mouse 4 - the best mouse!");
     }
 
+    @Test
+    public void shouldEmptyListWhenFirstComeIn() {
+        tester.assertTextNotPresent("List:");
+    }
 
 }

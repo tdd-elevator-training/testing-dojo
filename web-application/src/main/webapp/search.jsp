@@ -18,9 +18,12 @@
 			</table>
  		</form>
 
- 		Mouse 1
-        Mouse 2
-        Mouse 3
-        Mouse 4 - the best mouse!
+        <c:if test="${requestScope.records != null}">
+            List:
+            <c:forEach items="${requestScope.records}" var="record" varStatus="status">
+                <input type="radio" value="<c:out value="${status.index+1}"/>" name="record">
+                <c:out value="${record}"/>
+            </c:forEach>
+        </c:if>
 	</body>
 </html>
