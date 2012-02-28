@@ -42,4 +42,18 @@ public class SearchPage extends FunctionalTestCase {
         tester.assertTextNotPresent("List:");
     }
 
+    @Test
+    public void shouldFoundSomeAnotherRecordsWhenSearchItByPartOfDescription() {
+        tester.setTextField("search_text", "monitor");
+        tester.submit();
+
+        assertSearchForm();
+
+        tester.assertTextPresent("List:");
+        tester.assertTextPresent("Monitor 1");
+        tester.assertTextPresent("Monitor 2");
+        tester.assertTextPresent("Monitor 3 - the best monitor!");
+        tester.assertTextNotPresent("Mouse");
+    }
+
 }
