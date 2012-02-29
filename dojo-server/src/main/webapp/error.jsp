@@ -12,6 +12,6 @@
 
 		<b><c:out value="${requestScope.error_message}"/></b>
 
-		Please <a href="/">go home</a> and try again.
+		Please <a href="/Shop/index.jsp">go home</a> and try again.
 	</body>
 </html>

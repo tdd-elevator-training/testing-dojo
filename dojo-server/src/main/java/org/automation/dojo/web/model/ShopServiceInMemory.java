@@ -21,8 +21,28 @@ public class ShopServiceInMemory implements ShopService {
     }
 
     @Override
-    public List<Record> select(String foundString) {
-        List<Record> result = sortByPrice(foundTextAtDesciption(data, foundString));
+    public List<Record> select(String foundString, int priceOption, double price) {
+        List<Record> foundByText = foundTextAtDesciption(data, foundString);
+        List<Record> foundByPrice = removeByPrice(priceOption, price, foundByText);
+        List<Record> result = sortByPrice(foundByPrice);
+        return result;
+    }
+
+    private List<Record> removeByPrice(int priceOption, double price, List<Record> records) {
+        if (priceOption == IGNORE) {
+            return records;
+        }
+        
+        List<Record> result = new LinkedList<Record>();
+        
+        for (Record record : records) {
+            if ((priceOption == MORE_THAN && record.getPrice() >= price) ||
+                (priceOption == LESS_THAN && record.getPrice() <= price))
+            {
+                result.add(record);
+            }
+        }
+        
         return result;
     }
 

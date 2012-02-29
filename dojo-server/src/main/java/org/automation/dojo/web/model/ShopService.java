@@ -4,6 +4,10 @@ import java.util.List;
 
 public interface ShopService {
 
-    List<Record> select(String foundString);
+    static final int MORE_THAN = 1;
+    static final int LESS_THAN = 2;
+    static final int IGNORE = 0;
+
+    List<Record> select(String foundString, int priceOption, double price);
 
 }
