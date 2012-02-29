@@ -1,28 +1,35 @@
 package org.automation.dojo.web;
 
 
-import org.junit.*;
+import org.junit.Before;
+import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
-import static org.junit.Assert.*;
+import static org.automation.dojo.web.model.ShopService.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 public class SearchPage extends FunctionalTestCase {
 
-    private static final int MORE_THAN = 1;
-    private static final int LESS_THAN = 2;
-    private static final int IGNORE_OPTION = 0;
+    private WebElement search;
+    private WebElement searchButton;
+    private WebElement searchText;
+    private WebElement price;
+    private WebElement priceOption;
 
-    public static void assertSearchForm() {
-        assertPageContain("Please enter text to find");
-        assertNotNull(tester.findElement(By.name("search")));
-        assertNotNull(tester.findElement(By.id("search_button")));
-        assertNotNull(tester.findElement(By.id("search_text")));
-	}
+    @Before
+    public void resetAllElements() {
+        search = tester.findElement(By.name("search"));
+        searchButton = tester.findElement(By.id("search_button"));
+        searchText = tester.findElement(By.id("search_text"));
+        price = tester.findElement(By.id("price"));
+        priceOption = tester.findElement(By.id("price_option"));
+    }
 
     @Test
     public void shouldSearchPageAsWelcomePage() {
-    	assertSearchForm();
+        assertSearchForm();
     }
 
     @Test
@@ -37,14 +44,6 @@ public class SearchPage extends FunctionalTestCase {
         assertPageContain("Mouse 2");
         assertPageContain("Mouse 3");
         assertPageContain("Mouse 4 - the best mouse!");
-    }
-
-    private void enterText(String string) {
-        tester.findElement(By.id("search_text")).sendKeys(string);
-    }
-
-    private void submitSearchForm() {
-        tester.findElement(By.id("search_button")).submit();
     }
 
     @Test
@@ -71,18 +70,8 @@ public class SearchPage extends FunctionalTestCase {
         enterText("keyboard");
         submitSearchForm();
 
-        assertPageContain("Sorry no results for your request, but we have another devices:");
+        assertNotFound();
         allElementsPresent();
-    }
-
-    private void allElementsPresent() {
-        assertPageContain("'Mouse 1' 30.0$");
-        assertPageContain("'Mouse 3' 40.0$");
-        assertPageContain("'Mouse 2' 50.0$");
-        assertPageContain("'Mouse 4 - the best mouse!' 66.0$");
-        assertPageContain("'Monitor 2' 120.0$");
-        assertPageContain("'Monitor 1' 150.0$");
-        assertPageContain("'Monitor 3 - the best monitor!' 190.0$");
     }
 
     @Test
@@ -101,7 +90,7 @@ public class SearchPage extends FunctionalTestCase {
     }
 
     @Test
-    public void shouldAllElementsSortedByPrice2() {
+    public void shouldFoundElementsSortedByPrice() {
         enterText("the best");
         submitSearchForm();
 
@@ -143,7 +132,7 @@ public class SearchPage extends FunctionalTestCase {
     @Test
     public void shouldIgnorePriceIfNoSelectedPriceOption() {
         enterText("");
-        enterPrice(IGNORE_OPTION, 120);
+        enterPrice(IGNORE, 120);
         submitSearchForm();
 
         allElementsPresent();
@@ -155,6 +144,7 @@ public class SearchPage extends FunctionalTestCase {
         enterPrice(LESS_THAN, 1);
         submitSearchForm();
 
+        assertNotFound();
         allElementsPresent();
     }
 
@@ -167,18 +157,30 @@ public class SearchPage extends FunctionalTestCase {
         assertFormContains("some device", MORE_THAN, 111);
     }
 
-    private void assertFormContains(String text, int isMoreThan, int price) {
-        assertEquals(text, tester.findElement(By.id("search_text")).getAttribute("value"));
-        assertEquals(String.valueOf(price), tester.findElement(By.id("price")).getAttribute("value"));
-        assertEquals(getPriceOption(isMoreThan), getSelected(tester.findElement(By.id("price_option"))));
+    private void assertFormContains(String text, int priceOptionNumber, int price) {
+        assertEquals(text, getSearchText());
+        assertEquals(String.valueOf(price), gtePrice());
+        assertEquals(getPriceOption(priceOptionNumber), getSelectedPriceOption());
+    }
+
+    private String getSelectedPriceOption() {
+        return getSelected(this.priceOption);
+    }
+
+    private String getSearchText() {
+        return searchText.getAttribute("value");
+    }
+
+    private String gtePrice() {
+        return this.price.getAttribute("value");
     }
 
     private String getSelected(WebElement select) {
         return select.findElement(By.xpath("//option[@selected='']")).getAttribute("value");
     }
 
-    private void enterPrice(int priceOption, int price) {
-        setMoreThan(priceOption);
+    private void enterPrice(int priceOptionNumber, int price) {
+        setMoreThan(priceOptionNumber);
         setPrice(price);
     }
 
@@ -186,21 +188,55 @@ public class SearchPage extends FunctionalTestCase {
         tester.findElement(By.id("price")).sendKeys(String.valueOf(price));
     }
 
-    private void setMoreThan(int priceOption) {
-        WebElement priceSelect = tester.findElement(By.id("price_option"));
-        findOption(priceSelect, getPriceOption(priceOption)).click();
+    private void setMoreThan(int priceOptionNumber) {
+        findOption(this.priceOption, getPriceOption(priceOptionNumber)).click();
     }
 
     private WebElement findOption(WebElement priceSelect, String preceOption) {
         return priceSelect.findElement(By.xpath("//option[@value='" + preceOption + "']"));
     }
 
-    private String getPriceOption(int priceOption) {
-        switch (priceOption) {
-            case 0 : return "";
-            case 1 : return "more than";
-            case 2 : return "less than";
-            default: throw new IllegalArgumentException("Bad price option " + priceOption);
+    private String getPriceOption(int priceOptionNumber) {
+        switch (priceOptionNumber) {
+            case 0:
+                return "";
+            case 1:
+                return "more than";
+            case 2:
+                return "less than";
+            default:
+                throw new IllegalArgumentException("Bad price option " + priceOptionNumber);
         }
+    }
+
+    private void assertNotFound() {
+        assertPageContain("Sorry no results for your request, but we have another devices:");
+    }
+
+    private void allElementsPresent() {
+        assertPageContain("'Mouse 1' 30.0$");
+        assertPageContain("'Mouse 3' 40.0$");
+        assertPageContain("'Mouse 2' 50.0$");
+        assertPageContain("'Mouse 4 - the best mouse!' 66.0$");
+        assertPageContain("'Monitor 2' 120.0$");
+        assertPageContain("'Monitor 1' 150.0$");
+        assertPageContain("'Monitor 3 - the best monitor!' 190.0$");
+    }
+
+    private void assertSearchForm() {
+        assertPageContain("Please enter text to find");
+
+        assertNotNull(search);
+        assertNotNull(searchButton);
+        assertNotNull(searchText);
+    }
+
+    private void enterText(String string) {
+        searchText.sendKeys(string);
+    }
+
+    private void submitSearchForm() {
+        searchButton.submit();
+        resetAllElements();
     }
 }

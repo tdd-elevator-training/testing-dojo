@@ -1,58 +1,81 @@
 package org.automation.dojo.web.servlet;
 
-import org.apache.commons.codec.binary.StringUtils;
 import org.automation.dojo.web.model.Record;
 import org.automation.dojo.web.model.ShopService;
 import org.automation.dojo.web.model.ShopServiceFactory;
 
-import java.io.IOException;
-import java.util.*;
-
 import javax.servlet.ServletException;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 
-import static org.apache.commons.codec.binary.StringUtils.*;
-
-public class SearchController extends Controller{
+public class SearchController extends Controller {
 
     private ShopService service;
+    private List<String> priceOptions;
 
     public SearchController() {
         this.service = ShopServiceFactory.gtInstance();
+        priceOptions = Arrays.asList("", "more than", "less than");
     }
 
-	@Override
-	public String doAction() throws ServletException, IOException 
-	{
-        List<String> priceOptions = Arrays.asList("", "more than", "less than");
-        request.setAttribute("price_options", priceOptions);
-        String priceOptionString = request.getParameter("price_option");
-        request.setAttribute("price_option", priceOptionString);
-        request.setAttribute("price", request.getParameter("price"));
-        request.setAttribute("search_text", request.getParameter("search_text"));
+    @Override
+    public String doAction() throws ServletException, IOException {
+        saveFormState();
 
-        String foundString = request.getParameter("search_text");
+        String foundString = getSearchText();
         if (foundString != null) {
-            int priceOption = priceOptions.indexOf(priceOptionString);
-            double price = getPrice();
-            List<Record> filtered = service.select(foundString, priceOption, price);
+            List<Record> result = service.select(foundString, getPriceOptionIndex(), getPrice());
 
-            if (filtered.isEmpty()) {
-                filtered = service.select("", ShopService.IGNORE, 0);
-                request.setAttribute("no_results", true);
+            if (result.isEmpty()) {
+                result = service.select("", ShopService.IGNORE, 0);
+                noResultsFound();
             }
 
-            request.setAttribute("records", filtered);
+            setRecords(result);
         }
 
-		return "search.jsp";
-	}
+        return "search.jsp";
+    }
+
+    private void setRecords(List<Record> filtered) {
+        request.setAttribute("records", filtered);
+    }
+
+    private void noResultsFound() {
+        request.setAttribute("no_results", true);
+    }
+
+    private int getPriceOptionIndex() {
+        return priceOptions.indexOf(getPriceOption());
+    }
+
+    private void saveFormState() {
+        request.setAttribute("price_options", priceOptions);
+
+        request.setAttribute("price_option", getPriceOption());
+        request.setAttribute("price", getStringPrice());
+        request.setAttribute("search_text", getSearchText());
+    }
+
+    private String getSearchText() {
+        return request.getParameter("search_text");
+    }
+
+    private String getPriceOption() {
+        return request.getParameter("price_option");
+    }
 
     private Double getPrice() {
-        String priceString = request.getParameter("price");
+        String priceString = getStringPrice();
         if (isEmpty(priceString)) {
             return 0d;
         }
         return Double.valueOf(priceString);
+    }
+
+    private String getStringPrice() {
+        return request.getParameter("price");
     }
 
     private boolean isEmpty(String string) {

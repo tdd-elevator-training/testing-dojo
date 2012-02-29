@@ -11,38 +11,42 @@ import static org.junit.Assert.assertTrue;
 public class FunctionalTestCase {
 
 
-	protected static WebDriver tester;
+    protected static WebDriver tester;
 
-	@Before
-	public void init() throws Exception {
-	    int port = ServerRunner.getInstance().start();
+    @Before
+    public void init() throws Exception {
+        int port = ServerRunner.getInstance().start();
 
-	    tester = new HtmlUnitDriver();
-	    tester.get("http://localhost:" + port + "/Shop");
-	}
+        tester = new HtmlUnitDriver();
+        tester.get("http://localhost:" + port + "/Shop");
+    }
 
-	@AfterClass
-	public static void end() throws Exception {
-		ServerRunner.getInstance().stop();
-	}
+    @AfterClass
+    public static void end() throws Exception {
+        ServerRunner.getInstance().stop();
+    }
 
-	public FunctionalTestCase() {
-		super();
-	}
+    public FunctionalTestCase() {
+        super();
+    }
 
     protected static void assertPageContain(String string) {
         String page = getPageText();
-        assertTrue(String.format("Expected page contains '%s' but was '%s'.", string, page),
+        assertTrue(String.format("Expected page contains '%s' " +
+                "but was '%s'.", string, page),
                 page.contains(string));
     }
 
     private static String getPageText() {
-        return tester.getPageSource().replaceAll("<.*?>", "").replaceAll("\\n", "").replaceAll("\\r", "").replaceAll("(  )+", " ");
+        return tester.getPageSource().replaceAll("<.*?>", "")
+                .replaceAll("\\n", "").replaceAll("\\r", "")
+                .replaceAll("(  )+", " ");
     }
 
     protected void assertPageNotContain(String string) {
         String page = getPageText();
-        assertFalse(String.format("Expected page NOT contains '%s' but was '%s'.", string, page),
+        assertFalse(String.format("Expected page NOT contains " +
+                "'%s' but was '%s'.", string, page),
                 page.contains(string));
     }
 }

@@ -22,7 +22,7 @@ public class ShopServiceInMemory implements ShopService {
 
     @Override
     public List<Record> select(String foundString, int priceOption, double price) {
-        List<Record> foundByText = foundTextAtDesciption(data, foundString);
+        List<Record> foundByText = foundTextAtDescription(data, foundString);
         List<Record> foundByPrice = removeByPrice(priceOption, price, foundByText);
         List<Record> result = sortByPrice(foundByPrice);
         return result;
@@ -32,17 +32,16 @@ public class ShopServiceInMemory implements ShopService {
         if (priceOption == IGNORE) {
             return records;
         }
-        
+
         List<Record> result = new LinkedList<Record>();
-        
+
         for (Record record : records) {
             if ((priceOption == MORE_THAN && record.getPrice() >= price) ||
-                (priceOption == LESS_THAN && record.getPrice() <= price))
-            {
+                    (priceOption == LESS_THAN && record.getPrice() <= price)) {
                 result.add(record);
             }
         }
-        
+
         return result;
     }
 
@@ -59,7 +58,7 @@ public class ShopServiceInMemory implements ShopService {
         return result;
     }
 
-    private List<Record> foundTextAtDesciption(List<Record> list, String foundString) {
+    private List<Record> foundTextAtDescription(List<Record> list, String foundString) {
         List<Record> result = new LinkedList<Record>();
         for (Record record : list) {
             if (record.getDescription().toLowerCase().contains(foundString.toLowerCase())) {
