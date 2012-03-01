@@ -7,7 +7,6 @@ import java.util.List;
  * @author serhiy.zelenin
  */
 public class ReleaseEngine {
-    private Release currentRelease = new Release(new Scenario(1));
     private List<Release> releases = new ArrayList<Release>();
     private int currentReleaseIndex;
 
@@ -23,5 +22,9 @@ public class ReleaseEngine {
 
     public void nextMajorRelease() {
         currentReleaseIndex++;
+    }
+
+    public void nextMinorRelease() {
+
     }
 }

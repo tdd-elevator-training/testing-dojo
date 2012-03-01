@@ -5,6 +5,7 @@ package org.automation.dojo;
  */
 public class Scenario {
     private int id;
+    private Bug bug;
 
     public Scenario(int id) {
 
@@ -13,5 +14,9 @@ public class Scenario {
 
     public int getId() {
         return id;
+    }
+
+    public Bug getBug() {
+        return bug;
     }
 }
