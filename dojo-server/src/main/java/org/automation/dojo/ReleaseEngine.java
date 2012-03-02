@@ -1,6 +1,7 @@
 package org.automation.dojo;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -10,10 +11,14 @@ public class ReleaseEngine {
     private List<Release> releases = new ArrayList<Release>();
     private int currentReleaseIndex;
 
-    public ReleaseEngine() {
-        releases.add(new Release(new Scenario(1)));
-        releases.add(new Release(new Scenario(1), new Scenario(2), new Scenario(3)));
-        releases.add(new Release(new Scenario(4)));
+    public ReleaseEngine(BugsQueue bugsQueue) {
+        this(new Release(new Scenario(1, bugsQueue)),
+                new Release(new Scenario(1, bugsQueue), new Scenario(2, bugsQueue), new Scenario(3, bugsQueue)),
+                new Release(new Scenario(4, bugsQueue)));
+    }
+
+    public ReleaseEngine(Release ... releasesArray) {
+        Collections.addAll(releases, releasesArray);
     }
 
     public List<Scenario> getCurrentScenarios() {
@@ -25,6 +30,9 @@ public class ReleaseEngine {
     }
 
     public void nextMinorRelease() {
-
+        List<Scenario> currentScenarios = getCurrentScenarios();
+        for (Scenario currentScenario : currentScenarios) {
+            currentScenario.takeNextBug();
+        }
     }
 }
