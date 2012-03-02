@@ -8,6 +8,9 @@
     <artifactId>dojo-server</artifactId>
     <version>1.0</version>
     <packaging>war</packaging>
+    <properties>
+        <spring.version>3.1.1.RELEASE</spring.version>
+    </properties>
     <dependencies>
         <dependency>
             <groupId>org.mortbay.jetty</groupId>
@@ -43,6 +46,28 @@
             <artifactId>selenium-java</artifactId>
             <version>2.16.0</version>
         </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-webmvc</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-web</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
+            <scope>test</scope>
+            <version>${spring.version}</version>
+        </dependency>
+
     </dependencies>
 
     <build>

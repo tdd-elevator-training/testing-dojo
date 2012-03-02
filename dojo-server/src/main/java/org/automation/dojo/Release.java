@@ -17,4 +17,8 @@ public class Release {
     public List<Scenario> getScenarios() {
         return scenarios;
     }
+
+    public void addScenario(Scenario scenario) {
+        scenarios.add(scenario);
+    }
 }
