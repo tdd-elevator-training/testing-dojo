@@ -1,8 +1,5 @@
-/*
 package org.automation.dojo;
 
-import com.mockrunner.mock.web.MockHttpServletRequest;
-import com.mockrunner.mock.web.MockHttpServletResponse;
 import org.fest.assertions.Index;
 import org.junit.Before;
 import org.junit.Test;
@@ -133,4 +130,3 @@ public class GetResultServletTest {
         }
     }
 }
-*/
