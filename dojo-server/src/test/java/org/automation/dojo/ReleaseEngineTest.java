@@ -10,6 +10,7 @@ import org.mockito.stubbing.OngoingStubbing;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
+import static junit.framework.Assert.assertSame;
 import static org.fest.assertions.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
@@ -69,9 +70,20 @@ public class ReleaseEngineTest {
         assertEquals(345, scenario2.getBug().getId());
     }
 
+    @Test
+    public void shouldBeNoBugsWhenNoBugs() {
+        Scenario scenario1 = new Scenario(1, bugsQueue);
+        engine = new ReleaseEngine(new Release(scenario1));
+        putNextBugForScenario(scenario1, null);
 
-    private OngoingStubbing<Bug> putNextBugForScenario(Scenario expectedScenario, int bugId) {
-        return when(bugsQueue.nextBugFor(expectedScenario)).thenReturn(new Bug(bugId));
+        engine.nextMinorRelease();
+
+        assertSame(Bug.NULL_BUG, scenario1.getBug());
+    }
+
+
+    private OngoingStubbing<Bug> putNextBugForScenario(Scenario expectedScenario, Integer bugId) {
+        return when(bugsQueue.nextBugFor(expectedScenario)).thenReturn(bugId == null ? Bug.NULL_BUG : new Bug(bugId));
     }
 
     private ListAssert assertCurrentScenarios(Integer... scenarioId) {
