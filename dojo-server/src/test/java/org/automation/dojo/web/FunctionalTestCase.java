@@ -85,7 +85,7 @@ public abstract class FunctionalTestCase {
 
     protected void assertPageContain(String string) {
         String page = getPageText();
-        assertTrue(String.format("Expected page contains '%s' " +
+        assertTrue(String.format("Expected page contains '%s'\n" +
                 "but was '%s'.", string, page),
                 page.contains(string));
     }

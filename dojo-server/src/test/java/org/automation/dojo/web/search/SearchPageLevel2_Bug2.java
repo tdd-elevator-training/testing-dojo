@@ -95,7 +95,7 @@ public class SearchPageLevel2_Bug2 extends FunctionalTestCase {
         allElementsPresent();
     }
 
-    @Test
+    @Test(expected = AssertionError.class)
     public void shouldAllElementsSortedByPrice() {
         enterText("");
         submitSearchForm();
@@ -110,7 +110,7 @@ public class SearchPageLevel2_Bug2 extends FunctionalTestCase {
                 "'Monitor 3 - the best monitor!' 190.0$");
     }
 
-    @Test
+    @Test(expected = AssertionError.class)
     public void shouldFoundElementsSortedByPrice() {
         enterText("the best");
         submitSearchForm();

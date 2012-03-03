@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * @author serhiy.zelenin
  */
-public class Release {
+public class Release<T> {
     private List<Scenario> scenarios = new ArrayList<Scenario>();
 
     public Release(Scenario ... scenario) {
@@ -20,5 +20,13 @@ public class Release {
 
     public void addScenario(Scenario scenario) {
         scenarios.add(scenario);
+    }
+
+    public String process(T request) {
+        String result = null;
+        for (Scenario scenario : scenarios) {
+            result = scenario.process(request);
+        }
+        return result;
     }
 }

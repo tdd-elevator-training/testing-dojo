@@ -23,7 +23,7 @@ public class BrokenSortingBug extends Bug<RequestWorker> {
             do {
                 i = new Random().nextInt(records.size());
                 j = new Random().nextInt(records.size());
-            } while (i != j);
+            } while (i == j);
             Record record = records.get(i);
             records.set(i, records.get(j));
             records.set(j, record);

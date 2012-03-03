@@ -86,7 +86,7 @@ public class SearchPageLevel2_Bug1 extends FunctionalTestCase {
         assertPageNotContain("Mouse");
     }
 
-    @Test
+    @Test(expected = AssertionError.class)
     public void shouldAllListWhenNotFound() {
         enterText("keyboard");
         submitSearchForm();
@@ -95,7 +95,7 @@ public class SearchPageLevel2_Bug1 extends FunctionalTestCase {
         allElementsPresent();
     }
 
-    @Test
+    @Test(expected = AssertionError.class)
     public void shouldAllElementsSortedByPrice() {
         enterText("");
         submitSearchForm();
@@ -110,7 +110,7 @@ public class SearchPageLevel2_Bug1 extends FunctionalTestCase {
                 "'Monitor 3 - the best monitor!' 190.0$");
     }
 
-    @Test
+    @Test(expected = AssertionError.class)
     public void shouldFoundElementsSortedByPrice() {
         enterText("the best");
         submitSearchForm();
@@ -120,7 +120,7 @@ public class SearchPageLevel2_Bug1 extends FunctionalTestCase {
                 "'Monitor 3 - the best monitor!' 190.0$");
     }
 
-    @Test
+    @Test(expected = AssertionError.class)
     public void shouldOnlyElementsMoreThanSomePrice() {
         enterText("");
         enterPrice(MORE_THAN, 120);
@@ -135,7 +135,7 @@ public class SearchPageLevel2_Bug1 extends FunctionalTestCase {
         assertPageContain("'Monitor 3 - the best monitor!' 190.0$");
     }
 
-    @Test
+    @Test(expected = AssertionError.class)
     public void shouldOnlyElementsLessThanSomePrice() {
         enterText("");
         enterPrice(LESS_THAN, 120);
@@ -150,7 +150,7 @@ public class SearchPageLevel2_Bug1 extends FunctionalTestCase {
         assertPageNotContain("'Monitor 3 - the best monitor!' 190.0$");
     }
 
-    @Test
+    @Test(expected = AssertionError.class)
     public void shouldIgnorePriceIfNoSelectedPriceOption() {
         enterText("");
         enterPrice(IGNORE, 120);
@@ -159,7 +159,7 @@ public class SearchPageLevel2_Bug1 extends FunctionalTestCase {
         allElementsPresent();
     }
 
-    @Test
+    @Test(expected = AssertionError.class)
     public void shouldAllListIfNotFoundByPrice() {
         enterText("1");
         enterPrice(LESS_THAN, 1);
