@@ -11,15 +11,27 @@
     </welcome-file-list>
 
     <servlet>
-        <description>Search controller</description>
-        <display-name>SearchController</display-name>
-        <servlet-name>SearchController</servlet-name>
-        <servlet-class>org.automation.dojo.web.servlet.SearchController</servlet-class>
+        <description>Workflow controller</description>
+        <display-name>WorkflowController</display-name>
+        <servlet-name>WorkflowController</servlet-name>
+        <servlet-class>org.automation.dojo.web.servlet.WorkflowController</servlet-class>
     </servlet>
 
     <servlet-mapping>
-        <servlet-name>SearchController</servlet-name>
+        <servlet-name>WorkflowController</servlet-name>
         <url-pattern>/search</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <description>Release engine controller</description>
+        <display-name>ReleaseEngineController</display-name>
+        <servlet-name>ReleaseEngineController</servlet-name>
+        <servlet-class>org.automation.dojo.web.servlet.ReleaseEngineController</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>ReleaseEngineController</servlet-name>
+        <url-pattern>/releases</url-pattern>
     </servlet-mapping>
 
     <context-param>
