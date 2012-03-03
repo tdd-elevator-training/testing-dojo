@@ -20,9 +20,6 @@ public class SearchByTextLevel1Scenario extends Scenario<RequestWorker> {
         super(id, description, bugsQueue);
     }
 
-    public SearchByTextLevel1Scenario() {
-    }
-
     @Override
     public String process(RequestWorker request) {
         ShopService service = ShopServiceFactory.gtInstance();

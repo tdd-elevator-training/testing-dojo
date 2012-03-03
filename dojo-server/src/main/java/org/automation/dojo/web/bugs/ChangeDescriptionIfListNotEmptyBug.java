@@ -25,7 +25,6 @@ public class ChangeDescriptionIfListNotEmptyBug extends Bug<RequestWorker> {
             int index = new Random().nextInt(list.size());
             Record record = list.get(index);
             list.set(index, new Record(getRandomString(), record.getPrice()));
-            result.noResultsFound();
         }
         return result;
     }

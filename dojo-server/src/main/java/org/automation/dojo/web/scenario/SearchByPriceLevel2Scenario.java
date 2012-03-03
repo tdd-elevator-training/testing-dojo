@@ -19,9 +19,6 @@ public class SearchByPriceLevel2Scenario extends Scenario<RequestWorker> {
         super(id, description, bugsQueue);
     }
 
-    public SearchByPriceLevel2Scenario() {
-    }
-
     @Override
     public String process(RequestWorker request) {
         ShopService service = ShopServiceFactory.gtInstance();

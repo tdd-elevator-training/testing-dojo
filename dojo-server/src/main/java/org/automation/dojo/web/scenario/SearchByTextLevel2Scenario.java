@@ -6,6 +6,9 @@ import org.automation.dojo.Scenario;
 import org.automation.dojo.web.bugs.ChangeDescriptionIfListNotEmptyBug;
 import org.automation.dojo.web.bugs.FoundNotExistsProductBug;
 import org.automation.dojo.web.bugs.NoResultWhenExpectedBug;
+import org.automation.dojo.web.model.Record;
+import org.automation.dojo.web.model.ShopService;
+import org.automation.dojo.web.model.ShopServiceFactory;
 import org.automation.dojo.web.servlet.RequestWorker;
 
 import java.util.Arrays;
@@ -19,10 +22,23 @@ public class SearchByTextLevel2Scenario extends Scenario<RequestWorker> {
 
     @Override
     public String process(RequestWorker request) {
-        new SearchByTextLevel1Scenario().process(request);
-        bug.apply(request);
+        ShopService service = ShopServiceFactory.gtInstance();
 
-        new SearchByPriceLevel2Scenario().process(request);
+        request.saveFormState();
+
+        String foundString = request.getSearchText();
+        if (foundString != null) {
+            List<Record> result = service.selectByText(foundString);
+
+            if (result.isEmpty()) {
+                result = service.selectByText("");
+                request.noResultsFound();
+            }
+
+            request.setRecords(result);
+        }
+
+        bug.apply(request);
         return "search_level2.jsp";
     }
 

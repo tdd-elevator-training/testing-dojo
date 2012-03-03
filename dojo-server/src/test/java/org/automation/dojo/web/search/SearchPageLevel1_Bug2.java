@@ -11,6 +11,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
 
 @ContextConfiguration(locations = {"classpath:/org/automation/dojo/applicationContext.xml"})
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -89,13 +90,21 @@ public class SearchPageLevel1_Bug2 extends FunctionalTestCase {
         assertPageNotContain("Mouse");
     }
 
-    @Test(expected = AssertionError.class)
+    @Test
     public void shouldAllListWhenNotFound() {
         enterText("keyboard");
         submitSearchForm();
 
-        assertNotFound();
-        allElementsPresent();
+        try {
+            assertNotFound();
+            fail("Expected exception");
+        } catch (AssertionError e) {
+        }
+        try {
+            allElementsPresent();
+            fail("Expected exception");
+        } catch (AssertionError e) {
+        }
     }
 
     @Test

@@ -11,6 +11,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
 
 @ContextConfiguration(locations = {"classpath:/org/automation/dojo/applicationContext.xml"})
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -47,7 +48,7 @@ public class SearchPageLevel1_Bug3 extends FunctionalTestCase {
         assertSearchForm();
     }
 
-    @Test(expected = AssertionError.class)
+    @Test
     public void shouldFoundSomeRecordsWhenSearchItByPartOfDescription() {
         enterText("mouse");
         submitSearchForm();
@@ -55,10 +56,15 @@ public class SearchPageLevel1_Bug3 extends FunctionalTestCase {
         assertSearchForm();
 
         assertPageContain("List:");
-        assertPageContain("Mouse 1");
-        assertPageContain("Mouse 2");
-        assertPageContain("Mouse 3");
-        assertPageContain("Mouse 4 - the best mouse!");
+        try {
+            assertPageContain("Mouse 1");
+            assertPageContain("Mouse 2");
+            assertPageContain("Mouse 3");
+            assertPageContain("Mouse 4 - the best mouse!");
+            fail("Expected exception");
+        } catch (AssertionError e) {
+        }
+
     }
 
     @Test
@@ -75,7 +81,7 @@ public class SearchPageLevel1_Bug3 extends FunctionalTestCase {
         allElementsPresent();
     }
 
-    @Test(expected = AssertionError.class)
+    @Test
     public void shouldFoundSomeAnotherRecordsWhenSearchItByPartOfDescription() {
         enterText("monitor");
         submitSearchForm();
@@ -83,10 +89,14 @@ public class SearchPageLevel1_Bug3 extends FunctionalTestCase {
         assertSearchForm();
 
         assertPageContain("List:");
-        assertPageContain("Monitor 1");
-        assertPageContain("Monitor 2");
-        assertPageContain("Monitor 3 - the best monitor!");
-        assertPageNotContain("Mouse");
+        try {
+            assertPageContain("Monitor 1");
+            assertPageContain("Monitor 2");
+            assertPageContain("Monitor 3 - the best monitor!");
+            assertPageNotContain("Mouse");
+            fail("Expected exception");
+        } catch (AssertionError e) {
+        }
     }
 
     @Test
