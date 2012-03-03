@@ -5,6 +5,7 @@ import org.automation.dojo.web.scenario.BasicScenario;
 import org.automation.dojo.web.scenario.Release;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
+import sun.misc.JavaSecurityProtectionDomainAccess;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -44,11 +45,7 @@ public class ReleaseEngine {
         Collections.addAll(releases, releasesArray);
     }
 
-    public List<BasicScenario> getCurrentScenarios() {
-        return getCurrentRelease().getScenarios();
-    }
-
-    public Release getCurrentRelease() {
+     public Release getCurrentRelease() {
         return releases.get(currentReleaseIndex);
     }
 
@@ -125,17 +122,11 @@ public class ReleaseEngine {
     }
 
     public BasicScenario getScenario(int scenarioId) {
-        List<BasicScenario> scenarios = getCurrentScenarios();
-        for (BasicScenario scenario : scenarios) {
-            if (scenario.getId() == scenarioId) {
-                return scenario;
-            }
-        }
-        throw new IllegalArgumentException("No current scenario found with id : " + scenarioId);
+        return getCurrentRelease().getScenario(scenarioId);
     }
 
     public String getMinorInfo() {
-        return getCurrentScenarios().toString();
+        return getCurrentRelease().toString();
     }
 
     public String getMajorInfo() {
@@ -146,5 +137,9 @@ public class ReleaseEngine {
     public void setMajorRelease(int index) {
         currentReleaseIndex = index;
         getCurrentRelease().setNoBug();
+    }
+
+    public List<BasicScenario> getCurrentScenarios() {
+        return getCurrentRelease().getScenarios();
     }
 }
