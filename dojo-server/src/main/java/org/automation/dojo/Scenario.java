@@ -23,6 +23,9 @@ public abstract class Scenario<T> {
         this.bugsQueue = bugsQueue;
     }
 
+    public Scenario() {
+    }
+
     public int getId() {
         return id;
     }
@@ -49,5 +52,12 @@ public abstract class Scenario<T> {
 
     public boolean hasBug() {
         return bug == null || bug == Bug.NULL_BUG;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("Scenario %s with bug %s",
+                getClass().getSimpleName(),
+                bug.toString());
     }
 }

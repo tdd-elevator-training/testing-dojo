@@ -11,7 +11,6 @@ public class WorkflowController extends Controller {
     @Override
     public String doAction() throws ServletException, IOException {
         ReleaseEngine engine = ApplicationContextLocator.getInstance().getBean("releaseEngine");
-        engine.nextMinorRelease();
         return engine.getScenario(1).process(new RequestWorker(request));
     }
 }

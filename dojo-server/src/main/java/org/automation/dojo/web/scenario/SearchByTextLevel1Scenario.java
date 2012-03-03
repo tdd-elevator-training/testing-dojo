@@ -3,6 +3,8 @@ package org.automation.dojo.web.scenario;
 import org.automation.dojo.Bug;
 import org.automation.dojo.BugsQueue;
 import org.automation.dojo.Scenario;
+import org.automation.dojo.web.bugs.ChangeDescriptionIfListNotEmpty;
+import org.automation.dojo.web.bugs.FoundNotExistsProduct;
 import org.automation.dojo.web.bugs.NoResultWhenExpected;
 import org.automation.dojo.web.model.Record;
 import org.automation.dojo.web.model.ShopService;
@@ -12,10 +14,13 @@ import org.automation.dojo.web.servlet.RequestWorker;
 import java.util.Arrays;
 import java.util.List;
 
-public class SearchScenario extends Scenario<RequestWorker> {
+public class SearchByTextLevel1Scenario extends Scenario<RequestWorker> {
 
-    public SearchScenario(int id, String description, BugsQueue bugsQueue) {
+    public SearchByTextLevel1Scenario(int id, String description, BugsQueue bugsQueue) {
         super(id, description, bugsQueue);
+    }
+
+    public SearchByTextLevel1Scenario() {
     }
 
     @Override
@@ -26,10 +31,10 @@ public class SearchScenario extends Scenario<RequestWorker> {
 
         String foundString = request.getSearchText();
         if (foundString != null) {
-            List<Record> result = service.select(foundString, request.getPriceOptionIndex(), request.getPrice());
+            List<Record> result = service.selectByText(foundString);
 
             if (result.isEmpty()) {
-                result = service.select("", ShopService.IGNORE, 0);
+                result = service.selectByText("");
                 request.noResultsFound();
             }
 
@@ -37,11 +42,13 @@ public class SearchScenario extends Scenario<RequestWorker> {
         }
 
         bug.apply(request);
-        return "search.jsp";
+        return "search_level1.jsp";
     }
 
     public List<? extends Bug> getPossibleBugs() {
-        return Arrays.asList(new NoResultWhenExpected());
+        return Arrays.asList(new NoResultWhenExpected(),
+                new ChangeDescriptionIfListNotEmpty(),
+                new FoundNotExistsProduct());
     }
 
 }

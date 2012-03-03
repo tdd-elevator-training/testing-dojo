@@ -16,7 +16,7 @@ import static org.fest.reflect.core.Reflection.constructor;
  */
 public class ReleaseEngine {
     private List<Release> releases = new ArrayList<Release>();
-    private int currentReleaseIndex;
+    protected int currentReleaseIndex = 0;
 
     private Resource scenarioResource;
 
@@ -113,5 +113,17 @@ public class ReleaseEngine {
             }
         }
         throw new IllegalArgumentException("No current scenario found with id : " + scenarioId);
+    }
+
+    public String getMinorInfo() {
+        return getCurrentScenarios().toString();
+    }
+
+    public String getMajorInfo() {
+        return String.valueOf(currentReleaseIndex);
+    }
+
+    public void setMajorRelease(int index) {
+        currentReleaseIndex = index;
     }
 }

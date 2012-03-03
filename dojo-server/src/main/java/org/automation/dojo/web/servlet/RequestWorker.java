@@ -15,8 +15,17 @@ public class RequestWorker {
         this.request = request;
     }
 
+    public List<Record> getRecords() {
+        return (List<Record>) request.getAttribute("records");
+    }
+
     public void setRecords(List<Record> filtered) {
         request.setAttribute("records", filtered);
+    }
+
+    public boolean isNoResultsFound() {
+        Object noResults = request.getAttribute("no_results");
+        return (noResults != null && (Boolean)noResults);
     }
 
     public void noResultsFound() {
@@ -57,5 +66,9 @@ public class RequestWorker {
 
     public int getPriceOptionIndex() {
         return priceOptions.indexOf(getPriceOption());
+    }
+
+    public void clearNoResultsFound() {
+        request.setAttribute("no_results", false);
     }
 }

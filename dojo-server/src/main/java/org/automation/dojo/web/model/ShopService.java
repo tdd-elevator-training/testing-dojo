@@ -8,6 +8,9 @@ public interface ShopService {
     static final int LESS_THAN = 2;
     static final int IGNORE = 0;
 
-    List<Record> select(String foundString, int priceOption, double price);
+    List<Record> selectByTextAndPrice(String foundString, int priceOption, double price);
 
+    List<Record> selectByText(String foundString);
+
+    List<Record> priceFilter(List<Record> records, int priceOptionIndex, Double price);
 }

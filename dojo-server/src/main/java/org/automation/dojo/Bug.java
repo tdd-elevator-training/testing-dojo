@@ -35,4 +35,9 @@ public class Bug<T> {
     public T apply(T result) {
         return result;
     }
+
+    @Override
+    public String toString() {
+        return getClass().getSimpleName();
+    }
 }

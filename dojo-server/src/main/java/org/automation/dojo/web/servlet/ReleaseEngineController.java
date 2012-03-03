@@ -14,7 +14,18 @@ public class ReleaseEngineController extends Controller {
             engine.nextMajorRelease();
         }
 
+        setMajor(engine.getMajorInfo());
+        setMinor(engine.getMinorInfo());
+
         return "releases.jsp";
+    }
+
+    private void setMinor(String minorInfo) {
+        request.setAttribute("minor", minorInfo);
+    }
+
+    private void setMajor(String majorInfo) {
+        request.setAttribute("major", majorInfo);
     }
 
     private boolean isMajorClicked() {

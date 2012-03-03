@@ -21,11 +21,19 @@ public class ShopServiceInMemory implements ShopService {
     }
 
     @Override
-    public List<Record> select(String foundString, int priceOption, double price) {
-        List<Record> foundByText = foundTextAtDescription(data, foundString);
-        List<Record> foundByPrice = removeByPrice(priceOption, price, foundByText);
-        List<Record> result = sortByPrice(foundByPrice);
-        return result;
+    public List<Record> selectByTextAndPrice(String foundString, int priceOption, double price) {
+        return priceFilter(selectByText(foundString), priceOption, price);
+    }
+
+    @Override
+    public List<Record> selectByText(String foundString) {
+        return foundTextAtDescription(data, foundString);
+    }
+
+    @Override
+    public List<Record> priceFilter(List<Record> records, int priceOption, Double price) {
+        List<Record> foundByPrice = removeByPrice(priceOption, price, records);
+        return sortByPrice(foundByPrice);
     }
 
     private List<Record> removeByPrice(int priceOption, double price, List<Record> records) {
