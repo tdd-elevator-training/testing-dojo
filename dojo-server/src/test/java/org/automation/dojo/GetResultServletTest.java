@@ -28,7 +28,8 @@ public class GetResultServletTest {
     private MockHttpServletRequest request;
     private GetResultServlet servlet;
 
-    @Mock ScenarioService service;
+    @Mock
+    ReportService service;
     @Captor ArgumentCaptor<Integer> scenarioCaptor;
     @Captor ArgumentCaptor<Boolean> successCaptor;
     @Captor ArgumentCaptor<String> addressCaptor;
@@ -39,7 +40,7 @@ public class GetResultServletTest {
         response = new MockHttpServletResponse();
         request = new MockHttpServletRequest();
         servlet = new GetResultServlet();
-        servlet.setScenarioService(service);
+        servlet.setReportService(service);
     }
 
 

@@ -38,4 +38,8 @@ public class Scenario {
     public String getDescription() {
         return description;
     }
+
+    public boolean hasBug() {
+        return bug == null || bug == Bug.NULL_BUG;
+    }
 }
