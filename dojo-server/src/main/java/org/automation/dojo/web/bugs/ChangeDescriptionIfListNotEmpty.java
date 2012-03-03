@@ -17,7 +17,11 @@ public class ChangeDescriptionIfListNotEmpty extends Bug<RequestWorker> {
     @Override
     public RequestWorker apply(RequestWorker result) {
         List<Record> list = result.getRecords();
-        if (!list.isEmpty()) {
+        if (list != null &&
+                !list.isEmpty() &&
+                !result.isNoResultsFound() &&
+                !StringUtils.isEmpty(result.getSearchText()))
+        {
             int index = new Random().nextInt(list.size());
             Record record = list.get(index);
             list.set(index, new Record(getRandomString(), record.getPrice()));

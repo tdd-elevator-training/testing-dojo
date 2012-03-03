@@ -9,13 +9,12 @@ import org.openqa.selenium.WebElement;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import static org.automation.dojo.web.model.ShopService.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 @ContextConfiguration(locations = {"classpath:/org/automation/dojo/applicationContext.xml"})
 @RunWith(SpringJUnit4ClassRunner.class)
-public class SearchPageLevel1 extends FunctionalTestCase {
+public class SearchPageLevel1_Bug2 extends FunctionalTestCase {
 
     private WebElement search;
     private WebElement searchButton;
@@ -28,7 +27,7 @@ public class SearchPageLevel1 extends FunctionalTestCase {
 
     @Override
     protected String getMinorRelease() {
-        return "[Scenario SearchByTextLevel1Scenario with bug NullBug]";
+        return "[Scenario SearchByTextLevel1Scenario with bug FoundNotExistsProduct]";
     }
 
     @Override
@@ -68,6 +67,15 @@ public class SearchPageLevel1 extends FunctionalTestCase {
     }
 
     @Test
+    public void shouldAllListWhenFindEmptyString() {
+        enterText("");
+        submitSearchForm();
+
+        assertPageContain("List:");
+        allElementsPresent();
+    }
+
+    @Test
     public void shouldFoundSomeAnotherRecordsWhenSearchItByPartOfDescription() {
         enterText("monitor");
         submitSearchForm();
@@ -81,7 +89,7 @@ public class SearchPageLevel1 extends FunctionalTestCase {
         assertPageNotContain("Mouse");
     }
 
-    @Test
+    @Test(expected = AssertionError.class)
     public void shouldAllListWhenNotFound() {
         enterText("keyboard");
         submitSearchForm();

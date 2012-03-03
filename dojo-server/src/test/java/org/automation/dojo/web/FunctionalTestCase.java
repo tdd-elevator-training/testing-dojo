@@ -26,6 +26,7 @@ public abstract class FunctionalTestCase {
 
     protected static WebDriver tester;
     private static String baseUrl;
+    private ReleaseEngine releaseEngine;
 
     @BeforeClass
     public static void init() throws Exception {
@@ -39,15 +40,22 @@ public abstract class FunctionalTestCase {
     public void loadPage(){
         instance = ApplicationContextLocator.getInstance();
         instance.setApplicationContext(context);
+        releaseEngine = (ReleaseEngine) context.getBean("releaseEngine");
 
         switchToMajorRelease(getMajorRelease());
+        switchToMinorRelease(getMinorRelease());
 
         tester.get(baseUrl + getPageUrl());
         resetAllElements();
     }
 
+    private void switchToMinorRelease(String minorRelease) {
+        do {
+            releaseEngine.nextMinorRelease();
+        } while (!minorRelease.equals(releaseEngine.getMinorInfo()));
+    }
+
     private void switchToMajorRelease(int majorRelease) {
-        ReleaseEngine releaseEngine = (ReleaseEngine) ApplicationContextLocator.getInstance().getBean("releaseEngine");
         releaseEngine.setMajorRelease(majorRelease);
     }
 
@@ -56,6 +64,8 @@ public abstract class FunctionalTestCase {
     protected abstract String getPageUrl();
 
     protected abstract void resetAllElements();
+
+    protected abstract String getMinorRelease();
 
     @AfterClass
     public static void end() throws Exception {

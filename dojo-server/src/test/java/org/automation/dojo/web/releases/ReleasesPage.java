@@ -32,6 +32,11 @@ public class ReleasesPage extends FunctionalTestCase {
     }
 
     @Override
+    protected String getMinorRelease() {
+        return "[Scenario SearchByTextLevel1Scenario with bug NullBug]";
+    }
+
+    @Override
     protected int getMajorRelease() {
         return 0;
     }

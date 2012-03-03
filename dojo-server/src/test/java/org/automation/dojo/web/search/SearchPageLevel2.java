@@ -32,6 +32,12 @@ public class SearchPageLevel2 extends FunctionalTestCase {
     }
 
     @Override
+    protected String getMinorRelease() {
+        return "[Scenario SearchByTextLevel2Scenario with bug NullBug, " +
+                "Scenario SearchByPriceLevel2Scenario with bug NullBug]";
+    }
+
+    @Override
     protected String getPageUrl() {
         return "/search";
     }
