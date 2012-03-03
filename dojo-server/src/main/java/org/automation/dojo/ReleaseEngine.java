@@ -1,6 +1,7 @@
 package org.automation.dojo;
 
 import org.apache.commons.io.IOUtils;
+import org.automation.dojo.web.scenario.Scenario;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 

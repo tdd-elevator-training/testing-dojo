@@ -1,6 +1,5 @@
 package org.automation.dojo.web.bugs;
 
-import org.automation.dojo.Bug;
 import org.automation.dojo.web.model.Record;
 import org.automation.dojo.web.servlet.RequestWorker;
 

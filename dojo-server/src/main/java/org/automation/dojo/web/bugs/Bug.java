@@ -1,8 +1,4 @@
-package org.automation.dojo;
-
-import org.automation.dojo.web.model.Record;
-
-import java.util.List;
+package org.automation.dojo.web.bugs;
 
 /**
  * @author serhiy.zelenin

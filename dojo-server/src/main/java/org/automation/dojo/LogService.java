@@ -1,5 +1,7 @@
 package org.automation.dojo;
 
+import org.automation.dojo.web.scenario.Scenario;
+
 import java.util.List;
 
 /**

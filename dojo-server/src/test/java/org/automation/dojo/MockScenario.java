@@ -1,7 +1,7 @@
 package org.automation.dojo;
 
-import org.automation.dojo.BugsQueue;
-import org.automation.dojo.Scenario;
+import org.automation.dojo.web.bugs.Bug;
+import org.automation.dojo.web.scenario.Scenario;
 
 import java.util.List;
 

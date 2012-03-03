@@ -1,8 +1,7 @@
 package org.automation.dojo.web.scenario;
 
-import org.automation.dojo.Bug;
+import org.automation.dojo.web.bugs.Bug;
 import org.automation.dojo.BugsQueue;
-import org.automation.dojo.Scenario;
 import org.automation.dojo.web.bugs.ChangeDescriptionIfListNotEmptyBug;
 import org.automation.dojo.web.bugs.FoundNotExistsProductBug;
 import org.automation.dojo.web.bugs.NoResultWhenExpectedBug;

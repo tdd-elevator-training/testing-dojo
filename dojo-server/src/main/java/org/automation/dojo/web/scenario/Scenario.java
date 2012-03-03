@@ -1,6 +1,7 @@
-package org.automation.dojo;
+package org.automation.dojo.web.scenario;
 
-import org.automation.dojo.web.servlet.RequestWorker;
+import org.automation.dojo.BugsQueue;
+import org.automation.dojo.web.bugs.Bug;
 
 import java.util.List;
 

@@ -1,5 +1,7 @@
 package org.automation.dojo;
 
+import org.automation.dojo.web.bugs.Bug;
+import org.automation.dojo.web.scenario.Scenario;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;

@@ -1,6 +1,7 @@
 package org.automation.dojo;
 
-import org.junit.Assert;
+import org.automation.dojo.web.bugs.Bug;
+import org.automation.dojo.web.scenario.Scenario;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;

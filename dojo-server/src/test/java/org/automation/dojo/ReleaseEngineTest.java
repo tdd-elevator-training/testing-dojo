@@ -1,5 +1,7 @@
 package org.automation.dojo;
 
+import org.automation.dojo.web.bugs.Bug;
+import org.automation.dojo.web.scenario.Scenario;
 import org.fest.assertions.ListAssert;
 import org.junit.Before;
 import org.junit.Test;
