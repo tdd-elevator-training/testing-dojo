@@ -12,7 +12,7 @@ import java.util.Random;
 /**
  * Добавлять существующий продукт НЕ с тем именем, по которому ищем И ТОЛЬКО если результат поиска не пуст
  */
-public class ChangeDescriptionIfListNotEmpty extends Bug<RequestWorker> {
+public class ChangeDescriptionIfListNotEmptyBug extends Bug<RequestWorker> {
 
     @Override
     public RequestWorker apply(RequestWorker result) {

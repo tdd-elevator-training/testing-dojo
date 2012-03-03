@@ -3,9 +3,9 @@ package org.automation.dojo.web.scenario;
 import org.automation.dojo.Bug;
 import org.automation.dojo.BugsQueue;
 import org.automation.dojo.Scenario;
-import org.automation.dojo.web.bugs.ChangeDescriptionIfListNotEmpty;
-import org.automation.dojo.web.bugs.FoundNotExistsProduct;
-import org.automation.dojo.web.bugs.NoResultWhenExpected;
+import org.automation.dojo.web.bugs.ChangeDescriptionIfListNotEmptyBug;
+import org.automation.dojo.web.bugs.FoundNotExistsProductBug;
+import org.automation.dojo.web.bugs.NoResultWhenExpectedBug;
 import org.automation.dojo.web.model.Record;
 import org.automation.dojo.web.model.ShopService;
 import org.automation.dojo.web.model.ShopServiceFactory;
@@ -46,9 +46,9 @@ public class SearchByTextLevel1Scenario extends Scenario<RequestWorker> {
     }
 
     public List<? extends Bug> getPossibleBugs() {
-        return Arrays.asList(new NoResultWhenExpected(),
-                new ChangeDescriptionIfListNotEmpty(),
-                new FoundNotExistsProduct());
+        return Arrays.asList(new NoResultWhenExpectedBug(),
+                new ChangeDescriptionIfListNotEmptyBug(),
+                new FoundNotExistsProductBug());
     }
 
 }

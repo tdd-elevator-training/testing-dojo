@@ -13,7 +13,7 @@ import java.util.LinkedList;
 /**
  * Добавлять существующий продукт ТОЛЬКО если результат поиска пуст
  */
-public class FoundNotExistsProduct extends Bug<RequestWorker> {
+public class FoundNotExistsProductBug extends Bug<RequestWorker> {
 
     @Override
     public RequestWorker apply(RequestWorker result) {

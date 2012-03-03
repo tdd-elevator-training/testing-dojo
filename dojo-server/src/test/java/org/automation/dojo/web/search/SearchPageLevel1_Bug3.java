@@ -27,7 +27,7 @@ public class SearchPageLevel1_Bug3 extends FunctionalTestCase {
 
     @Override
     protected String getMinorRelease() {
-        return "[Scenario SearchByTextLevel1Scenario with bug ChangeDescriptionIfListNotEmpty]";
+        return "[Scenario SearchByTextLevel1Scenario with bug ChangeDescriptionIfListNotEmptyBug]";
     }
 
     @Override

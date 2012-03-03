@@ -11,7 +11,7 @@ import java.util.LinkedList;
  * Ничего не отобразилось, когда выводится весь список при пустом запросе
  */
 
-public class NoResultWhenExpected extends Bug<RequestWorker> {
+public class NoResultWhenExpectedBug extends Bug<RequestWorker> {
 
     @Override
     public RequestWorker apply(RequestWorker result) {

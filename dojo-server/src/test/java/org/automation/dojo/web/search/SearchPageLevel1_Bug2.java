@@ -27,7 +27,7 @@ public class SearchPageLevel1_Bug2 extends FunctionalTestCase {
 
     @Override
     protected String getMinorRelease() {
-        return "[Scenario SearchByTextLevel1Scenario with bug FoundNotExistsProduct]";
+        return "[Scenario SearchByTextLevel1Scenario with bug FoundNotExistsProductBug]";
     }
 
     @Override

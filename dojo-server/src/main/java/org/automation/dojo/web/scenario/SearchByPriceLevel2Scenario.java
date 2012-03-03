@@ -3,7 +3,8 @@ package org.automation.dojo.web.scenario;
 import org.automation.dojo.Bug;
 import org.automation.dojo.BugsQueue;
 import org.automation.dojo.Scenario;
-import org.automation.dojo.web.bugs.NoResultWhenExpected;
+import org.automation.dojo.web.bugs.BrokenSortingBug;
+import org.automation.dojo.web.bugs.HideSomePriceBug;
 import org.automation.dojo.web.model.Record;
 import org.automation.dojo.web.model.ShopService;
 import org.automation.dojo.web.model.ShopServiceFactory;
@@ -43,7 +44,7 @@ public class SearchByPriceLevel2Scenario extends Scenario<RequestWorker> {
     }
 
     public List<? extends Bug> getPossibleBugs() {
-        return Arrays.asList(new NoResultWhenExpected());
+        return Arrays.asList(new BrokenSortingBug(), new HideSomePriceBug());
     }
 
 }
