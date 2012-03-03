@@ -105,7 +105,13 @@ public class ReleaseEngine {
         this.bugsQueue = bugsQueue;
     }
 
-    public Scenario getScenario(int index) {
-        return getCurrentScenarios().get(index);
+    public Scenario getScenario(int scenarioId) {
+        List<Scenario> scenarios = getCurrentScenarios();
+        for (Scenario scenario : scenarios) {
+            if (scenario.getId() == scenarioId) {
+                return scenario;
+            }
+        }
+        throw new IllegalArgumentException("No current scenario found with id : " + scenarioId);
     }
 }

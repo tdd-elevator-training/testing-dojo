@@ -18,7 +18,7 @@ public class ReleaseEngineSpringTest {
 
     @Test
     public void testScenariosCreated() {
-        assertEquals(1, releaseEngine.getScenario(0).getId());
+        assertEquals(0, releaseEngine.getScenario(0).getId());
     }
 
 }

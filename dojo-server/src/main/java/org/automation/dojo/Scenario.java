@@ -49,4 +49,8 @@ public abstract class Scenario {
     }
 
     protected abstract String process();
+    
+    public boolean hasBug() {
+        return bug == null || bug == Bug.NULL_BUG;
+    }
 }

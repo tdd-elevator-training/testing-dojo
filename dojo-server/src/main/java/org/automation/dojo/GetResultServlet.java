@@ -12,7 +12,7 @@ import java.util.regex.Pattern;
 
 @WebServlet(name="resultServlet", urlPatterns={"/result"}, asyncSupported = false)
 public class GetResultServlet extends HttpServlet {
-    private ScenarioService scenarioService = new DojoScenarioService();
+    private ReportService reportService = new DojoReportService();
     private Pattern pattern = Pattern.compile("scenario(\\d*)", Pattern.CASE_INSENSITIVE);
 
     @Override
@@ -24,7 +24,7 @@ public class GetResultServlet extends HttpServlet {
             String parameterName = parameterNames.nextElement();
             Matcher matcher = pattern.matcher(parameterName);
             if (matcher.find()) {
-                boolean result = scenarioService.testResult(name, remoteAddr, Integer.parseInt(matcher.group(1)),
+                boolean result = reportService.testResult(name, remoteAddr, Integer.parseInt(matcher.group(1)),
                         parseResult(request.getParameter(parameterName)));
                 response.getWriter().println(parameterName + "=" + (result ? "passed" : "failed"));
             }
@@ -41,8 +41,8 @@ public class GetResultServlet extends HttpServlet {
         return value.equalsIgnoreCase("passed") || value.equalsIgnoreCase("true");
     }
 
-    public void setScenarioService(ScenarioService scenarioService) {
-        this.scenarioService = scenarioService;
+    public void setReportService(ReportService reportService) {
+        this.reportService = reportService;
     }
 
 }
