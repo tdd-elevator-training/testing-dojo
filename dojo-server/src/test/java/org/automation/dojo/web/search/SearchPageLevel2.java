@@ -18,7 +18,7 @@ import static org.junit.Assert.assertNotNull;
 
 @ContextConfiguration(locations = {"classpath:/org/automation/dojo/applicationContext.xml"})
 @RunWith(SpringJUnit4ClassRunner.class)
-public class SearchPage extends FunctionalTestCase {
+public class SearchPageLevel2 extends FunctionalTestCase {
 
     private WebElement search;
     private WebElement searchButton;
