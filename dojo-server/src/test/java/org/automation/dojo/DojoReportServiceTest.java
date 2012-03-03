@@ -1,29 +1,27 @@
 package org.automation.dojo;
 
-import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.mockito.stubbing.OngoingStubbing;
+
+import java.util.Arrays;
+import java.util.List;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-import static org.mockito.Mockito.atLeastOnce;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 /**
  * @author serhiy.zelenin
  */
 @RunWith(MockitoJUnitRunner.class)
 public class DojoReportServiceTest {
+    private static final String CLIENT_ADDRESS = "10.10.1.1";
     @Captor ArgumentCaptor<PlayerRecord> recordCaptor;
     @Mock LogService logService;
     @Mock ReleaseEngine releaseEngine;
@@ -38,21 +36,24 @@ public class DojoReportServiceTest {
 
     @Test
     public void shouldReturnFailureWhenReportFailure() {
-        setupScenario(1, true);
+        Scenario scenario = setupScenario(1, true);
+        setupGameLogs(scenario, gameLog(scenario));
 
         assertFalse(reportScenario(1, false));
     }
 
     @Test
     public void shouldReturnPassedWhenReportPassed() {
-        setupScenario(1, false);
+        Scenario scenario = setupScenario(1, false);
+        setupGameLogs(scenario, gameLog(scenario));
 
         assertTrue(reportScenario(1, true));
     }
 
     @Test
     public void shouldAddScoreWhenBugFound() {
-        setupScenario(1, 88);
+        Scenario scenario = setupScenario(1, 88);
+        setupGameLogs(scenario, gameLog(scenario));
 
         reportScenario(1, false);
 
@@ -64,15 +65,44 @@ public class DojoReportServiceTest {
     }
 
     @Test
-    @Ignore
     public void shouldAddHalfScoreWhenFoundAgainAfterPassed(){
-        setupScenario(1, 100);
+        Scenario scenario = setupScenario(1, 100);
+        setupGameLogs(scenario,
+                gameLog(scenario, record(scenario, false, 100)),
+                gameLog(scenario, record(scenario, true, 0)),
+                gameLog(scenario)); //new minor release record, no reports yet
 
         reportScenario(1, false);
 
-        PlayerRecord record = captureLogRecord();
+        PlayerRecord capturedRecord = captureLogRecord();
         
-        assertEquals(100 / 2, record.getScore());
+        assertEquals(100 / 2, capturedRecord.getScore());
+    }
+
+    @Test
+    public void shouldNotAddScoreWhenReportedBugAgainForSameMinorRelease(){
+        Scenario scenario = setupScenario(1, 100);
+        setupGameLogs(scenario,
+                gameLog(scenario, record(scenario, false, 100)));
+
+        reportScenario(1, false);
+
+        PlayerRecord capturedRecord = captureLogRecord();
+
+        assertEquals(0, capturedRecord.getScore());
+    }
+
+    private void setupGameLogs(Scenario scenario, GameLog... gameLogs) {
+        when(logService.getGameLogs(CLIENT_ADDRESS, scenario))
+                .thenReturn(Arrays.asList(gameLogs));
+    }
+
+    private PlayerRecord record(Scenario scenario, boolean passed, int score) {
+        return new PlayerRecord("", CLIENT_ADDRESS, scenario, passed, score);
+    }
+
+    private GameLog gameLog(Scenario scenario,PlayerRecord ... records) {
+        return new GameLog(scenario, records);
     }
 
     private PlayerRecord captureLogRecord() {
@@ -80,16 +110,18 @@ public class DojoReportServiceTest {
         return recordCaptor.getValue();
     }
 
-    private void setupScenario(int scenarioId, int bugWeight) {
-        when(releaseEngine.getScenario(scenarioId)).thenReturn(createScneario(1, bugWeight));
+    private Scenario setupScenario(int scenarioId, int bugWeight) {
+        Scenario scenario = createScneario(1, bugWeight);
+        when(releaseEngine.getScenario(scenarioId)).thenReturn(scenario);
+        return scenario;
     }
 
-    private void setupScenario(int scenarioId, boolean hasBug) {
-        setupScenario(scenarioId, hasBug ? 100 : 0);
+    private Scenario setupScenario(int scenarioId, boolean hasBug) {
+        return setupScenario(scenarioId, hasBug ? 100 : 0);
     }
 
     private boolean reportScenario(int scenarioId, boolean testPassed) {
-        return reportService.testResult("vasya", "10.10.1.1", scenarioId, testPassed);
+        return reportService.testResult("vasya", CLIENT_ADDRESS, scenarioId, testPassed);
     }
 
 
