@@ -1,15 +1,20 @@
-package org.automation.dojo.web;
+package org.automation.dojo.web.releases;
 
 
+import org.automation.dojo.web.FunctionalTestCase;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import static org.automation.dojo.web.model.ShopService.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
+@ContextConfiguration(locations = {"classpath:/org/automation/dojo/applicationTestContext.xml"})
+@RunWith(SpringJUnit4ClassRunner.class)
 public class ReleasesPage extends FunctionalTestCase {
 
     private WebElement nextMajor;
@@ -34,13 +39,13 @@ public class ReleasesPage extends FunctionalTestCase {
 
     @Test
     public void shouldSwitchMajorWhenClick() {
-         nextMajor.click();
-
+         goTo(nextMajor.getAttribute("href"));
+         assertEquals("[nextMajorRelease]", MockReleaseEngine.pullHistory());
     }
 
     @Test
     public void shouldSwitchMinorWhenClick() {
-         nextMinor.click();
-
+         goTo(nextMinor.getAttribute("href"));
+         assertEquals("[nextMinorRelease]", MockReleaseEngine.pullHistory());
     }
 }

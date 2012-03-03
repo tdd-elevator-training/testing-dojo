@@ -17,35 +17,41 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-public class FunctionalTestCase {
+public abstract class FunctionalTestCase {
 
     @Autowired
-    private static ApplicationContext context;
-
-    private static ApplicationContextLocator instance;
+    private ApplicationContext context;
+    private ApplicationContextLocator instance;
 
     protected static WebDriver tester;
-    private static int port;
+    private static String baseUrl;
 
     @BeforeClass
     public static void init() throws Exception {
-        instance = ApplicationContextLocator.getInstance();
-        instance.setApplicationContext(new FileSystemXmlApplicationContext("classpath:/org/automation/dojo/applicationContext.xml"));
-
-        port = ServerRunner.getInstance().start();
+        int port = ServerRunner.getInstance().start();
+        baseUrl = "http://localhost:" + port + "/Shop";
 
         tester = new HtmlUnitDriver();
     }
 
     @Before
     public void loadPage(){
-        tester.get("http://localhost:" + port + "/Shop");
+        instance = ApplicationContextLocator.getInstance();
+        instance.setApplicationContext(context);
+
+        tester.get(baseUrl + getPageUrl());
     }
+
+    public abstract String getPageUrl();
 
     @AfterClass
     public static void end() throws Exception {
         ApplicationContextLocator.clearInstance();
         ServerRunner.getInstance().stop();
+    }
+
+    public void goTo(String url) {
+        tester.get(url);
     }
 
     public FunctionalTestCase() {

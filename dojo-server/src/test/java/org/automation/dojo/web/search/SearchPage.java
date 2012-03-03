@@ -1,15 +1,21 @@
-package org.automation.dojo.web;
+package org.automation.dojo.web.search;
 
 
+import org.automation.dojo.web.FunctionalTestCase;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import static org.automation.dojo.web.model.ShopService.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
+@ContextConfiguration(locations = {"classpath:/org/automation/dojo/applicationContext.xml"})
+@RunWith(SpringJUnit4ClassRunner.class)
 public class SearchPage extends FunctionalTestCase {
 
     private WebElement search;
@@ -17,6 +23,11 @@ public class SearchPage extends FunctionalTestCase {
     private WebElement searchText;
     private WebElement price;
     private WebElement priceOption;
+
+    @Override
+    public String getPageUrl() {
+        return "/search";
+    }
 
     @Before
     public void resetAllElements() {
@@ -239,4 +250,5 @@ public class SearchPage extends FunctionalTestCase {
         searchButton.submit();
         resetAllElements();
     }
+
 }
