@@ -4,17 +4,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
-public class DojoReportService implements ReportService {
+public class DojoScoreService implements ScoreService {
     @Autowired
     private LogService logService;
 
     @Autowired
     private ReleaseEngine releaseEngine;
 
-    public DojoReportService() {
+    public DojoScoreService() {
     }
 
-    public DojoReportService(LogService logService, ReleaseEngine releaseEngine) {
+    public DojoScoreService(LogService logService, ReleaseEngine releaseEngine) {
         this.logService = logService;
         this.releaseEngine = releaseEngine;
     }
@@ -49,7 +49,7 @@ public class DojoReportService implements ReportService {
         return gameLogs.get(gameLogs.size() - 1);
     }
 
-    public void nextMinorRelease(Release previousRelease) {
+    public void nextRelease(Release previousRelease) {
         List<String> clientAddresses = logService.getUniqueClientAddresses();
         for (String clientAddress : clientAddresses) {
             List<Scenario> scenarios = previousRelease.getScenarios();

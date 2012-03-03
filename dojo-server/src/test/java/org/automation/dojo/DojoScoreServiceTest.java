@@ -1,6 +1,5 @@
 package org.automation.dojo;
 
-import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -21,18 +20,18 @@ import static org.mockito.Mockito.*;
  * @author serhiy.zelenin
  */
 @RunWith(MockitoJUnitRunner.class)
-public class DojoReportServiceTest {
+public class DojoScoreServiceTest {
     private static final String CLIENT_ADDRESS = "10.10.1.1";
     @Captor ArgumentCaptor<PlayerRecord> recordCaptor;
     @Mock LogService logService;
     @Mock ReleaseEngine releaseEngine;
 
-    private DojoReportService reportService;
+    private DojoScoreService scoreService;
 
 
     @Before
     public void setUp() throws Exception {
-        reportService = new DojoReportService(logService, releaseEngine);
+        scoreService = new DojoScoreService(logService, releaseEngine);
     }
 
     @Test
@@ -92,13 +91,13 @@ public class DojoReportServiceTest {
     }
 
     @Test
-    public void shouldDecreaseScoreWhenBugNotFound() {
+    public void shouldDecreaseScoreWhenBugNotReported() {
         Scenario scenario = setupScenario(1, 100);
         setupGameLogs(scenario, gameLog(scenario));
 
         setupClientAddressesDb();
 
-        reportService.nextMinorRelease(new Release(scenario));
+        scoreService.nextRelease(new Release(scenario));
 
         PlayerRecord record = captureLogRecord();
         assertEquals(-100, record.getScore());
@@ -110,12 +109,12 @@ public class DojoReportServiceTest {
     }
 
     @Test
-    public void shouldDecreaseScoreWhenBugNotFound2() {
+    public void shouldDecreaseScoreWhenBugNotFound() {
         Scenario scenario = setupScenario(1, 50);
         setupGameLogs(scenario, gameLog(scenario, record(scenario, true, 0)));
         setupClientAddressesDb();
 
-        reportService.nextMinorRelease(new Release(scenario));
+        scoreService.nextRelease(new Release(scenario));
 
         assertEquals(-50, captureLogRecord().getScore());
     }
@@ -126,7 +125,7 @@ public class DojoReportServiceTest {
         setupGameLogs(scenario, gameLog(scenario));
         setupClientAddressesDb();
 
-        reportService.nextMinorRelease(new Release(scenario));
+        scoreService.nextRelease(new Release(scenario));
 
         verify(logService, never()).playerLog(Matchers.<PlayerRecord>anyObject());
     }
@@ -137,7 +136,7 @@ public class DojoReportServiceTest {
         setupGameLogs(scenario, gameLog(scenario, record(scenario, false, 100)));
         setupClientAddressesDb();
 
-        reportService.nextMinorRelease(new Release(scenario));
+        scoreService.nextRelease(new Release(scenario));
 
         verify(logService, never()).playerLog(Matchers.<PlayerRecord>anyObject());
     }
@@ -171,7 +170,7 @@ public class DojoReportServiceTest {
     }
 
     private boolean reportScenario(int scenarioId, boolean testPassed) {
-        return reportService.testResult("vasya", CLIENT_ADDRESS, scenarioId, testPassed);
+        return scoreService.testResult("vasya", CLIENT_ADDRESS, scenarioId, testPassed);
     }
 
 

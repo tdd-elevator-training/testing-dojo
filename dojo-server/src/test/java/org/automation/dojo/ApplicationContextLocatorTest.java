@@ -13,7 +13,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import static org.junit.Assert.assertNotNull;
 
-@ContextConfiguration(locations = {"classpath:/org/automation/dojo/applicationTestContext.xml"})
+@ContextConfiguration(locations = {"classpath:/org/automation/dojo/applicationContext.xml"})
 @RunWith(SpringJUnit4ClassRunner.class)
 public class ApplicationContextLocatorTest {
 

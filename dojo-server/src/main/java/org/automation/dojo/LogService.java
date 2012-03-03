@@ -11,4 +11,6 @@ public interface LogService {
     List<GameLog> getGameLogs(String clientAddress, Scenario scenario);
 
     List<String> getUniqueClientAddresses();
+
+    void createGameLog(Release previousRelease);
 }
