@@ -147,7 +147,7 @@ public class DojoScoreServiceTest {
     }
 
     private PlayerRecord record(Scenario scenario, boolean passed, int score) {
-        return new PlayerRecord("", CLIENT_ADDRESS, scenario, passed, score);
+        return new PlayerRecord("", CLIENT_ADDRESS, scenario, passed, score, "");
     }
 
     private GameLog gameLog(Scenario scenario,PlayerRecord ... records) {

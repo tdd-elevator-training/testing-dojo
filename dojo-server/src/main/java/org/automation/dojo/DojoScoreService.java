@@ -24,9 +24,11 @@ public class DojoScoreService implements ScoreService {
         List<GameLog> gameLogs = logService.getGameLogs(clientAddress, scenario);
         //last log will be a log for current release
         GameLog currentGame = lastGameLog(gameLogs);
+        Bug currentBug = scenario.getBug();
         if (!testPassed && currentGame.bugReported()) {
             logService.playerLog(new PlayerRecord(clientName, clientAddress,
-                    scenario, testPassed, 0));
+                    scenario, testPassed, 0, "Bug already reported for this Minor Release. " +
+                    "Bug #"+ currentBug.getId()));
             return scenario.bugsFree();
         }
         
@@ -38,10 +40,11 @@ public class DojoScoreService implements ScoreService {
             }
         }
         
-        int weight = scenario.getBug().getWeight();
+        int weight = currentBug.getWeight();
         int score = weight/countBugsReportedForScenario;
         logService.playerLog(new PlayerRecord(clientName, clientAddress,
-                scenario, testPassed, score));
+                scenario, testPassed, score, "Scores for bug #" + currentBug.getId() +
+                " scenario #"+scenario.getId()));
         return scenario.bugsFree();
     }
 
@@ -62,8 +65,10 @@ public class DojoScoreService implements ScoreService {
                 if (gameLog.bugReported()) {
                     continue;
                 }
-                logService.playerLog(new PlayerRecord("<bug should be found>", clientAddress, scenario,
-                        true, -scenario.getBug().getWeight()));
+                logService.playerLog(new PlayerRecord("<system>", clientAddress, scenario,
+                        true, -scenario.getBug().getWeight(), 
+                        "After Minor Release check. Missed bug #"+scenario.getBug().getId() + 
+                                " for scenario #" + scenario.getId()));
             }
         }
     }
