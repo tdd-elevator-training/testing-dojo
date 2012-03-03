@@ -26,4 +26,14 @@ public class GameLog {
     public boolean hasNoRecords() {
         return playerRecords.isEmpty();
     }
+
+    public boolean bugReported() {
+        List<PlayerRecord> playerRecords = getPlayerRecords();
+        for (PlayerRecord record : playerRecords) {
+            if (!record.isPassed()) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

@@ -24,27 +24,22 @@ public class DojoReportService implements ReportService {
         List<GameLog> gameLogs = logService.getGameLogs(clientAddress, scenario);
         //last log will be a log for current release
         GameLog currentGame = lastGameLog(gameLogs);
-        if (!testPassed && alreadyReportedForThisGame(currentGame)) {
+        if (!testPassed && currentGame.bugReported()) {
             logService.playerLog(new PlayerRecord(clientName, clientAddress,
                     scenario, testPassed, 0));
             return scenario.bugsFree();
         }
         
-        PlayerRecord lastPlayerRecord = null;
-        int countBugsReportedForScenario = 0;
+        int countBugsReportedForScenario = 1;
         
         for (GameLog gameLog : gameLogs) {
-            List<PlayerRecord> playerRecords = gameLog.getPlayerRecords();
-            for (PlayerRecord playerRecord : playerRecords) {
-                if (!playerRecord.isPassed()) {
-                    lastPlayerRecord = playerRecord;
-                    countBugsReportedForScenario ++;
-                }
+            if (gameLog.bugReported()) {
+                countBugsReportedForScenario ++;
             }
         }
         
         int weight = scenario.getBug().getWeight();
-        int score = lastPlayerRecord == null ? weight : weight / (countBugsReportedForScenario + 1);
+        int score = weight/countBugsReportedForScenario;
         logService.playerLog(new PlayerRecord(clientName, clientAddress,
                 scenario, testPassed, score));
         return scenario.bugsFree();
@@ -52,16 +47,6 @@ public class DojoReportService implements ReportService {
 
     private GameLog lastGameLog(List<GameLog> gameLogs) {
         return gameLogs.get(gameLogs.size() - 1);
-    }
-
-    private boolean alreadyReportedForThisGame(GameLog game) {
-        List<PlayerRecord> playerRecords = game.getPlayerRecords();
-        for (PlayerRecord record : playerRecords) {
-            if (!record.isPassed()) {
-                return true;
-            }
-        }
-        return false;
     }
 
     public void nextMinorRelease(Release previousRelease) {
@@ -74,7 +59,7 @@ public class DojoReportService implements ReportService {
                 }
                 List<GameLog> gameLogs = logService.getGameLogs(clientAddress, scenario);
                 GameLog gameLog = lastGameLog(gameLogs);
-                if (alreadyReportedForThisGame(gameLog)) {
+                if (gameLog.bugReported()) {
                     continue;
                 }
                 logService.playerLog(new PlayerRecord("<bug should be found>", clientAddress, scenario,
