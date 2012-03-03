@@ -1,9 +1,13 @@
 package org.automation.dojo;
 
+import org.automation.dojo.web.model.Record;
+
+import java.util.List;
+
 /**
  * @author serhiy.zelenin
  */
-public class Bug {
+public class Bug<T> {
     public static Bug NULL_BUG = new NullBug();
 
     private int id;
@@ -26,5 +30,9 @@ public class Bug {
 
     public int getWeight() {
         return weight;
+    }
+
+    public T apply(T result) {
+        return result;
     }
 }

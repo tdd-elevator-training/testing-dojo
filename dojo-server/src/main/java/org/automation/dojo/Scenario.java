@@ -2,16 +2,16 @@ package org.automation.dojo;
 
 import org.automation.dojo.web.servlet.RequestWorker;
 
+import java.util.List;
+
 /**
  * @author serhiy.zelenin
  */
-public abstract class Scenario {
+public abstract class Scenario<T> {
     private int id;
     private BugsQueue bugsQueue;
-    private Bug bug;
+    protected Bug bug = Bug.NULL_BUG;
     private String description;
-
-    protected RequestWorker request;
 
     public Scenario(int id, BugsQueue bugsQueue) {
         this(id, "", bugsQueue);
@@ -43,13 +43,10 @@ public abstract class Scenario {
         return description;
     }
 
-    public String process(RequestWorker request) {
-        this.request = request;
-        return process();
-    }
+    public abstract String process(T request);
 
-    protected abstract String process();
-    
+    public abstract List<? extends Bug> getPossibleBugs();
+
     public boolean hasBug() {
         return bug == null || bug == Bug.NULL_BUG;
     }

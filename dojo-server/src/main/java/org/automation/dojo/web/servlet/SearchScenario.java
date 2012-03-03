@@ -1,21 +1,23 @@
 package org.automation.dojo.web.servlet;
 
+import org.automation.dojo.Bug;
 import org.automation.dojo.BugsQueue;
 import org.automation.dojo.Scenario;
 import org.automation.dojo.web.model.Record;
 import org.automation.dojo.web.model.ShopService;
 import org.automation.dojo.web.model.ShopServiceFactory;
 
+import java.util.Arrays;
 import java.util.List;
 
-public class SearchScenario extends Scenario {
+public class SearchScenario extends Scenario<RequestWorker> {
 
     public SearchScenario(int id, String description, BugsQueue bugsQueue) {
         super(id, description, bugsQueue);
     }
 
     @Override
-    protected String process() {
+    public String process(RequestWorker request) {
         ShopService service = ShopServiceFactory.gtInstance();
 
         request.saveFormState();
@@ -32,7 +34,12 @@ public class SearchScenario extends Scenario {
             request.setRecords(result);
         }
 
+        bug.apply(request);
         return "search.jsp";
+    }
+
+    public List<? extends Bug> getPossibleBugs() {
+        return Arrays.asList(new NoResultWhenExpected());
     }
 
 }

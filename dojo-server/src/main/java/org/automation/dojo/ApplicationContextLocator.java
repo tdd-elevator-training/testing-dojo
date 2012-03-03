@@ -20,6 +20,7 @@ public class ApplicationContextLocator implements ApplicationContextAware {
     }
 
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+        instance = this;
         this.context = applicationContext;
     }
 
