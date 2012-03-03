@@ -1,7 +1,8 @@
 package org.automation.dojo;
 
 import org.apache.commons.io.IOUtils;
-import org.automation.dojo.web.scenario.Scenario;
+import org.automation.dojo.web.scenario.BasicScenario;
+import org.automation.dojo.web.scenario.Release;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 
@@ -43,7 +44,7 @@ public class ReleaseEngine {
         Collections.addAll(releases, releasesArray);
     }
 
-    public List<Scenario> getCurrentScenarios() {
+    public List<BasicScenario> getCurrentScenarios() {
         return getCurrentRelease().getScenarios();
     }
 
@@ -52,17 +53,16 @@ public class ReleaseEngine {
     }
 
     public void nextMajorRelease() {
+        if (currentReleaseIndex == releases.size() - 1) {
+            return;
+        }
         notifyServices();
-        currentReleaseIndex++;
+        setMajorRelease(currentReleaseIndex + 1);
     }
 
     public void nextMinorRelease() {
         notifyServices();
-
-        List<Scenario> currentScenarios = getCurrentScenarios();
-        for (Scenario currentScenario : currentScenarios) {
-            currentScenario.takeNextBug();
-        }
+        getCurrentRelease().takeNextBug();
     }
 
     private void notifyServices() {
@@ -82,7 +82,7 @@ public class ReleaseEngine {
                 int scenarioId = Integer.parseInt(scenarioParts[0]);
                 int releaseNumber = Integer.parseInt(scenarioParts[2]);
                 String scenarioDescription = scenarioParts[1];
-                Class<Scenario> scenarioClass = getScenarioClassByName(scenarioParts[3]);
+                Class<BasicScenario> scenarioClass = getScenarioClassByName(scenarioParts[3]);
 
                 if (currentReleaseNumber != releaseNumber) {
                     releases.add(currentRelease);
@@ -100,21 +100,21 @@ public class ReleaseEngine {
         notifyServices();
     }
 
-    private Class<Scenario> getScenarioClassByName(String className) {
+    private Class<BasicScenario> getScenarioClassByName(String className) {
         Class<?> aClass = null;
         try {
             aClass = this.getClass().getClassLoader().loadClass(className);
         } catch (ClassNotFoundException e) {
             throw new RuntimeException(String.format("Class %s not found in the classpath", className));
         }
-        if (aClass != null && Scenario.class.isAssignableFrom(aClass)) {
-            return (Class<Scenario>)aClass;
+        if (aClass != null && BasicScenario.class.isAssignableFrom(aClass)) {
+            return (Class<BasicScenario>)aClass;
         } else {
             throw new IllegalArgumentException("This is not scenario class: " + aClass.getName());
         }
     }
 
-    private Scenario scenario(Class<Scenario> scenarioClass, int id, String description) {
+    private BasicScenario scenario(Class<BasicScenario> scenarioClass, int id, String description) {
         return constructor().withParameterTypes(int.class, String.class, BugsQueue.class)
                              .in(scenarioClass)
                              .newInstance(id, description, bugsQueue);
@@ -124,13 +124,9 @@ public class ReleaseEngine {
         this.scenarioResource = scenarioResource;
     }
 
-    public void setBugsQueue(BugsQueue bugsQueue) {
-        this.bugsQueue = bugsQueue;
-    }
-
-    public Scenario getScenario(int scenarioId) {
-        List<Scenario> scenarios = getCurrentScenarios();
-        for (Scenario scenario : scenarios) {
+    public BasicScenario getScenario(int scenarioId) {
+        List<BasicScenario> scenarios = getCurrentScenarios();
+        for (BasicScenario scenario : scenarios) {
             if (scenario.getId() == scenarioId) {
                 return scenario;
             }
@@ -146,7 +142,9 @@ public class ReleaseEngine {
         return String.valueOf(currentReleaseIndex);
     }
 
+    //WARN!! public for testing only!!!
     public void setMajorRelease(int index) {
         currentReleaseIndex = index;
+        getCurrentRelease().setNoBug();
     }
 }

@@ -1,6 +1,7 @@
 package org.automation.dojo;
 
-import org.automation.dojo.web.scenario.Scenario;
+import org.automation.dojo.web.scenario.BasicScenario;
+import org.automation.dojo.web.scenario.Release;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,7 +13,7 @@ public class GameLogService implements LogService {
     public void playerLog(PlayerRecord record) {
     }
 
-    public List<GameLog> getGameLogs(String clientAddress, Scenario scenario) {
+    public List<GameLog> getGameLogs(String clientAddress, BasicScenario scenario) {
         return new ArrayList<GameLog>();
     }
 

@@ -1,6 +1,6 @@
 package org.automation.dojo;
 
-import org.automation.dojo.web.scenario.Scenario;
+import org.automation.dojo.web.scenario.BasicScenario;
 
 import java.util.Arrays;
 import java.util.List;
@@ -9,15 +9,15 @@ import java.util.List;
  * @author serhiy.zelenin
  */
 public class GameLog {
-    private Scenario scenario;
+    private BasicScenario scenario;
     private List<PlayerRecord> playerRecords;
 
-    public GameLog(Scenario scenario, PlayerRecord ... records) {
+    public GameLog(BasicScenario scenario, PlayerRecord ... records) {
         this.scenario = scenario;
         this.playerRecords = Arrays.asList(records);
     }
 
-    public Scenario getScenario() {
+    public BasicScenario getScenario() {
         return scenario;
     }
 

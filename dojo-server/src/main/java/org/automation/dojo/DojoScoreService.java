@@ -1,7 +1,8 @@
 package org.automation.dojo;
 
 import org.automation.dojo.web.bugs.Bug;
-import org.automation.dojo.web.scenario.Scenario;
+import org.automation.dojo.web.scenario.BasicScenario;
+import org.automation.dojo.web.scenario.Release;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
@@ -22,7 +23,7 @@ public class DojoScoreService implements ScoreService {
     }
 
     public boolean testResult(String clientName, String clientAddress, int scenarioNumber, boolean testPassed) {
-        Scenario scenario = releaseEngine.getScenario(scenarioNumber);
+        BasicScenario scenario = releaseEngine.getScenario(scenarioNumber);
         List<GameLog> gameLogs = logService.getGameLogs(clientAddress, scenario);
         //last log will be a log for current release
         GameLog currentGame = lastGameLog(gameLogs);
@@ -58,8 +59,8 @@ public class DojoScoreService implements ScoreService {
     public void nextRelease(Release previousRelease) {
         List<String> clientAddresses = logService.getUniqueClientAddresses();
         for (String clientAddress : clientAddresses) {
-            List<Scenario> scenarios = previousRelease.getScenarios();
-            for (Scenario scenario : scenarios) {
+            List<BasicScenario> scenarios = previousRelease.getScenarios();
+            for (BasicScenario scenario : scenarios) {
                 if (scenario.bugsFree()) {
                     continue;
                 }

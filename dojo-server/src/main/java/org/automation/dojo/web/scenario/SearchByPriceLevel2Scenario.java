@@ -12,7 +12,7 @@ import org.automation.dojo.web.servlet.RequestWorker;
 import java.util.Arrays;
 import java.util.List;
 
-public class SearchByPriceLevel2Scenario extends Scenario<RequestWorker> {
+public class SearchByPriceLevel2Scenario extends BasicScenario<RequestWorker> {
 
     public SearchByPriceLevel2Scenario(int id, String description, BugsQueue bugsQueue) {
         super(id, description, bugsQueue);

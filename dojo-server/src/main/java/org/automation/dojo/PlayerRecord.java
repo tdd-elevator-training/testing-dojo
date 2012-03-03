@@ -1,6 +1,6 @@
 package org.automation.dojo;
 
-import org.automation.dojo.web.scenario.Scenario;
+import org.automation.dojo.web.scenario.BasicScenario;
 
 /**
  * @author serhiy.zelenin
@@ -8,12 +8,12 @@ import org.automation.dojo.web.scenario.Scenario;
 public class PlayerRecord {
     private int score;
     private String description;
-    private Scenario scenario;
+    private BasicScenario scenario;
     private boolean passed;
     private String clientName;
     private String clientAddress;
 
-    public PlayerRecord(String clientName, String clientAddress, Scenario scenario, boolean passed, int score,
+    public PlayerRecord(String clientName, String clientAddress, BasicScenario scenario, boolean passed, int score,
             String description) {
         this.clientName = clientName;
         this.clientAddress = clientAddress;
@@ -27,7 +27,7 @@ public class PlayerRecord {
         return score;
     }
 
-    public Scenario getScenario() {
+    public BasicScenario getScenario() {
         return scenario;
     }
 
