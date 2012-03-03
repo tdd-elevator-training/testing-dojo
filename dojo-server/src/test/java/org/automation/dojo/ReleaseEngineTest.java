@@ -74,24 +74,24 @@ public class ReleaseEngineTest {
     public void shouldGenerateBugsWhenNewMinorReleaseForSeveralScenarios() {
         setScenarioDefinitions("1,scenario1,1\n2,scenario2,1");
         engine.init();
-        putNextBugForScenario(engine.getScenario(0), 123);
-        putNextBugForScenario(engine.getScenario(1), 345);
+        putNextBugForScenario(engine.getScenario(1), 123);
+        putNextBugForScenario(engine.getScenario(2), 345);
 
         engine.nextMinorRelease();
 
-        assertEquals(123, engine.getScenario(0).getBug().getId());
-        assertEquals(345, engine.getScenario(1).getBug().getId());
+        assertEquals(123, engine.getScenario(1).getBug().getId());
+        assertEquals(345, engine.getScenario(2).getBug().getId());
     }
 
     @Test
     public void shouldBeNoBugsWhenNoBugs() {
         setScenarioDefinitions("1,scenario1,1");
         engine.init();
-        putNextBugForScenario(engine.getScenario(0), null);
+        putNextBugForScenario(engine.getScenario(1), null);
 
         engine.nextMinorRelease();
 
-        assertSame(Bug.NULL_BUG, engine.getScenario(0).getBug());
+        assertSame(Bug.NULL_BUG, engine.getScenario(1).getBug());
     }
 
     private void setScenarioDefinitions(String scenarioDefinition) {
