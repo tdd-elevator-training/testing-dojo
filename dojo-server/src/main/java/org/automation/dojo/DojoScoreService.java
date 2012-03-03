@@ -33,9 +33,10 @@ public class DojoScoreService implements ScoreService {
         }
         
         int countBugsReportedForScenario = 1;
-        
+
         for (GameLog gameLog : gameLogs) {
-            if (gameLog.bugReported()) {
+            boolean bugAlreadyReported = gameLog.bugReported();
+            if (bugAlreadyReported) {
                 countBugsReportedForScenario ++;
             }
         }

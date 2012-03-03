@@ -1,6 +1,8 @@
 package org.automation.dojo;
 
+import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
@@ -139,6 +141,21 @@ public class DojoScoreServiceTest {
         scoreService.nextRelease(new Release(scenario));
 
         verify(logService, never()).playerLog(Matchers.<PlayerRecord>anyObject());
+    }
+
+    @Test
+    @Ignore
+    public void shouldDecreaseScoreWhenLiar() {
+        Scenario scenario = setupScenario(1, 0);
+        setupGameLogs(scenario,
+                gameLog(scenario, record(createScneario(1, 120), false, 120)),
+                gameLog(scenario));
+
+        reportScenario(1, false);
+
+        PlayerRecord record = captureLogRecord();
+        assertEquals(-120*2, record.getScore());
+        assertFalse(record.isPassed());
     }
 
     private void setupGameLogs(Scenario scenario, GameLog... gameLogs) {

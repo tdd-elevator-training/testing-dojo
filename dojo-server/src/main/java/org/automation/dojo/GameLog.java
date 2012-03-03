@@ -28,12 +28,16 @@ public class GameLog {
     }
 
     public boolean bugReported() {
+        return findReportedRecord() != null;
+    }
+
+    public PlayerRecord findReportedRecord() {
         List<PlayerRecord> playerRecords = getPlayerRecords();
         for (PlayerRecord record : playerRecords) {
             if (!record.isPassed()) {
-                return true;
+                return record;
             }
         }
-        return false;
+        return null;
     }
 }
