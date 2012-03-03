@@ -50,7 +50,7 @@ public abstract class Scenario<T> {
 
     public abstract List<? extends Bug> getPossibleBugs();
 
-    public boolean hasBug() {
+    public boolean bugsFree() {
         return bug == null || bug == Bug.NULL_BUG;
     }
 

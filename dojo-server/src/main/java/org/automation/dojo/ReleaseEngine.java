@@ -23,11 +23,19 @@ public class ReleaseEngine {
     @Autowired
     private BugsQueue bugsQueue;
 
+    @Autowired
+    private ScoreService scoreService;
+
+    @Autowired
+    private LogService logService;
+
     public ReleaseEngine() {
     }
 
-    public ReleaseEngine(BugsQueue bugsQueue) {
+    public ReleaseEngine(BugsQueue bugsQueue, ScoreService scoreService, LogService logService) {
         this.bugsQueue = bugsQueue;
+        this.scoreService = scoreService;
+        this.logService = logService;
     }
 
     public ReleaseEngine(Release ... releasesArray) {
@@ -35,18 +43,31 @@ public class ReleaseEngine {
     }
 
     public List<Scenario> getCurrentScenarios() {
-        return releases.get(currentReleaseIndex).getScenarios();
+        return getCurrentRelease().getScenarios();
+    }
+
+    public Release getCurrentRelease() {
+        return releases.get(currentReleaseIndex);
     }
 
     public void nextMajorRelease() {
+        notifyServices();
         currentReleaseIndex++;
     }
 
     public void nextMinorRelease() {
+        notifyServices();
+
         List<Scenario> currentScenarios = getCurrentScenarios();
         for (Scenario currentScenario : currentScenarios) {
             currentScenario.takeNextBug();
         }
+    }
+
+    private void notifyServices() {
+        //WARN!! the order is not tested but it is important to calculate scores
+        logService.createGameLog(getCurrentRelease());
+        scoreService.nextRelease(getCurrentRelease());
     }
 
     public void init() {
@@ -75,6 +96,7 @@ public class ReleaseEngine {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        notifyServices();
     }
 
     private Class<Scenario> getScenarioClassByName(String className) {

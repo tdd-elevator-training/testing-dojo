@@ -9,4 +9,8 @@ public interface LogService {
     void playerLog(PlayerRecord record);
 
     List<GameLog> getGameLogs(String clientAddress, Scenario scenario);
+
+    List<String> getUniqueClientAddresses();
+
+    void createGameLog(Release previousRelease);
 }

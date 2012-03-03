@@ -4,6 +4,8 @@ import org.fest.assertions.ListAssert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.mockito.stubbing.OngoingStubbing;
@@ -13,7 +15,7 @@ import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertSame;
 import static org.fest.assertions.Assertions.assertThat;
 import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 /**
  * @author serhiy.zelenin
@@ -21,12 +23,19 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public class ReleaseEngineTest {
     @Mock BugsQueue bugsQueue;
+    @Mock
+    ScoreService scoreService;
+    @Mock LogService logService;
+    
+    @Captor ArgumentCaptor<Release> logServiceReleaseCaptor;
+    @Captor ArgumentCaptor<Release> scoreServiceReleaseCaptor;
 
+    
     private ReleaseEngine engine;
 
     @Before
     public void setUp() throws Exception {
-        engine = new ReleaseEngine(bugsQueue);
+        engine = new ReleaseEngine(bugsQueue, scoreService, logService);
     }
 
     @Test
@@ -94,6 +103,32 @@ public class ReleaseEngineTest {
         engine.nextMinorRelease();
 
         assertSame(Bug.NULL_BUG, engine.getScenario(1).getBug());
+    }
+
+    @Test
+    public void shouldNotifyServicesWhenInitThenMinorReleaseThenMajorRelease(){
+        setScenarioDefinitions("" +
+                "1,scenario1,1,org.automation.dojo.MockScenario\n" +
+                "2,scenario1,1,org.automation.dojo.MockScenario\n" +
+                "1,scenario1,2,org.automation.dojo.MockScenario\n");
+        engine.init();
+
+        assertServicesNotified(engine.getCurrentRelease(), 1);
+
+        engine.nextMinorRelease();
+
+        assertServicesNotified(engine.getCurrentRelease(), 2);
+
+        Release release = engine.getCurrentRelease();
+        engine.nextMajorRelease();
+        assertServicesNotified(release, 3);
+    }
+
+    private void assertServicesNotified(Release release, int wantedNumberOfInvocations) {
+        verify(scoreService, times(wantedNumberOfInvocations)).nextRelease(scoreServiceReleaseCaptor.capture());
+        verify(logService, times(wantedNumberOfInvocations)).createGameLog(logServiceReleaseCaptor.capture());
+        assertSame(release, scoreServiceReleaseCaptor.getValue());
+        assertSame(release, logServiceReleaseCaptor.getValue());
     }
 
     private void setScenarioDefinitions(String scenarioDefinition) {

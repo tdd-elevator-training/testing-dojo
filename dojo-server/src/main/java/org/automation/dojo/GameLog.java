@@ -22,4 +22,22 @@ public class GameLog {
     public List<PlayerRecord> getPlayerRecords() {
         return playerRecords;
     }
+
+    public boolean hasNoRecords() {
+        return playerRecords.isEmpty();
+    }
+
+    public boolean bugReported() {
+        return findReportedRecord() != null;
+    }
+
+    public PlayerRecord findReportedRecord() {
+        List<PlayerRecord> playerRecords = getPlayerRecords();
+        for (PlayerRecord record : playerRecords) {
+            if (!record.isPassed()) {
+                return record;
+            }
+        }
+        return null;
+    }
 }

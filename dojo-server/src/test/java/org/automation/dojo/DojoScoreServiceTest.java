@@ -1,15 +1,17 @@
 package org.automation.dojo;
 
+import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
+import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.Arrays;
-import java.util.List;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
@@ -20,18 +22,18 @@ import static org.mockito.Mockito.*;
  * @author serhiy.zelenin
  */
 @RunWith(MockitoJUnitRunner.class)
-public class DojoReportServiceTest {
+public class DojoScoreServiceTest {
     private static final String CLIENT_ADDRESS = "10.10.1.1";
     @Captor ArgumentCaptor<PlayerRecord> recordCaptor;
     @Mock LogService logService;
     @Mock ReleaseEngine releaseEngine;
 
-    private DojoReportService reportService;
+    private DojoScoreService scoreService;
 
 
     @Before
     public void setUp() throws Exception {
-        reportService = new DojoReportService(logService, releaseEngine);
+        scoreService = new DojoScoreService(logService, releaseEngine);
     }
 
     @Test
@@ -87,9 +89,73 @@ public class DojoReportServiceTest {
 
         reportScenario(1, false);
 
-        PlayerRecord capturedRecord = captureLogRecord();
+        assertEquals(0, captureLogRecord().getScore());
+    }
 
-        assertEquals(0, capturedRecord.getScore());
+    @Test
+    public void shouldDecreaseScoreWhenBugNotReported() {
+        Scenario scenario = setupScenario(1, 100);
+        setupGameLogs(scenario, gameLog(scenario));
+
+        setupClientAddressesDb();
+
+        scoreService.nextRelease(new Release(scenario));
+
+        PlayerRecord record = captureLogRecord();
+        assertEquals(-100, record.getScore());
+        assertTrue(record.isPassed());
+    }
+
+    private void setupClientAddressesDb() {
+        when(logService.getUniqueClientAddresses()).thenReturn(Arrays.asList(CLIENT_ADDRESS));
+    }
+
+    @Test
+    public void shouldDecreaseScoreWhenBugNotFound() {
+        Scenario scenario = setupScenario(1, 50);
+        setupGameLogs(scenario, gameLog(scenario, record(scenario, true, 0)));
+        setupClientAddressesDb();
+
+        scoreService.nextRelease(new Release(scenario));
+
+        assertEquals(-50, captureLogRecord().getScore());
+    }
+
+    @Test
+    public void shouldNotDecreaseScoreWhenNoBugsInPreviousRelease() {
+        Scenario scenario = createScneario(1, 0);
+        setupGameLogs(scenario, gameLog(scenario));
+        setupClientAddressesDb();
+
+        scoreService.nextRelease(new Release(scenario));
+
+        verify(logService, never()).playerLog(Matchers.<PlayerRecord>anyObject());
+    }
+
+    @Test
+    public void shouldNotDecreaseScoreWhenBugReportedOnPreviousMinorRelease() {
+        Scenario scenario = createScneario(1, 100);
+        setupGameLogs(scenario, gameLog(scenario, record(scenario, false, 100)));
+        setupClientAddressesDb();
+
+        scoreService.nextRelease(new Release(scenario));
+
+        verify(logService, never()).playerLog(Matchers.<PlayerRecord>anyObject());
+    }
+
+    @Test
+    @Ignore
+    public void shouldDecreaseScoreWhenLiar() {
+        Scenario scenario = setupScenario(1, 0);
+        setupGameLogs(scenario,
+                gameLog(scenario, record(createScneario(1, 120), false, 120)),
+                gameLog(scenario));
+
+        reportScenario(1, false);
+
+        PlayerRecord record = captureLogRecord();
+        assertEquals(-120*2, record.getScore());
+        assertFalse(record.isPassed());
     }
 
     private void setupGameLogs(Scenario scenario, GameLog... gameLogs) {
@@ -98,7 +164,7 @@ public class DojoReportServiceTest {
     }
 
     private PlayerRecord record(Scenario scenario, boolean passed, int score) {
-        return new PlayerRecord("", CLIENT_ADDRESS, scenario, passed, score);
+        return new PlayerRecord("", CLIENT_ADDRESS, scenario, passed, score, "");
     }
 
     private GameLog gameLog(Scenario scenario,PlayerRecord ... records) {
@@ -121,7 +187,7 @@ public class DojoReportServiceTest {
     }
 
     private boolean reportScenario(int scenarioId, boolean testPassed) {
-        return reportService.testResult("vasya", CLIENT_ADDRESS, scenarioId, testPassed);
+        return scoreService.testResult("vasya", CLIENT_ADDRESS, scenarioId, testPassed);
     }
 
 
