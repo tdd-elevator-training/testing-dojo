@@ -1,7 +1,6 @@
 package org.automation.dojo.web.servlet;
 
 import org.automation.dojo.web.model.Record;
-import org.automation.dojo.web.model.ShopServiceFactory;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Arrays;

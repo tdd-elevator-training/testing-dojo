@@ -27,4 +27,12 @@ public class ApplicationContextLocator implements ApplicationContextAware {
     public <X> X getBean(String beanName) {
         return (X) context.getBean(beanName);
     }
+
+    public <X> X getBean(Class<X> clazz) {
+        return context.getBean(clazz);
+    }
+
+    public static void clearInstance() {
+        instance = null;
+    }
 }

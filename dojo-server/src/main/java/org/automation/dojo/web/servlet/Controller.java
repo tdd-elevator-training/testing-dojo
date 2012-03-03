@@ -29,7 +29,8 @@ public abstract class Controller extends HttpServlet {
         try {
             goTo(doAction());
         } catch (Exception exception) {
-            request.setAttribute("error_message", exception.getMessage());
+            exception.printStackTrace();
+            request.setAttribute("error_message", exception.toString());
             request.getRequestDispatcher("error.jsp").forward(request, response);
         }
     }

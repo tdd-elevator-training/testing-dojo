@@ -10,7 +10,7 @@
 	<body>
 		<h2>Error</h2>
 
-		<b><c:out value="${requestScope.error_message}"/></b>
+		<b><c:out value="${requestScope.error_message}"/></b></br>
 
 		Please <a href="/Shop/index.jsp">go home</a> and try again.
 	</body>

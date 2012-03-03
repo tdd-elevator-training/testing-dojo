@@ -2,13 +2,14 @@ package org.automation.dojo;
 
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import static org.fest.reflect.core.Reflection.constructor;
 
 /**
  * @author serhiy.zelenin
@@ -58,12 +59,16 @@ public class ReleaseEngine {
                 String[] scenarioParts = scenarioLines.get(i).split(",");
                 int scenarioId = Integer.parseInt(scenarioParts[0]);
                 int releaseNumber = Integer.parseInt(scenarioParts[2]);
+                String scenarioDescription = scenarioParts[1];
+                Class<Scenario> scenarioClass = getScenarioClassByName(scenarioParts[3]);
+
                 if (currentReleaseNumber != releaseNumber) {
                     releases.add(currentRelease);
                     currentReleaseNumber = releaseNumber;
                     currentRelease = new Release();
                 }
-                currentRelease.addScenario(scenario(scenarioId, scenarioParts[1]));
+
+                currentRelease.addScenario(scenario(scenarioClass, scenarioId, scenarioDescription));
                 i++;
             }
             releases.add(currentRelease);
@@ -72,8 +77,24 @@ public class ReleaseEngine {
         }
     }
 
-    private Scenario scenario(int id, String description) {
-        return new Scenario(id, description, bugsQueue);
+    private Class<Scenario> getScenarioClassByName(String className) {
+        Class<?> aClass = null;
+        try {
+            aClass = this.getClass().getClassLoader().loadClass(className);
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(String.format("Class %s not found in the classpath", className));
+        }
+        if (aClass != null && Scenario.class.isAssignableFrom(aClass)) {
+            return (Class<Scenario>)aClass;
+        } else {
+            throw new IllegalArgumentException("This is not scenario class: " + aClass.getName());
+        }
+    }
+
+    private Scenario scenario(Class<Scenario> scenarioClass, int id, String description) {
+        return constructor().withParameterTypes(int.class, String.class, BugsQueue.class)
+                             .in(scenarioClass)
+                             .newInstance(id, description, bugsQueue);
     }
 
     public void setScenarioResource(Resource scenarioResource) {

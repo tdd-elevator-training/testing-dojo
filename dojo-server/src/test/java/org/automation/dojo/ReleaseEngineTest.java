@@ -31,7 +31,7 @@ public class ReleaseEngineTest {
 
     @Test
     public void shouldHaveScenarioWhenGameStarted() {
-        setScenarioDefinitions("1,scenario1,1");
+        setScenarioDefinitions("1,scenario1,1,org.automation.dojo.MockScenario");
 
         engine.init();
 
@@ -42,10 +42,10 @@ public class ReleaseEngineTest {
     @Test
     public void shouldActivateScenarioWhenMajorRelease() {
         setScenarioDefinitions("" +
-                "1,scenario1,1\n" +
-                "1,scenario1,2\n" +
-                "2,scenario2,2\n" +
-                "3,scenario3,3\n");
+                "1,scenario1,1,org.automation.dojo.MockScenario\n" +
+                "1,scenario1,2,org.automation.dojo.MockScenario\n" +
+                "2,scenario2,2,org.automation.dojo.MockScenario\n" +
+                "3,scenario3,3,org.automation.dojo.MockScenario\n");
 
         engine.init();
 
@@ -59,7 +59,7 @@ public class ReleaseEngineTest {
 
     @Test
     public void shouldGenerateBugsWhenNewMinorRelease() {
-        setScenarioDefinitions("1,scenario1,1");
+        setScenarioDefinitions("1,scenario1,1,org.automation.dojo.MockScenario");
         engine.init();
 
         putNextBugForScenario(engine.getCurrentScenarios().get(0), 123);
@@ -72,7 +72,9 @@ public class ReleaseEngineTest {
 
     @Test
     public void shouldGenerateBugsWhenNewMinorReleaseForSeveralScenarios() {
-        setScenarioDefinitions("1,scenario1,1\n2,scenario2,1");
+        setScenarioDefinitions(
+                "1,scenario1,1,org.automation.dojo.MockScenario\n" +
+                "2,scenario2,1,org.automation.dojo.MockScenario");
         engine.init();
         putNextBugForScenario(engine.getScenario(0), 123);
         putNextBugForScenario(engine.getScenario(1), 345);
@@ -85,7 +87,7 @@ public class ReleaseEngineTest {
 
     @Test
     public void shouldBeNoBugsWhenNoBugs() {
-        setScenarioDefinitions("1,scenario1,1");
+        setScenarioDefinitions("1,scenario1,1,org.automation.dojo.MockScenario");
         engine.init();
         putNextBugForScenario(engine.getScenario(0), null);
 

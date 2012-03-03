@@ -1,14 +1,21 @@
 package org.automation.dojo.web.servlet;
 
+import org.automation.dojo.BugsQueue;
+import org.automation.dojo.Scenario;
 import org.automation.dojo.web.model.Record;
 import org.automation.dojo.web.model.ShopService;
 import org.automation.dojo.web.model.ShopServiceFactory;
 
 import java.util.List;
 
-public class SearchScenario {
+public class SearchScenario extends Scenario {
 
-    public String process(RequestWorker request) {
+    public SearchScenario(int id, String description, BugsQueue bugsQueue) {
+        super(id, description, bugsQueue);
+    }
+
+    @Override
+    protected String process() {
         ShopService service = ShopServiceFactory.gtInstance();
 
         request.saveFormState();

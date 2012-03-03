@@ -1,13 +1,17 @@
 package org.automation.dojo;
 
+import org.automation.dojo.web.servlet.RequestWorker;
+
 /**
  * @author serhiy.zelenin
  */
-public class Scenario {
+public abstract class Scenario {
     private int id;
     private BugsQueue bugsQueue;
     private Bug bug;
     private String description;
+
+    protected RequestWorker request;
 
     public Scenario(int id, BugsQueue bugsQueue) {
         this(id, "", bugsQueue);
@@ -38,4 +42,11 @@ public class Scenario {
     public String getDescription() {
         return description;
     }
+
+    public String process(RequestWorker request) {
+        this.request = request;
+        return process();
+    }
+
+    protected abstract String process();
 }
