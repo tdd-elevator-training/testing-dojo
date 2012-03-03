@@ -18,7 +18,9 @@ public class DojoReportService implements ReportService {
     }
 
     public boolean testResult(String clientName, String clientAddress, int scenarioNumber, boolean testPassed) {
-//        logService.playerLog(new PlayerRecord(clientName, clientAddress, scenarioNumber, testPassed));
-        return releaseEngine.getScenario(scenarioNumber).hasBug();
+        Scenario scenario = releaseEngine.getScenario(scenarioNumber);
+        logService.playerLog(new PlayerRecord(clientName, clientAddress,
+                scenarioNumber, testPassed, scenario.getBug().getWeight()));
+        return scenario.hasBug();
     }
 }

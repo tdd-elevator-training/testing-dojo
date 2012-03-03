@@ -2,13 +2,13 @@ package org.automation.dojo;
 
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.stubbing.OngoingStubbing;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
@@ -37,36 +37,59 @@ public class DojoReportServiceTest {
 
     @Test
     public void shouldReturnFailureWhenReportFailure() {
-        Scenario scenario = new Scenario(1, null);
-        scenario.setBug(new Bug(1));
-        when(releaseEngine.getScenario(1)).thenReturn(scenario);
+        setupScenario(1, true);
 
-        assertFalse(reportService.testResult("vasya", "10.10.1.1", 1, false));
+        assertFalse(reportScenario(1, false));
     }
 
     @Test
     public void shouldReturnPassedWhenReportPassed() {
-        Scenario scenario = new Scenario(1, null);
-        scenario.setBug(Bug.NULL_BUG);
-        when(releaseEngine.getScenario(1)).thenReturn(scenario);
+        setupScenario(1, false);
 
-        assertTrue(reportService.testResult("vasya", "10.10.1.1", 1, true));
+        assertTrue(reportScenario(1, true));
     }
 
-
     @Test
-    @Ignore
     public void shouldAddScoreWhenBugFound() {
-        fail();
-        new ReleaseEngine();
+        setupScenario(1, 88);
 
-        assertFalse(reportService.testResult("vasya", "10.10.1.1", 1, false));
+        reportScenario(1, false);
 
         verify(logService, atLeastOnce()).playerLog(recordCaptor.capture());
         PlayerRecord record = recordCaptor.getValue();
 
-        assertEquals(100, record.getScore());
+        assertEquals(88, record.getScore());
         assertEquals(1, record.getScenario());
         assertFalse(record.isPassed());
+    }
+
+    @Test
+    public void shouldAddHalfScoreWhenFoundAgainAfterPassed(){
+//        assertEquals(100/2);
+    }
+
+    private void setupScenario(int scenarioId, int bugWeight) {
+        when(releaseEngine.getScenario(scenarioId)).thenReturn(createScneario(1, bugWeight));
+    }
+
+    private void setupScenario(int scenarioId, boolean hasBug) {
+        setupScenario(scenarioId, hasBug ? 100 : 0);
+    }
+
+    private boolean reportScenario(int scenarioId, boolean testPassed) {
+        return reportService.testResult("vasya", "10.10.1.1", scenarioId, testPassed);
+    }
+
+
+    private Scenario createScneario(int scenarioId, int bugWeight) {
+        Scenario scenario = new Scenario(scenarioId, null);
+        if (bugWeight > 0) {
+            Bug bug = new Bug(1);
+            bug.setWeight(bugWeight);
+            scenario.setBug(bug);
+        }else{
+            scenario.setBug(Bug.NULL_BUG);
+        }
+        return scenario;
     }
 }
