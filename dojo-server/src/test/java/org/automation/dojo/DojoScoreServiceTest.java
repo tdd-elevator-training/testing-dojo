@@ -1,7 +1,8 @@
 package org.automation.dojo;
 
 import org.automation.dojo.web.bugs.Bug;
-import org.automation.dojo.web.scenario.Scenario;
+import org.automation.dojo.web.scenario.BasicScenario;
+import org.automation.dojo.web.scenario.Release;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -39,7 +40,7 @@ public class DojoScoreServiceTest {
 
     @Test
     public void shouldReturnFailureWhenReportFailure() {
-        Scenario scenario = setupScenario(1, true);
+        BasicScenario scenario = setupScenario(1, true);
         setupGameLogs(scenario, gameLog(scenario));
 
         assertFalse(reportScenario(1, false));
@@ -47,7 +48,7 @@ public class DojoScoreServiceTest {
 
     @Test
     public void shouldReturnPassedWhenReportPassed() {
-        Scenario scenario = setupScenario(1, false);
+        BasicScenario scenario = setupScenario(1, false);
         setupGameLogs(scenario, gameLog(scenario));
 
         assertTrue(reportScenario(1, true));
@@ -55,7 +56,7 @@ public class DojoScoreServiceTest {
 
     @Test
     public void shouldAddScoreWhenBugFound() {
-        Scenario scenario = setupScenario(1, 88);
+        BasicScenario scenario = setupScenario(1, 88);
         setupGameLogs(scenario, gameLog(scenario));
 
         reportScenario(1, false);
@@ -69,7 +70,7 @@ public class DojoScoreServiceTest {
 
     @Test
     public void shouldAddHalfScoreWhenFoundAgainAfterPassed(){
-        Scenario scenario = setupScenario(1, 100);
+        BasicScenario scenario = setupScenario(1, 100);
         setupGameLogs(scenario,
                 gameLog(scenario, record(scenario, false, 100)),
                 gameLog(scenario, record(scenario, true, 0)),
@@ -84,7 +85,7 @@ public class DojoScoreServiceTest {
 
     @Test
     public void shouldNotAddScoreWhenReportedBugAgainForSameMinorRelease(){
-        Scenario scenario = setupScenario(1, 100);
+        BasicScenario scenario = setupScenario(1, 100);
         setupGameLogs(scenario,
                 gameLog(scenario, record(scenario, false, 100)));
 
@@ -95,7 +96,7 @@ public class DojoScoreServiceTest {
 
     @Test
     public void shouldDecreaseScoreWhenBugNotReported() {
-        Scenario scenario = setupScenario(1, 100);
+        BasicScenario scenario = setupScenario(1, 100);
         setupGameLogs(scenario, gameLog(scenario));
 
         setupClientAddressesDb();
@@ -113,7 +114,7 @@ public class DojoScoreServiceTest {
 
     @Test
     public void shouldDecreaseScoreWhenBugNotFound() {
-        Scenario scenario = setupScenario(1, 50);
+        BasicScenario scenario = setupScenario(1, 50);
         setupGameLogs(scenario, gameLog(scenario, record(scenario, true, 0)));
         setupClientAddressesDb();
 
@@ -124,7 +125,7 @@ public class DojoScoreServiceTest {
 
     @Test
     public void shouldNotDecreaseScoreWhenNoBugsInPreviousRelease() {
-        Scenario scenario = createScneario(1, 0);
+        BasicScenario scenario = createScneario(1, 0);
         setupGameLogs(scenario, gameLog(scenario));
         setupClientAddressesDb();
 
@@ -135,7 +136,7 @@ public class DojoScoreServiceTest {
 
     @Test
     public void shouldNotDecreaseScoreWhenBugReportedOnPreviousMinorRelease() {
-        Scenario scenario = createScneario(1, 100);
+        BasicScenario scenario = createScneario(1, 100);
         setupGameLogs(scenario, gameLog(scenario, record(scenario, false, 100)));
         setupClientAddressesDb();
 
@@ -147,7 +148,7 @@ public class DojoScoreServiceTest {
     @Test
     @Ignore
     public void shouldDecreaseScoreWhenLiar() {
-        Scenario scenario = setupScenario(1, 0);
+        BasicScenario scenario = setupScenario(1, 0);
         setupGameLogs(scenario,
                 gameLog(scenario, record(createScneario(1, 120), false, 120)),
                 gameLog(scenario));
@@ -159,16 +160,16 @@ public class DojoScoreServiceTest {
         assertFalse(record.isPassed());
     }
 
-    private void setupGameLogs(Scenario scenario, GameLog... gameLogs) {
+    private void setupGameLogs(BasicScenario scenario, GameLog... gameLogs) {
         when(logService.getGameLogs(CLIENT_ADDRESS, scenario))
                 .thenReturn(Arrays.asList(gameLogs));
     }
 
-    private PlayerRecord record(Scenario scenario, boolean passed, int score) {
+    private PlayerRecord record(BasicScenario scenario, boolean passed, int score) {
         return new PlayerRecord("", CLIENT_ADDRESS, scenario, passed, score, "");
     }
 
-    private GameLog gameLog(Scenario scenario,PlayerRecord ... records) {
+    private GameLog gameLog(BasicScenario scenario,PlayerRecord ... records) {
         return new GameLog(scenario, records);
     }
 
@@ -177,13 +178,13 @@ public class DojoScoreServiceTest {
         return recordCaptor.getValue();
     }
 
-    private Scenario setupScenario(int scenarioId, int bugWeight) {
-        Scenario scenario = createScneario(1, bugWeight);
+    private BasicScenario setupScenario(int scenarioId, int bugWeight) {
+        BasicScenario scenario = createScneario(1, bugWeight);
         when(releaseEngine.getScenario(scenarioId)).thenReturn(scenario);
         return scenario;
     }
 
-    private Scenario setupScenario(int scenarioId, boolean hasBug) {
+    private BasicScenario setupScenario(int scenarioId, boolean hasBug) {
         return setupScenario(scenarioId, hasBug ? 100 : 0);
     }
 
@@ -192,8 +193,8 @@ public class DojoScoreServiceTest {
     }
 
 
-    private Scenario createScneario(int scenarioId, int bugWeight) {
-        Scenario scenario = new MockScenario(scenarioId, "", null);
+    private BasicScenario createScneario(int scenarioId, int bugWeight) {
+        BasicScenario scenario = new MockScenario(scenarioId, "", null);
         if (bugWeight > 0) {
             Bug bug = new Bug(1);
             bug.setWeight(bugWeight);

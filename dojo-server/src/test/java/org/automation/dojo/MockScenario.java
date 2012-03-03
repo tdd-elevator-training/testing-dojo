@@ -1,11 +1,11 @@
 package org.automation.dojo;
 
 import org.automation.dojo.web.bugs.Bug;
-import org.automation.dojo.web.scenario.Scenario;
+import org.automation.dojo.web.scenario.BasicScenario;
 
 import java.util.List;
 
-public class MockScenario extends Scenario {
+public class MockScenario extends BasicScenario {
     public MockScenario(int id, String description, BugsQueue bugsQueue) {
         super(id, description, bugsQueue);
     }

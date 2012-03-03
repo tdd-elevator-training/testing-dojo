@@ -74,7 +74,12 @@ public abstract class FunctionalTestCase {
     }
 
     public void goTo(String url) {
-        url = (url.contains(baseUrl))?url:baseUrl + url;
+        if (!url.contains("Shop")) { // TODO hotfix
+            url = url.replace(baseUrl.replace("/Shop", ""), baseUrl);
+        }
+        if (!url.contains(baseUrl)) {
+            url = baseUrl + url;
+        }
         tester.get(url);
         resetAllElements();
     }

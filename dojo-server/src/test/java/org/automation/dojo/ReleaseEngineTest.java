@@ -1,7 +1,8 @@
 package org.automation.dojo;
 
 import org.automation.dojo.web.bugs.Bug;
-import org.automation.dojo.web.scenario.Scenario;
+import org.automation.dojo.web.scenario.BasicScenario;
+import org.automation.dojo.web.scenario.Release;
 import org.fest.assertions.ListAssert;
 import org.junit.Before;
 import org.junit.Test;
@@ -77,7 +78,7 @@ public class ReleaseEngineTest {
 
         engine.nextMinorRelease();
         
-        Scenario scenario = engine.getCurrentScenarios().get(0);
+        BasicScenario scenario = engine.getCurrentScenarios().get(0);
         assertEquals(123, scenario.getBug().getId());
     }
 
@@ -137,7 +138,7 @@ public class ReleaseEngineTest {
         engine.setScenarioResource(new ByteArrayResource(scenarioDefinition.getBytes()));
     }
 
-    private OngoingStubbing<Bug> putNextBugForScenario(Scenario expectedScenario, Integer bugId) {
+    private OngoingStubbing<Bug> putNextBugForScenario(BasicScenario expectedScenario, Integer bugId) {
         return when(bugsQueue.nextBugFor(eq(expectedScenario))).thenReturn(bugId == null ? Bug.NULL_BUG : new Bug(bugId));
     }
 

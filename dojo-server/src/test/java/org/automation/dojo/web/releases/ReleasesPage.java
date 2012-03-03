@@ -89,8 +89,32 @@ public class ReleasesPage extends FunctionalTestCase {
                 indicator.getText());
     }
 
+    @Test
+    public void shouldStopIfNoMoreMajorRevisions() {
+        assertMach("Now we have major 0 and minor " +
+                "\\[Scenario SearchByTextLevel1Scenario with bug NullBug\\]",
+                indicator.getText());
+
+        goTo(nextMajor.getAttribute("href"));
+
+        assertMach("Now we have major 1 and minor " +
+                "\\[Scenario SearchByTextLevel2Scenario with bug NullBug, " +
+                "Scenario SearchByPriceLevel2Scenario with bug NullBug\\]",
+                indicator.getText());
+
+        goTo(nextMajor.getAttribute("href"));
+        goTo(nextMajor.getAttribute("href"));
+        goTo(nextMajor.getAttribute("href"));
+
+        assertMach("Now we have major 1 and minor " +
+                "\\[Scenario SearchByTextLevel2Scenario with bug NullBug, " +
+                "Scenario SearchByPriceLevel2Scenario with bug NullBug\\]",
+                indicator.getText());
+    }
+
     private void assertMach(String regexp, String text) {
-        assertTrue(String.format("Expected regexp '%s'\nbut was '%s'", regexp, text),
+        assertTrue(String.format("\nExpected regexp '%s'\n" +
+                                 "        but was '%s'", regexp, text),
                 Pattern.compile(regexp).matcher(text).matches());
     }
 }
