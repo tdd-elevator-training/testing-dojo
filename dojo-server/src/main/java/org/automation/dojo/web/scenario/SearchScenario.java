@@ -1,11 +1,13 @@
-package org.automation.dojo.web.servlet;
+package org.automation.dojo.web.scenario;
 
 import org.automation.dojo.Bug;
 import org.automation.dojo.BugsQueue;
 import org.automation.dojo.Scenario;
+import org.automation.dojo.web.bugs.NoResultWhenExpected;
 import org.automation.dojo.web.model.Record;
 import org.automation.dojo.web.model.ShopService;
 import org.automation.dojo.web.model.ShopServiceFactory;
+import org.automation.dojo.web.servlet.RequestWorker;
 
 import java.util.Arrays;
 import java.util.List;
