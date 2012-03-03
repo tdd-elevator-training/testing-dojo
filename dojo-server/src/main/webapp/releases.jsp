@@ -8,6 +8,7 @@
 		<title>Search form</title>
 	</head>
 	<body>		
+        <span id="indicator">Now we have major <c:out value="${requestScope.major}"/> and minor <c:out value="${requestScope.minor}"/></span> </br>
         <a name="next_minor" href="/Shop/releases?next_minor=true">Next minor</a></br>
         <a name="next_major" href="/Shop/releases?next_major=true">Next major</a>
 	</body>

@@ -1,6 +1,8 @@
 package org.automation.dojo.web.search;
 
 
+import org.automation.dojo.ApplicationContextLocator;
+import org.automation.dojo.ReleaseEngine;
 import org.automation.dojo.web.FunctionalTestCase;
 import org.junit.Before;
 import org.junit.Test;
@@ -25,12 +27,17 @@ public class SearchPage extends FunctionalTestCase {
     private WebElement priceOption;
 
     @Override
-    public String getPageUrl() {
+    protected int getMajorRelease() {
+        return 1;
+    }
+
+    @Override
+    protected String getPageUrl() {
         return "/search";
     }
 
-    @Before
-    public void resetAllElements() {
+    @Override
+    protected void resetAllElements() {
         search = tester.findElement(By.name("search"));
         searchButton = tester.findElement(By.id("search_button"));
         searchText = tester.findElement(By.id("search_text"));

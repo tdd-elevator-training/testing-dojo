@@ -1,6 +1,7 @@
 package org.automation.dojo.web;
 
 import org.automation.dojo.ApplicationContextLocator;
+import org.automation.dojo.ReleaseEngine;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -39,10 +40,22 @@ public abstract class FunctionalTestCase {
         instance = ApplicationContextLocator.getInstance();
         instance.setApplicationContext(context);
 
+        switchToMajorRelease(getMajorRelease());
+
         tester.get(baseUrl + getPageUrl());
+        resetAllElements();
     }
 
-    public abstract String getPageUrl();
+    private void switchToMajorRelease(int majorRelease) {
+        ReleaseEngine releaseEngine = (ReleaseEngine) ApplicationContextLocator.getInstance().getBean("releaseEngine");
+        releaseEngine.setMajorRelease(majorRelease);
+    }
+
+    protected abstract int getMajorRelease();
+
+    protected abstract String getPageUrl();
+
+    protected abstract void resetAllElements();
 
     @AfterClass
     public static void end() throws Exception {
@@ -51,7 +64,9 @@ public abstract class FunctionalTestCase {
     }
 
     public void goTo(String url) {
+        url = (url.contains(baseUrl))?url:baseUrl + url;
         tester.get(url);
+        resetAllElements();
     }
 
     public FunctionalTestCase() {
