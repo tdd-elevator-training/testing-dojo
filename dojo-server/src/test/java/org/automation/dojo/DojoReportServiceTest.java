@@ -2,6 +2,7 @@ package org.automation.dojo;
 
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
@@ -55,17 +56,28 @@ public class DojoReportServiceTest {
 
         reportScenario(1, false);
 
-        verify(logService, atLeastOnce()).playerLog(recordCaptor.capture());
-        PlayerRecord record = recordCaptor.getValue();
+        PlayerRecord record = captureLogRecord();
 
         assertEquals(88, record.getScore());
-        assertEquals(1, record.getScenario());
+        assertEquals(1, record.getScenario().getId());
         assertFalse(record.isPassed());
     }
 
     @Test
+    @Ignore
     public void shouldAddHalfScoreWhenFoundAgainAfterPassed(){
-//        assertEquals(100/2);
+        setupScenario(1, 100);
+
+        reportScenario(1, false);
+
+        PlayerRecord record = captureLogRecord();
+        
+        assertEquals(100 / 2, record.getScore());
+    }
+
+    private PlayerRecord captureLogRecord() {
+        verify(logService, atLeastOnce()).playerLog(recordCaptor.capture());
+        return recordCaptor.getValue();
     }
 
     private void setupScenario(int scenarioId, int bugWeight) {
@@ -82,7 +94,7 @@ public class DojoReportServiceTest {
 
 
     private Scenario createScneario(int scenarioId, int bugWeight) {
-        Scenario scenario = new Scenario(scenarioId, null);
+        Scenario scenario = new MockScenario(scenarioId, "", null);
         if (bugWeight > 0) {
             Bug bug = new Bug(1);
             bug.setWeight(bugWeight);

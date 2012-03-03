@@ -5,12 +5,12 @@ package org.automation.dojo;
  */
 public class PlayerRecord {
     private int score;
-    private int scenario;
+    private Scenario scenario;
     private boolean passed;
     private String clientName;
     private String clientAddress;
 
-    public PlayerRecord(String clientName, String clientAddress, int scenario, boolean passed, int score) {
+    public PlayerRecord(String clientName, String clientAddress, Scenario scenario, boolean passed, int score) {
         this.clientName = clientName;
         this.clientAddress = clientAddress;
         this.scenario = scenario;
@@ -22,7 +22,7 @@ public class PlayerRecord {
         return score;
     }
 
-    public int getScenario() {
+    public Scenario getScenario() {
         return scenario;
     }
 

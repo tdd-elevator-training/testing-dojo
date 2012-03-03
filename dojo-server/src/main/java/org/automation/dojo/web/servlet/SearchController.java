@@ -17,6 +17,6 @@ public class SearchController extends Controller {
         ReleaseEngine engine = context.getBean(ReleaseEngine.class);
         engine.init();
 
-        return engine.getScenario(0).process(new RequestWorker(super.request));
+        return engine.getScenario(1).process(new RequestWorker(super.request));
     }
 }
