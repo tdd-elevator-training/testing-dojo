@@ -23,11 +23,11 @@ public class DojoReportService implements ReportService {
         Scenario scenario = releaseEngine.getScenario(scenarioNumber);
         List<GameLog> gameLogs = logService.getGameLogs(clientAddress, scenario);
         //last log will be a log for current release
-        GameLog currentGame = gameLogs.get(gameLogs.size() - 1);
+        GameLog currentGame = lastGameLog(gameLogs);
         if (!testPassed && alreadyReportedForThisGame(currentGame)) {
             logService.playerLog(new PlayerRecord(clientName, clientAddress,
                     scenario, testPassed, 0));
-            return scenario.hasBug();
+            return scenario.bugsFree();
         }
         
         PlayerRecord lastPlayerRecord = null;
@@ -47,7 +47,11 @@ public class DojoReportService implements ReportService {
         int score = lastPlayerRecord == null ? weight : weight / (countBugsReportedForScenario + 1);
         logService.playerLog(new PlayerRecord(clientName, clientAddress,
                 scenario, testPassed, score));
-        return scenario.hasBug();
+        return scenario.bugsFree();
+    }
+
+    private GameLog lastGameLog(List<GameLog> gameLogs) {
+        return gameLogs.get(gameLogs.size() - 1);
     }
 
     private boolean alreadyReportedForThisGame(GameLog game) {
@@ -58,5 +62,24 @@ public class DojoReportService implements ReportService {
             }
         }
         return false;
+    }
+
+    public void nextMinorRelease(Release previousRelease) {
+        List<String> clientAddresses = logService.getUniqueClientAddresses();
+        for (String clientAddress : clientAddresses) {
+            List<Scenario> scenarios = previousRelease.getScenarios();
+            for (Scenario scenario : scenarios) {
+                if (scenario.bugsFree()) {
+                    continue;
+                }
+                List<GameLog> gameLogs = logService.getGameLogs(clientAddress, scenario);
+                GameLog gameLog = lastGameLog(gameLogs);
+                if (alreadyReportedForThisGame(gameLog)) {
+                    continue;
+                }
+                logService.playerLog(new PlayerRecord("<bug should be found>", clientAddress, scenario,
+                        true, -scenario.getBug().getWeight()));
+            }
+        }
     }
 }

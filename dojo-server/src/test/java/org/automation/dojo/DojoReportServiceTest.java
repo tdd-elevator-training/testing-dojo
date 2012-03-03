@@ -1,15 +1,16 @@
 package org.automation.dojo;
 
+import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
+import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.Arrays;
-import java.util.List;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
@@ -87,9 +88,58 @@ public class DojoReportServiceTest {
 
         reportScenario(1, false);
 
-        PlayerRecord capturedRecord = captureLogRecord();
+        assertEquals(0, captureLogRecord().getScore());
+    }
 
-        assertEquals(0, capturedRecord.getScore());
+    @Test
+    public void shouldDecreaseScoreWhenBugNotFound() {
+        Scenario scenario = setupScenario(1, 100);
+        setupGameLogs(scenario, gameLog(scenario));
+
+        setupClientAddressesDb();
+
+        reportService.nextMinorRelease(new Release(scenario));
+
+        PlayerRecord record = captureLogRecord();
+        assertEquals(-100, record.getScore());
+        assertTrue(record.isPassed());
+    }
+
+    private void setupClientAddressesDb() {
+        when(logService.getUniqueClientAddresses()).thenReturn(Arrays.asList(CLIENT_ADDRESS));
+    }
+
+    @Test
+    public void shouldDecreaseScoreWhenBugNotFound2() {
+        Scenario scenario = setupScenario(1, 50);
+        setupGameLogs(scenario, gameLog(scenario, record(scenario, true, 0)));
+        setupClientAddressesDb();
+
+        reportService.nextMinorRelease(new Release(scenario));
+
+        assertEquals(-50, captureLogRecord().getScore());
+    }
+
+    @Test
+    public void shouldNotDecreaseScoreWhenNoBugsInPreviousRelease() {
+        Scenario scenario = createScneario(1, 0);
+        setupGameLogs(scenario, gameLog(scenario));
+        setupClientAddressesDb();
+
+        reportService.nextMinorRelease(new Release(scenario));
+
+        verify(logService, never()).playerLog(Matchers.<PlayerRecord>anyObject());
+    }
+
+    @Test
+    public void shouldNotDecreaseScoreWhenBugReportedOnPreviousMinorRelease() {
+        Scenario scenario = createScneario(1, 100);
+        setupGameLogs(scenario, gameLog(scenario, record(scenario, false, 100)));
+        setupClientAddressesDb();
+
+        reportService.nextMinorRelease(new Release(scenario));
+
+        verify(logService, never()).playerLog(Matchers.<PlayerRecord>anyObject());
     }
 
     private void setupGameLogs(Scenario scenario, GameLog... gameLogs) {

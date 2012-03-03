@@ -22,4 +22,8 @@ public class GameLog {
     public List<PlayerRecord> getPlayerRecords() {
         return playerRecords;
     }
+
+    public boolean hasNoRecords() {
+        return playerRecords.isEmpty();
+    }
 }
