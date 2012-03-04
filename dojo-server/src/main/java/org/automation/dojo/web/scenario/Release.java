@@ -2,6 +2,7 @@ package org.automation.dojo.web.scenario;
 
 import org.automation.dojo.web.scenario.Scenario;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -9,7 +10,7 @@ import java.util.List;
 /**
  * @author serhiy.zelenin
  */
-public class Release<T> implements Scenario<T> {
+public class Release<T> implements Scenario<T>, Serializable {
 
     private List<BasicScenario> scenarios = new ArrayList<BasicScenario>();
 

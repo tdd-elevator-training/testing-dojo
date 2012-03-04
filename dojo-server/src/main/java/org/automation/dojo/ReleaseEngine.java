@@ -1,6 +1,7 @@
 package org.automation.dojo;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.SerializationUtils;
 import org.automation.dojo.web.scenario.BasicScenario;
 import org.automation.dojo.web.scenario.Release;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import static org.fest.reflect.core.Reflection.constructor;
 
@@ -29,6 +31,8 @@ public class ReleaseEngine {
     @Autowired
     private LogService logService;
 
+    private ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
+    
     public ReleaseEngine() {
     }
 
@@ -37,27 +41,39 @@ public class ReleaseEngine {
         this.logService = logService;
     }
 
-    public ReleaseEngine(Release ... releasesArray) {
-        Collections.addAll(releases, releasesArray);
-    }
-
-     public Release getCurrentRelease() {
-        return releases.get(currentReleaseIndex);
+    public Release getCurrentRelease() {
+        lock.readLock().lock();
+        try {
+//            return (Release) SerializationUtils.clone(releases.get(currentReleaseIndex));
+            return releases.get(currentReleaseIndex);
+        } finally {
+            lock.readLock().unlock();
+        }
     }
 
     public void nextMajorRelease() {
-        if (currentReleaseIndex == releases.size() - 1) {
-            return;
+        lock.writeLock().lock();
+        try {
+            if (currentReleaseIndex == releases.size() - 1) {
+                return;
+            }
+            scoreService.nextRelease(getCurrentRelease());
+            setMajorRelease(currentReleaseIndex + 1);
+            logService.createGameLog(getCurrentRelease());
+        } finally {
+            lock.writeLock().unlock();
         }
-        scoreService.nextRelease(getCurrentRelease());
-        setMajorRelease(currentReleaseIndex + 1);
-        logService.createGameLog(getCurrentRelease());
     }
 
     public void nextMinorRelease() {
-        scoreService.nextRelease(getCurrentRelease());
-        getCurrentRelease().takeNextBug();
-        logService.createGameLog(getCurrentRelease());
+        lock.writeLock().lock();
+        try {
+            scoreService.nextRelease(getCurrentRelease());
+            getCurrentRelease().takeNextBug();
+            logService.createGameLog(getCurrentRelease());
+        } finally {
+            lock.writeLock().unlock();
+        }
     }
 
     private void notifyServices() {
@@ -137,6 +153,11 @@ public class ReleaseEngine {
     }
 
     public List<BasicScenario> getCurrentScenarios() {
-        return getCurrentRelease().getScenarios();
+        lock.readLock().lock();
+        try {
+            return getCurrentRelease().getScenarios();
+        } finally {
+            lock.readLock().unlock();
+        }
     }
 }
