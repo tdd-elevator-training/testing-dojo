@@ -27,7 +27,7 @@ public class LogsController {
     
     @RequestMapping(value = "/logs", method = RequestMethod.GET)
     public String playerRecords(ModelMap model, HttpServletRequest request) {
-        String clientAddress = request.getRemoteHost();
+        String clientAddress = request.getRemoteAddr();
         List<ReleaseLog> logsForHost = logService.getReleaseLogsForHost(clientAddress);
         List<List<PlayerRecord>> releaseLogs = new ArrayList<List<PlayerRecord>>();
         for (ReleaseLog releaseLog : logsForHost) {
