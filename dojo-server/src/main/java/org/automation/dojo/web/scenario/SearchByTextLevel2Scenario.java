@@ -1,6 +1,7 @@
 package org.automation.dojo.web.scenario;
 
 import org.automation.dojo.web.bugs.Bug;
+import org.automation.dojo.BugsQueue;
 import org.automation.dojo.web.bugs.ChangeDescriptionIfListNotEmptyBug;
 import org.automation.dojo.web.bugs.FoundNotExistsProductBug;
 import org.automation.dojo.web.bugs.NoResultWhenExpectedBug;
@@ -14,8 +15,8 @@ import java.util.List;
 
 public class SearchByTextLevel2Scenario extends BasicScenario<RequestWorker> {
 
-    public SearchByTextLevel2Scenario(int id, String description) {
-        super(id, description);
+    public SearchByTextLevel2Scenario(int id, String description, BugsQueue bugsQueue) {
+        super(id, description, bugsQueue);
     }
 
     @Override

@@ -1,5 +1,6 @@
 package org.automation.dojo.web.scenario;
 
+import org.automation.dojo.BugsQueue;
 import org.automation.dojo.web.bugs.Bug;
 
 import java.util.ArrayList;
@@ -12,14 +13,15 @@ import java.util.Random;
 public abstract class BasicScenario<T> implements Scenario<T> {
 
     private int id;
+//    private BugsQueue bugsQueue;
     protected Bug bug;
     private String description;
 
-    public BasicScenario(int id) {
-        this(id, "");
+    public BasicScenario(int id, BugsQueue bugsQueue) {
+        this(id, "", bugsQueue);
     }
 
-    public BasicScenario(int id, String description) {
+    public BasicScenario(int id, String description, BugsQueue bugsQueue) {
         this.id = id;
         this.description = description;
 //        this.bugsQueue = bugsQueue;

@@ -7,10 +7,11 @@ import java.util.Arrays;
 import java.util.List;
 
 public class MockScenario extends BasicScenario {
+    private int currentBugNumber = -1;
     private Bug nextBug;
 
-    public MockScenario(int id, String description) {
-        super(id, description);
+    public MockScenario(int id, String description, BugsQueue bugsQueue) {
+        super(id, description, bugsQueue);
     }
 
     @Override

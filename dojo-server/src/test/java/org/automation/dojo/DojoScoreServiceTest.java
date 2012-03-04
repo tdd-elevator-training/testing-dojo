@@ -3,7 +3,9 @@ package org.automation.dojo;
 import org.automation.dojo.web.bugs.Bug;
 import org.automation.dojo.web.scenario.BasicScenario;
 import org.automation.dojo.web.scenario.Release;
+import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
@@ -281,7 +283,7 @@ public class DojoScoreServiceTest {
 
 
     private BasicScenario createScneario(int scenarioId, int bugWeight) {
-        BasicScenario scenario = new MockScenario(scenarioId, "");
+        BasicScenario scenario = new MockScenario(scenarioId, "", null);
         if (bugWeight > 0) {
             Bug bug = new Bug(1);
             bug.setWeight(bugWeight);
