@@ -1,13 +1,9 @@
 package org.automation.dojo;
 
-import com.google.common.base.Predicate;
-import com.google.common.collect.Collections2;
 import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
 import org.automation.dojo.web.scenario.BasicScenario;
 import org.automation.dojo.web.scenario.Release;
 
-import javax.annotation.Nullable;
 import java.util.*;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
@@ -16,8 +12,8 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  */
 public class GameLogService implements LogService {
     private ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
-    private ReleaseLogs currentRelease;
-    private ArrayList<ReleaseLogs> releases = new ArrayList<ReleaseLogs>();
+    private ReleaseLog currentRelease;
+    private ArrayList<ReleaseLog> releases = new ArrayList<ReleaseLog>();
     private Set<String> addresses = new HashSet<String>();
 
     public void playerLog(PlayerRecord record) {
@@ -34,7 +30,7 @@ public class GameLogService implements LogService {
         lock.readLock().lock();
         try {
             ArrayList<GameLog> result = new ArrayList<GameLog>();
-            for (ReleaseLogs release : releases) {
+            for (ReleaseLog release : releases) {
                 GameLog gameLog = new GameLog(scenario);
                 gameLog.addAll(release.getRecordsFor(clientAddress, scenario));
                 result.add(gameLog);
@@ -52,10 +48,19 @@ public class GameLogService implements LogService {
     public void createGameLog(Release release) {
         lock.writeLock().lock();
         try {
-            currentRelease = new ReleaseLogs(release);
+            currentRelease = new ReleaseLog(release);
             releases.add(currentRelease);
         }finally{
             lock.writeLock().unlock();
+        }
+    }
+
+    public List<ReleaseLog> getReleaseLogsForHost(String clientAddress) {
+        lock.readLock().lock();
+        try {
+            return new ArrayList<ReleaseLog>(releases);
+        } finally {
+            lock.readLock().unlock();
         }
     }
 }

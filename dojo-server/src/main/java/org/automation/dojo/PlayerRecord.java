@@ -48,4 +48,7 @@ public class PlayerRecord {
         return clientAddress;
     }
 
+    public String getDescription() {
+        return description;
+    }
 }

@@ -12,12 +12,12 @@ import java.util.List;
 /**
  * @author serhiy.zelenin
  */
-public class ReleaseLogs {
+public class ReleaseLog {
     private Release release;
     
     private List<PlayerRecord> records = new ArrayList<PlayerRecord>();
     
-    public ReleaseLogs(Release release) {
+    public ReleaseLog(Release release) {
         this.release = release;
     }
 
@@ -29,6 +29,20 @@ public class ReleaseLogs {
         ArrayList<PlayerRecord> result = new ArrayList<PlayerRecord>();
         for (PlayerRecord playerRecord : records) {
             if (playerRecord.getClientAddress().equals(clientAddress) && playerRecord.getScenario().equals(scenario)) {
+                result.add(playerRecord);
+            }
+        }
+        return result;
+    }
+
+    public Release getRelease() {
+        return release;
+    }
+
+    public List<PlayerRecord> getRecordsForHost(String clientAddress) {
+        ArrayList<PlayerRecord> result = new ArrayList<PlayerRecord>();
+        for (PlayerRecord playerRecord : records) {
+            if (playerRecord.getClientAddress().equals(clientAddress)) {
                 result.add(playerRecord);
             }
         }

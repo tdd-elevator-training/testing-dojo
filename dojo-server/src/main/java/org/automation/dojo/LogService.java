@@ -17,4 +17,6 @@ public interface LogService {
     Collection<String> getUniqueClientAddresses();
 
     void createGameLog(Release previousRelease);
+
+    List<ReleaseLog> getReleaseLogsForHost(String clientAddress);
 }

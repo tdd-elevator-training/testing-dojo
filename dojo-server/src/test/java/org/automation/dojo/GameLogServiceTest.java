@@ -2,12 +2,12 @@ package org.automation.dojo;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
+import org.automation.dojo.web.scenario.BasicScenario;
 import org.automation.dojo.web.scenario.Release;
 import org.fest.assertions.ListAssert;
 import org.junit.Before;
 import org.junit.Test;
 
-import javax.annotation.Nullable;
 import java.util.List;
 
 import static junit.framework.Assert.assertEquals;
@@ -63,7 +63,7 @@ public class GameLogServiceTest {
         List<GameLog> gameLogs = gameLogService.getGameLogs("10.10.1.1", scenario);
 
         assertFalse(Iterables.all(gameLogs, new EmptyPlayerLogs()));
-        assertTrue(Iterables.all(gameLogs, new AllLogsForAddress("10.10.1.1")));
+        assertTrue(Iterables.all(gameLogs, new AllRecordsForAddress("10.10.1.1")));
     }
 
     @Test
@@ -79,7 +79,7 @@ public class GameLogServiceTest {
 
         assertEquals(1, gameLogs.size());
         assertAllGameLogsForScenario(gameLogs, scenario1);
-        Iterables.all(gameLogs, new EmptyPlayerLogs());
+        assertTrue(Iterables.all(gameLogs, new AllRecordsForScenario(scenario1)));
     }
 
     @Test
@@ -92,6 +92,23 @@ public class GameLogServiceTest {
 
         assertThat(gameLogService.getUniqueClientAddresses()).doesNotHaveDuplicates().contains("10.10.1.1", "127.0.0.1");
     } 
+    
+    @Test
+    public void shouldReturnGameLogsForHost() {
+        MockScenario scenario1 = new MockScenario(1, "", null);
+        MockScenario scenario2 = new MockScenario(2, "", null);
+        gameLogService.createGameLog(new Release(scenario1, scenario2));
+        gameLogService.playerLog(record(scenario1,"127.0.0.1"));
+        gameLogService.playerLog(record(scenario2,"127.0.0.1"));
+
+        List<ReleaseLog> releaseLogs = gameLogService.getReleaseLogsForHost("127.0.0.1");
+        ReleaseLog releaseLog = releaseLogs.get(0);
+
+        List<PlayerRecord> records = releaseLog.getRecordsForHost("127.0.0.1");
+
+        assertTrue(Iterables.all(records, new RecordsForAddress("127.0.0.1")));
+        
+    }
     
     private PlayerRecord record(MockScenario scenario, String clientAddress) {
         return new PlayerRecord("test", clientAddress, scenario, false, 100, "", PlayerRecord.Type.LIAR);
@@ -107,17 +124,44 @@ public class GameLogServiceTest {
         }
     }
 
-    private static class AllLogsForAddress implements Predicate<GameLog> {
+    private static class AllRecordsForAddress implements Predicate<GameLog> {
         private final String expectedAddress;
 
-        public AllLogsForAddress(String expectedAddress) {
+        public AllRecordsForAddress(String expectedAddress) {
             this.expectedAddress = expectedAddress;
         }
 
         public boolean apply(GameLog gameLog) {
+            return Iterables.all(gameLog.getPlayerRecords(), new RecordsForAddress(expectedAddress));
+        }
+
+    }
+
+    private static class RecordsForAddress implements Predicate<PlayerRecord> {
+        private String expectedAddress;
+
+        public RecordsForAddress(String expectedAddress) {
+
+            this.expectedAddress = expectedAddress;
+        }
+
+        public boolean apply(PlayerRecord input) {
+            return input.getClientAddress().equals(expectedAddress);
+        }
+    }
+
+    private class AllRecordsForScenario implements Predicate<GameLog> {
+        public BasicScenario scenario;
+
+        private AllRecordsForScenario(BasicScenario scenario) {
+            this.scenario = scenario;
+        }
+
+        public boolean apply(GameLog gameLog) {
             return Iterables.all(gameLog.getPlayerRecords(), new Predicate<PlayerRecord>() {
-                public boolean apply(PlayerRecord input) {
-                    return input.getClientAddress().equals(expectedAddress);
+
+                public boolean apply(PlayerRecord record  ) {
+                    return record.getScenario().equals(scenario);
                 }
             });
         }
