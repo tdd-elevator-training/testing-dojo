@@ -30,16 +30,26 @@ public class GameLog {
     }
 
     public boolean bugReported() {
-        return findReportedRecord() != null;
+        return findReportedBugs() != null;
     }
 
-    public PlayerRecord findReportedRecord() {
+    public PlayerRecord findReportedBugs() {
         List<PlayerRecord> playerRecords = getPlayerRecords();
         for (PlayerRecord record : playerRecords) {
-            if (!record.isPassed()) {
+            if (!record.isPassed() && record.getType() == PlayerRecord.Type.VALID_BUG) {
                 return record;
             }
         }
         return null;
+    }
+
+    public boolean liarReported() {
+        List<PlayerRecord> records = getPlayerRecords();
+        for (PlayerRecord record : records) {
+            if (record.getType() == PlayerRecord.Type.LIAR) {
+                return true;
+            }
+        }
+        return false;
     }
 }

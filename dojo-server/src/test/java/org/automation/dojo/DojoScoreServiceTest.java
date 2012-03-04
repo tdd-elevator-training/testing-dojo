@@ -3,6 +3,7 @@ package org.automation.dojo;
 import org.automation.dojo.web.bugs.Bug;
 import org.automation.dojo.web.scenario.BasicScenario;
 import org.automation.dojo.web.scenario.Release;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -84,6 +85,21 @@ public class DojoScoreServiceTest {
     }
 
     @Test
+    public void shouldAddHalfScoreWhenFoundAgainAfterPassed_SkipZeros(){
+        BasicScenario scenario = setupScenario(1, 100);
+        setupGameLogs(scenario,
+                gameLog(scenario, record(scenario, false, 100), record(scenario, false, 0)),
+                gameLog(scenario, record(scenario, true, 0)),
+                gameLog(scenario)); //new minor release record, no reports yet
+
+        reportScenario(1, false);
+
+        PlayerRecord capturedRecord = captureLogRecord();
+
+        assertEquals(100 / 2, capturedRecord.getScore());
+    }
+
+    @Test
     public void shouldNotAddScoreWhenReportedBugAgainForSameMinorRelease(){
         BasicScenario scenario = setupScenario(1, 100);
         setupGameLogs(scenario,
@@ -146,7 +162,6 @@ public class DojoScoreServiceTest {
     }
 
     @Test
-    @Ignore
     public void shouldDecreaseScoreWhenLiar() {
         BasicScenario scenario = setupScenario(1, 0);
         setupGameLogs(scenario,
@@ -160,13 +175,87 @@ public class DojoScoreServiceTest {
         assertFalse(record.isPassed());
     }
 
+    @Test
+    public void shouldDecreaseScoreWhenInvertedLiar() {
+        BasicScenario scenario = setupScenario(1, 100);
+        setupGameLogs(scenario,
+                gameLog(scenario, record(scenario, false, 100)));
+
+        reportScenario(1, true);
+
+        PlayerRecord record = captureLogRecord();
+        assertEquals(-100*2, record.getScore());
+        assertTrue(record.isPassed());
+        assertEquals(PlayerRecord.Type.LIAR, record.getType());
+    }
+
+    @Test
+    public void shouldNotDecreaseScoreWhenLiarReportedForSameRelease() {
+        BasicScenario scenario = setupScenario(1, 100);
+        setupGameLogs(scenario,
+                gameLog(scenario, record(scenario, false, 100)),
+                gameLog(scenario, record(scenario, true, -200, PlayerRecord.Type.LIAR)));
+
+        reportScenario(1, true);
+
+        PlayerRecord record = captureLogRecord();
+        assertEquals(0, record.getScore());
+        assertTrue(record.isPassed());
+        assertEquals(PlayerRecord.Type.LIAR, record.getType());
+    }
+
+    @Test
+    public void shouldNotDecreaseScoreWhenInvertedLiarReportedForSameRelease() {
+        BasicScenario scenario = setupScenario(1, 0);
+        setupGameLogs(scenario,
+                gameLog(scenario, record(scenario, false, 100)),
+                gameLog(scenario, record(scenario, false, -200, PlayerRecord.Type.LIAR)));
+
+        reportScenario(1, false);
+
+        PlayerRecord record = captureLogRecord();
+        assertEquals(0, record.getScore());
+        assertEquals(PlayerRecord.Type.LIAR, record.getType());
+    }
+
+    @Test
+    public void shouldNotDecreaseScoreWhenResultMismatch() {
+        BasicScenario scenario = setupScenario(1, 100);
+        setupGameLogs(scenario,
+                gameLog(scenario));
+
+        reportScenario(1, true);
+
+        PlayerRecord record = captureLogRecord();
+        assertEquals(0, record.getScore());
+        assertEquals(PlayerRecord.Type.LIAR, record.getType());
+    }
+
+    @Test
+    public void shouldNotDecreaseScoreWhenResultMismatch_Inverted() {
+        BasicScenario scenario = setupScenario(1, 0);
+        setupGameLogs(scenario,
+                gameLog(scenario));
+
+        reportScenario(1, false);
+
+        PlayerRecord record = captureLogRecord();
+        assertEquals(0, record.getScore());
+        assertEquals(PlayerRecord.Type.LIAR, record.getType());
+    }
+
+
     private void setupGameLogs(BasicScenario scenario, GameLog... gameLogs) {
         when(logService.getGameLogs(CLIENT_ADDRESS, scenario))
                 .thenReturn(Arrays.asList(gameLogs));
     }
 
     private PlayerRecord record(BasicScenario scenario, boolean passed, int score) {
-        return new PlayerRecord("", CLIENT_ADDRESS, scenario, passed, score, "");
+        return record(scenario, passed, score, PlayerRecord.Type.VALID_BUG);
+    }
+
+    private PlayerRecord record(BasicScenario scenario, boolean passed, int score, PlayerRecord.Type type) {
+        return new PlayerRecord("", CLIENT_ADDRESS, scenario, passed, score, "", type);
     }
 
     private GameLog gameLog(BasicScenario scenario,PlayerRecord ... records) {
