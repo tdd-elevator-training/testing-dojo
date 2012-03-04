@@ -53,17 +53,18 @@ public class ReleaseEngine {
         if (currentReleaseIndex == releases.size() - 1) {
             return;
         }
-        notifyServices();
+        scoreService.nextRelease(getCurrentRelease());
         setMajorRelease(currentReleaseIndex + 1);
+        logService.createGameLog(getCurrentRelease());
     }
 
     public void nextMinorRelease() {
-        notifyServices();
+        scoreService.nextRelease(getCurrentRelease());
         getCurrentRelease().takeNextBug();
+        logService.createGameLog(getCurrentRelease());
     }
 
     private void notifyServices() {
-        //WARN!! the order is not tested but it is important to calculate scores
         logService.createGameLog(getCurrentRelease());
         scoreService.nextRelease(getCurrentRelease());
     }

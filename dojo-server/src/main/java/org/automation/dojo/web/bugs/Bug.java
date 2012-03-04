@@ -36,4 +36,9 @@ public class Bug<T> {
     public String toString() {
         return getClass().getSimpleName();
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        return obj instanceof Bug && this.id == ((Bug) obj).id;
+    }
 }
