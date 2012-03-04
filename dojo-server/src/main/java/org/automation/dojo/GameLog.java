@@ -1,7 +1,9 @@
 package org.automation.dojo;
 
+import com.google.common.collect.Iterables;
 import org.automation.dojo.web.scenario.BasicScenario;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -10,11 +12,16 @@ import java.util.List;
  */
 public class GameLog {
     private BasicScenario scenario;
-    private List<PlayerRecord> playerRecords;
+    private List<PlayerRecord> playerRecords = new ArrayList<PlayerRecord>();
 
     public GameLog(BasicScenario scenario, PlayerRecord ... records) {
         this.scenario = scenario;
-        this.playerRecords = Arrays.asList(records);
+        this.playerRecords = new ArrayList<PlayerRecord>(Arrays.asList(records));
+    }
+
+    public GameLog(BasicScenario scenario, Iterable<PlayerRecord> records) {
+        this.scenario = scenario;
+        Iterables.addAll(playerRecords, records);
     }
 
     public BasicScenario getScenario() {
@@ -51,5 +58,9 @@ public class GameLog {
             }
         }
         return false;
+    }
+
+    public void addAll(List<PlayerRecord> playerRecords) {
+        this.playerRecords.addAll(playerRecords);
     }
 }

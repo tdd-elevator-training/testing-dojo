@@ -12,7 +12,7 @@ public class Bug<T> implements Serializable {
     public static Bug NULL_BUG = new NullBug();
 
     private int id;
-    private int weight;
+    private int weight = 100;
 
     public Bug(int id) {
         this.id = id;

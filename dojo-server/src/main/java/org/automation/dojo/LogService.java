@@ -3,6 +3,7 @@ package org.automation.dojo;
 import org.automation.dojo.web.scenario.BasicScenario;
 import org.automation.dojo.web.scenario.Release;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -13,7 +14,7 @@ public interface LogService {
 
     List<GameLog> getGameLogs(String clientAddress, BasicScenario scenario);
 
-    List<String> getUniqueClientAddresses();
+    Collection<String> getUniqueClientAddresses();
 
     void createGameLog(Release previousRelease);
 }

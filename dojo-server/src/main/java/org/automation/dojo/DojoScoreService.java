@@ -6,6 +6,7 @@ import org.automation.dojo.web.scenario.Release;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 public class DojoScoreService implements ScoreService {
@@ -82,7 +83,7 @@ public class DojoScoreService implements ScoreService {
     }
 
     public void nextRelease(Release previousRelease) {
-        List<String> clientAddresses = logService.getUniqueClientAddresses();
+        Collection<String> clientAddresses = logService.getUniqueClientAddresses();
         for (String clientAddress : clientAddresses) {
             List<BasicScenario> scenarios = previousRelease.getScenarios();
             for (BasicScenario scenario : scenarios) {

@@ -43,4 +43,9 @@ public class PlayerRecord {
     public Type getType() {
         return type;
     }
+
+    public String getClientAddress() {
+        return clientAddress;
+    }
+
 }
