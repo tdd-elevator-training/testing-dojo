@@ -106,7 +106,21 @@ public class ReleaseEngineTest {
 
         engine.nextMinorRelease();
 
-        assertSame(Bug.NULL_BUG, engine.getScenario(1).getBug());
+        assertEquals(Bug.NULL_BUG, engine.getScenario(1).getBug());
+    }
+
+    @Test
+    public void shouldSerializeOnGetRelease(){
+        setScenarioDefinitions("1,scenario1,1,org.automation.dojo.MockScenario\n");
+        engine.init();
+
+        putNextBugForScenario(engine.getScenario(1), 123);
+        BasicScenario scenario = engine.getCurrentRelease().getScenario(1);
+        
+        engine.nextMinorRelease();
+        scenario.setBug(new Bug(345));
+        
+        assertEquals(123, engine.getCurrentRelease().getScenario(1).getBug().getId());
     }
 
     @Test

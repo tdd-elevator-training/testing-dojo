@@ -12,6 +12,8 @@ import java.util.List;
  */
 public class Release<T> implements Scenario<T>, Serializable {
 
+    private static final long serialVersionUID = -2300292798842489992L;
+
     private List<BasicScenario> scenarios = new ArrayList<BasicScenario>();
 
     public Release(BasicScenario ... scenario) {

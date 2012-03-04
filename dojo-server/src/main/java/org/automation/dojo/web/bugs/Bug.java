@@ -1,9 +1,14 @@
 package org.automation.dojo.web.bugs;
 
+import java.io.Serializable;
+
 /**
  * @author serhiy.zelenin
  */
-public class Bug<T> {
+public class Bug<T> implements Serializable {
+
+    private static final long serialVersionUID = -3599003903578159919L;
+
     public static Bug NULL_BUG = new NullBug();
 
     private int id;
@@ -35,5 +40,23 @@ public class Bug<T> {
     @Override
     public String toString() {
         return getClass().getSimpleName();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        Bug bug = (Bug) o;
+
+        if (id != bug.id) {
+            return false;
+        }
+
+        return true;
     }
 }

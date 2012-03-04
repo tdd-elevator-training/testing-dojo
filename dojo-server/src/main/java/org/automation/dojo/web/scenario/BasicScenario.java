@@ -3,15 +3,18 @@ package org.automation.dojo.web.scenario;
 import org.automation.dojo.BugsQueue;
 import org.automation.dojo.web.bugs.Bug;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * @author serhiy.zelenin
  */
-public abstract class BasicScenario<T> implements Scenario<T> {
+public abstract class BasicScenario<T> implements Scenario<T>, Serializable {
+
+    private static final long serialVersionUID = -7932822537221318057L;
 
     private int id;
-    private BugsQueue bugsQueue;
+    private transient BugsQueue bugsQueue;
     protected Bug bug;
     private String description;
 
@@ -64,4 +67,23 @@ public abstract class BasicScenario<T> implements Scenario<T> {
     public void setNoBug() {
         this.bug = Bug.NULL_BUG;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        BasicScenario that = (BasicScenario) o;
+
+        if (id != that.id) {
+            return false;
+        }
+
+        return true;
+    }
+
 }

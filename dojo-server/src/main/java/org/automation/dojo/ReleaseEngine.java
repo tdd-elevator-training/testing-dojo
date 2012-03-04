@@ -4,6 +4,7 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.SerializationUtils;
 import org.automation.dojo.web.scenario.BasicScenario;
 import org.automation.dojo.web.scenario.Release;
+import org.automation.dojo.web.scenario.Scenario;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import sun.misc.JavaSecurityProtectionDomainAccess;
@@ -48,8 +49,7 @@ public class ReleaseEngine {
     public Release getCurrentRelease() {
         lock.readLock().lock();
         try {
-//            return (Release) SerializationUtils.clone(releases.get(currentReleaseIndex));
-            return releases.get(currentReleaseIndex);
+            return (Release) SerializationUtils.clone(releases.get(currentReleaseIndex));
         } finally {
             lock.readLock().unlock();
         }
@@ -73,11 +73,15 @@ public class ReleaseEngine {
         lock.writeLock().lock();
         try {
             scoreService.nextRelease(getCurrentRelease());
-            getCurrentRelease().takeNextBug();
+            currentRelease().takeNextBug();
             logService.createGameLog(getCurrentRelease());
         } finally {
             lock.writeLock().unlock();
         }
+    }
+
+    private Release currentRelease() {
+        return releases.get(currentReleaseIndex);
     }
 
     private void notifyServices() {
@@ -139,11 +143,16 @@ public class ReleaseEngine {
     }
 
     public BasicScenario getScenario(int scenarioId) {
-        return getCurrentRelease().getScenario(scenarioId);
+        lock.readLock().lock();
+        try {
+            return getCurrentRelease().getScenario(scenarioId);
+        } finally {
+            lock.readLock().unlock();
+        }
     }
 
     public String getMinorInfo() {
-        return getCurrentRelease().toString();
+        return currentRelease().toString();
     }
 
     public String getMajorInfo() {
@@ -152,8 +161,13 @@ public class ReleaseEngine {
 
     //WARN!! public for testing only!!!
     public void setMajorRelease(int index) {
-        currentReleaseIndex = index;
-        getCurrentRelease().setNoBug();
+        lock.writeLock().lock();
+        try {
+            currentReleaseIndex = index;
+            currentRelease().setNoBug();
+        } finally {
+            lock.writeLock().unlock();
+        }
     }
 
     public List<BasicScenario> getCurrentScenarios() {
