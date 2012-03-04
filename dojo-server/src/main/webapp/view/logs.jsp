@@ -11,7 +11,7 @@
 	Logs for ${playerName}:<br>
 	    <table>
 	        <tr>
-	            <td>Scenario</td><td>Test result</td><td>Description</td><td>Log type</td>
+	            <td>Scenario</td><td>Score</td><td>Test result</td><td>Description</td><td>Log type</td>
 	        </tr>
             <c:forEach items="${releaseLogs}" var="releaseLog" varStatus="statusRelease">
                 <tr>
@@ -20,7 +20,7 @@
 
                 <c:forEach items="${releaseLog}" var="playerRecord" varStatus="statusRecord">
                 <tr>
-                    <td>${playerRecord.scenario.id}</td><td>${playerRecord.passed}</td><td>${playerRecord.description}</td><td>${playerRecord.type}</td>
+                    <td>${playerRecord.scenario.id}</td><td>${playerRecord.score}</td><td>${playerRecord.passed}</td><td>${playerRecord.description}</td><td>${playerRecord.type}</td>
                 </tr>
                 </c:forEach>
             </c:forEach>

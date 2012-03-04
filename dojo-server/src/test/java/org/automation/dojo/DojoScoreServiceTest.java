@@ -4,6 +4,7 @@ import org.automation.dojo.web.bugs.Bug;
 import org.automation.dojo.web.scenario.BasicScenario;
 import org.automation.dojo.web.scenario.Release;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
@@ -240,6 +241,37 @@ public class DojoScoreServiceTest {
         PlayerRecord record = captureLogRecord();
         assertEquals(0, record.getScore());
         assertEquals(PlayerRecord.Type.LIAR, record.getType());
+    }
+
+    @Test
+    @Ignore
+    public void shouldLogZeroWhenReportedNoBugsForBugsFreeScenario() {
+        BasicScenario scenario = setupScenario(1, 0);
+        setupGameLogs(scenario,
+                gameLog(scenario));
+
+        reportScenario(1, true);
+
+        PlayerRecord record = captureLogRecord();
+        assertEquals(0, record.getScore());
+//        assertEquals(PlayerRecord.Type.LIAR, record.getType()); what type?
+    }
+
+    @Test
+    @Ignore
+    public void shouldReportLiarWhen() {
+/*
+        Release 1
+        1	100	true	Scores for bug #0 scenario #1	VALID_BUG
+        1	0	false	Fix the test! It shows wrong result. Current scenario #1 is bugs free.	LIAR
+        1	0	false	Fix the test! It shows wrong result. Current scenario #1 is bugs free.	LIAR
+        1	100	true	Scores for bug #0 scenario #1	VALID_BUG
+        Release 2
+        1	0	true	Fix the test! It shows wrong result. Current scenario #1 contains bug.	LIAR
+        1	100	false	Scores for bug #0 scenario #1	VALID_BUG
+?       1	0	false	Bug already reported for this Minor Release. Bug #0	DUPLICATE
+-->     1	0	true	Liar! Current scenario #1 contains bug.Previously reported bug #0	LIAR
+*/
     }
 
 

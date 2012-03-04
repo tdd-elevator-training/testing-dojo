@@ -8,6 +8,8 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.htmlunit.HtmlUnitDriver;
 
+import static junit.framework.Assert.fail;
+
 /**
  * @author serhiy.zelenin
  */
@@ -33,6 +35,6 @@ public class SampleAutomationTest {
 
         searchText.sendKeys("mouse");
         searchButton.submit();
-
+//        fail();
     }
 }

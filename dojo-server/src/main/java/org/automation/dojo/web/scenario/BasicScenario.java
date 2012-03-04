@@ -53,7 +53,7 @@ public abstract class BasicScenario<T> implements Scenario<T>, Serializable {
     public abstract List<? extends Bug> getPossibleBugs();
 
     public boolean bugsFree() {
-        return bug == null || bug == Bug.NULL_BUG;
+        return bug == null || bug.equals(Bug.NULL_BUG);
     }
 
     @Override
