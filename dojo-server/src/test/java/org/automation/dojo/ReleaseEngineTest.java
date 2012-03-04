@@ -3,7 +3,6 @@ package org.automation.dojo;
 import org.automation.dojo.web.bugs.Bug;
 import org.automation.dojo.web.scenario.BasicScenario;
 import org.automation.dojo.web.scenario.Release;
-import org.automation.dojo.web.scenario.SearchByTextLevel2Scenario;
 import org.fest.assertions.ListAssert;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -37,8 +36,6 @@ public class ReleaseEngineTest {
 
     
     private ReleaseEngine engine;
-    private Release capturedScoreServiceRelease;
-    private Release capturedLogServiceRelease;
 
     @Before
     public void setUp() throws Exception {
@@ -113,7 +110,7 @@ public class ReleaseEngineTest {
     }
 
     @Test
-    @Ignore //TODO: kill or leave after serialization
+    @Ignore //TODO: revisit after serialization is done
     public void shouldNotifyServicesWhenInitThenMinorReleaseThenMajorRelease(){
         setScenarioDefinitions("" +
                 "1,scenario1,1,org.automation.dojo.MockScenario\n" +
@@ -121,39 +118,20 @@ public class ReleaseEngineTest {
                 "1,scenario1,2,org.automation.dojo.MockScenario\n");
         engine.init();
 
-        Release release = engine.getCurrentRelease();
-        captureReleaseEvents(1);
-        assertEquals(release, capturedLogServiceRelease);
-        assertEquals(release, capturedLogServiceRelease);
+        assertServicesNotified(engine.getCurrentRelease(), 1);
 
         engine.nextMinorRelease();
 
-        captureReleaseEvents(2);
-        assertEquals(Bug.NULL_BUG, capturedScoreServiceRelease.getScenario(1).getBug());
-        assertEquals(1, capturedLogServiceRelease.getScenario(1).getBug().getId());
-
-/*
-
-        Release release1 = engine.getCurrentRelease();
-        int wantedNumberOfInvocations = 2;
-        assertSame(release1, scoreServiceReleaseCaptor.getValue());
-        assertSame(release1, logServiceReleaseCaptor.getValue());
+        assertServicesNotified(engine.getCurrentRelease(), 2);
 
         Release release = engine.getCurrentRelease();
         engine.nextMajorRelease();
         assertServicesNotified(release, 3);
-*/
-    }
-
-    private void captureReleaseEvents(int wantedNumberOfInvocations) {
-        verify(scoreService, times(wantedNumberOfInvocations)).nextRelease(scoreServiceReleaseCaptor.capture());
-        verify(logService, times(wantedNumberOfInvocations)).createGameLog(logServiceReleaseCaptor.capture());
-        capturedLogServiceRelease = logServiceReleaseCaptor.getValue();
-        capturedScoreServiceRelease = scoreServiceReleaseCaptor.getValue();
     }
 
     private void assertServicesNotified(Release release, int wantedNumberOfInvocations) {
-        captureReleaseEvents(wantedNumberOfInvocations);
+        verify(scoreService, times(wantedNumberOfInvocations)).nextRelease(scoreServiceReleaseCaptor.capture());
+        verify(logService, times(wantedNumberOfInvocations)).createGameLog(logServiceReleaseCaptor.capture());
         assertSame(release, scoreServiceReleaseCaptor.getValue());
         assertSame(release, logServiceReleaseCaptor.getValue());
     }
@@ -162,8 +140,8 @@ public class ReleaseEngineTest {
         engine.setScenarioResource(new ByteArrayResource(scenarioDefinition.getBytes()));
     }
 
-    private void putNextBugForScenario(BasicScenario expectedScenario, Integer bugId) {
-        ((MockScenario) expectedScenario).setNextBug(bugId == null ? Bug.NULL_BUG : new Bug(bugId));
+    private OngoingStubbing<Bug> putNextBugForScenario(BasicScenario expectedScenario, Integer bugId) {
+        return when(bugsQueue.nextBugFor(eq(expectedScenario))).thenReturn(bugId == null ? Bug.NULL_BUG : new Bug(bugId));
     }
 
     private ListAssert assertCurrentScenarios(Integer... scenarioId) {

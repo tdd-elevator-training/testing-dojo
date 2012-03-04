@@ -3,9 +3,7 @@ package org.automation.dojo.web.scenario;
 import org.automation.dojo.BugsQueue;
 import org.automation.dojo.web.bugs.Bug;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 /**
  * @author serhiy.zelenin
@@ -13,7 +11,7 @@ import java.util.Random;
 public abstract class BasicScenario<T> implements Scenario<T> {
 
     private int id;
-//    private BugsQueue bugsQueue;
+    private BugsQueue bugsQueue;
     protected Bug bug;
     private String description;
 
@@ -24,7 +22,7 @@ public abstract class BasicScenario<T> implements Scenario<T> {
     public BasicScenario(int id, String description, BugsQueue bugsQueue) {
         this.id = id;
         this.description = description;
-//        this.bugsQueue = bugsQueue;
+        this.bugsQueue = bugsQueue;
         setNoBug();
     }
 
@@ -42,11 +40,7 @@ public abstract class BasicScenario<T> implements Scenario<T> {
 
     @Override
     public void takeNextBug() {
-        // TODO test this
-        ArrayList<Bug> possibleBugs = new ArrayList<Bug>(getPossibleBugs());
-        possibleBugs.add(Bug.NULL_BUG);
-        int bugIndex = new Random().nextInt(possibleBugs.size());
-        this.bug = possibleBugs.get(bugIndex);
+        this.bug = bugsQueue.nextBugFor(this);
     }
 
     public String getDescription() {
