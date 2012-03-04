@@ -3,7 +3,6 @@ package org.automation.dojo;
 import org.automation.dojo.web.bugs.Bug;
 import org.automation.dojo.web.scenario.BasicScenario;
 import org.automation.dojo.web.scenario.Release;
-import org.automation.dojo.web.scenario.SearchByTextLevel2Scenario;
 import org.fest.assertions.ListAssert;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -13,7 +12,6 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.mockito.stubbing.OngoingStubbing;
 import org.springframework.core.io.ByteArrayResource;
 
 import static junit.framework.Assert.assertEquals;
@@ -27,7 +25,6 @@ import static org.mockito.Mockito.*;
  */
 @RunWith(MockitoJUnitRunner.class)
 public class ReleaseEngineTest {
-    @Mock BugsQueue bugsQueue;
     @Mock
     ScoreService scoreService;
     @Mock LogService logService;
@@ -42,7 +39,7 @@ public class ReleaseEngineTest {
 
     @Before
     public void setUp() throws Exception {
-        engine = new ReleaseEngine(bugsQueue, scoreService, logService);
+        engine = new ReleaseEngine(scoreService, logService);
     }
 
     @Test

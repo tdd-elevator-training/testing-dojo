@@ -24,9 +24,6 @@ public class ReleaseEngine {
     private Resource scenarioResource;
 
     @Autowired
-    private BugsQueue bugsQueue;
-
-    @Autowired
     private ScoreService scoreService;
 
     @Autowired
@@ -35,8 +32,7 @@ public class ReleaseEngine {
     public ReleaseEngine() {
     }
 
-    public ReleaseEngine(BugsQueue bugsQueue, ScoreService scoreService, LogService logService) {
-        this.bugsQueue = bugsQueue;
+    public ReleaseEngine(ScoreService scoreService, LogService logService) {
         this.scoreService = scoreService;
         this.logService = logService;
     }
@@ -113,9 +109,9 @@ public class ReleaseEngine {
     }
 
     private BasicScenario scenario(Class<BasicScenario> scenarioClass, int id, String description) {
-        return constructor().withParameterTypes(int.class, String.class, BugsQueue.class)
+        return constructor().withParameterTypes(int.class, String.class)
                              .in(scenarioClass)
-                             .newInstance(id, description, bugsQueue);
+                             .newInstance(id, description);
     }
 
     public void setScenarioResource(Resource scenarioResource) {

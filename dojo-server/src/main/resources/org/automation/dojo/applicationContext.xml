@@ -10,7 +10,6 @@
 
     <bean class="org.automation.dojo.GameLogService" id="logService"/>
     <bean class="org.automation.dojo.DojoScoreService" id="scoreService" autowire="byType"/>
-    <bean class="org.automation.dojo.ShopBugsQueue" id="bugsQueue"/>
     <bean class="org.automation.dojo.ReleaseEngine" id="releaseEngine" init-method="init">
         <property name="scenarioResource" value="classpath:/org/automation/dojo/scenarios.csv"/>
     </bean>
