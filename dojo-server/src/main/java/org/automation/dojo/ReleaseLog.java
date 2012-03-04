@@ -25,10 +25,10 @@ public class ReleaseLog {
         records.add(record);
     }
 
-    public List<PlayerRecord> getRecordsFor(final String clientAddress, final BasicScenario scenario) {
+    public List<PlayerRecord> getRecordsFor(final String playerName, final BasicScenario scenario) {
         ArrayList<PlayerRecord> result = new ArrayList<PlayerRecord>();
         for (PlayerRecord playerRecord : records) {
-            if (playerRecord.getClientAddress().equals(clientAddress) && playerRecord.getScenario().equals(scenario)) {
+            if (playerRecord.getPlayerName().equals(playerName) && playerRecord.getScenario().equals(scenario)) {
                 result.add(playerRecord);
             }
         }
@@ -39,10 +39,10 @@ public class ReleaseLog {
         return release;
     }
 
-    public List<PlayerRecord> getRecordsForHost(String clientAddress) {
+    public List<PlayerRecord> getRecordsForPlayer(String player) {
         ArrayList<PlayerRecord> result = new ArrayList<PlayerRecord>();
         for (PlayerRecord playerRecord : records) {
-            if (playerRecord.getClientAddress().equals(clientAddress)) {
+            if (playerRecord.getPlayerName().equals(player)) {
                 result.add(playerRecord);
             }
         }

@@ -5,10 +5,10 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html;">
-		<title>Logs for ${clientAddress}</title>
+		<title>Logs for ${playerName}</title>
 	</head>
 	<body>
-	Logs for ${clientAddress}:<br>
+	Logs for ${playerName}:<br>
 	    <table>
 	        <tr>
 	            <td>Scenario</td><td>Test result</td><td>Description</td><td>Log type</td>

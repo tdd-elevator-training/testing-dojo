@@ -3,9 +3,7 @@ package org.automation.dojo;
 import org.automation.dojo.web.bugs.Bug;
 import org.automation.dojo.web.scenario.BasicScenario;
 import org.automation.dojo.web.scenario.Release;
-import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
@@ -26,7 +24,7 @@ import static org.mockito.Mockito.*;
  */
 @RunWith(MockitoJUnitRunner.class)
 public class DojoScoreServiceTest {
-    private static final String CLIENT_ADDRESS = "10.10.1.1";
+    private static final String PLAYER_NAME = "vasyad";
     @Captor ArgumentCaptor<PlayerRecord> recordCaptor;
     @Mock LogService logService;
     @Mock ReleaseEngine releaseEngine;
@@ -125,7 +123,7 @@ public class DojoScoreServiceTest {
     }
 
     private void setupClientAddressesDb() {
-        when(logService.getUniqueClientAddresses()).thenReturn(Arrays.asList(CLIENT_ADDRESS));
+        when(logService.getRegisteredPlayers()).thenReturn(Arrays.asList(PLAYER_NAME));
     }
 
     @Test
@@ -246,7 +244,7 @@ public class DojoScoreServiceTest {
 
 
     private void setupGameLogs(BasicScenario scenario, GameLog... gameLogs) {
-        when(logService.getGameLogs(CLIENT_ADDRESS, scenario))
+        when(logService.getGameLogs(PLAYER_NAME, scenario))
                 .thenReturn(Arrays.asList(gameLogs));
     }
 
@@ -255,7 +253,7 @@ public class DojoScoreServiceTest {
     }
 
     private PlayerRecord record(BasicScenario scenario, boolean passed, int score, PlayerRecord.Type type) {
-        return new PlayerRecord("", CLIENT_ADDRESS, scenario, passed, score, "", type);
+        return new PlayerRecord("", scenario, passed, score, "", type);
     }
 
     private GameLog gameLog(BasicScenario scenario,PlayerRecord ... records) {
@@ -278,7 +276,7 @@ public class DojoScoreServiceTest {
     }
 
     private boolean reportScenario(int scenarioId, boolean testPassed) {
-        return scoreService.testResult("vasya", CLIENT_ADDRESS, scenarioId, testPassed);
+        return scoreService.testResult(PLAYER_NAME, scenarioId, testPassed);
     }
 
 

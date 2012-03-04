@@ -12,11 +12,13 @@ import java.util.List;
 public interface LogService {
     void playerLog(PlayerRecord record);
 
-    List<GameLog> getGameLogs(String clientAddress, BasicScenario scenario);
+    List<GameLog> getGameLogs(String player, BasicScenario scenario);
 
-    Collection<String> getUniqueClientAddresses();
+    Collection<String> getRegisteredPlayers();
 
     void createGameLog(Release previousRelease);
 
-    List<ReleaseLog> getReleaseLogsForHost(String clientAddress);
+    List<ReleaseLog> getReleaseLogs();
+
+    public boolean registerPlayer(String name);
 }

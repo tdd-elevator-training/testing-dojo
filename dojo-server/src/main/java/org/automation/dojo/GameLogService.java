@@ -1,6 +1,5 @@
 package org.automation.dojo;
 
-import com.google.common.collect.Iterables;
 import org.automation.dojo.web.scenario.BasicScenario;
 import org.automation.dojo.web.scenario.Release;
 
@@ -14,25 +13,27 @@ public class GameLogService implements LogService {
     private ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
     private ReleaseLog currentRelease;
     private ArrayList<ReleaseLog> releases = new ArrayList<ReleaseLog>();
-    private Set<String> addresses = new HashSet<String>();
+    private final Set<String> registeredPlayers = new HashSet<String>();
 
     public void playerLog(PlayerRecord record) {
         lock.writeLock().lock();
         try {
-            addresses.add(record.getClientAddress());
+            if (!registeredPlayers.contains(record.getPlayerName())) {
+                throw new IllegalArgumentException("Player " + record.getPlayerName() + " does not exist!");
+            }
             currentRelease.putRecord(record);
         } finally {
             lock.writeLock().unlock();
         }
     }
 
-    public List<GameLog> getGameLogs(final String clientAddress, final BasicScenario scenario) {
+    public List<GameLog> getGameLogs(final String player, final BasicScenario scenario) {
         lock.readLock().lock();
         try {
             ArrayList<GameLog> result = new ArrayList<GameLog>();
             for (ReleaseLog release : releases) {
                 GameLog gameLog = new GameLog(scenario);
-                gameLog.addAll(release.getRecordsFor(clientAddress, scenario));
+                gameLog.addAll(release.getRecordsFor(player, scenario));
                 result.add(gameLog);
             }
             return result;
@@ -41,8 +42,13 @@ public class GameLogService implements LogService {
         }
     }
 
-    public Collection<String> getUniqueClientAddresses() {
-        return addresses;
+    public Collection<String> getRegisteredPlayers() {
+        lock.readLock().lock();
+        try {
+            return Collections.unmodifiableCollection(registeredPlayers);
+        } finally {
+            lock.readLock().unlock();
+        }
     }
 
     public void createGameLog(Release release) {
@@ -55,12 +61,26 @@ public class GameLogService implements LogService {
         }
     }
 
-    public List<ReleaseLog> getReleaseLogsForHost(String clientAddress) {
+
+    public List<ReleaseLog> getReleaseLogs() {
         lock.readLock().lock();
         try {
-            return new ArrayList<ReleaseLog>(releases);
+            return Collections.unmodifiableList(releases);
         } finally {
             lock.readLock().unlock();
+        }
+    }
+
+    public boolean registerPlayer(String name) {
+        lock.writeLock().lock();
+        try {
+            if (registeredPlayers.contains(name)) {
+                return false;
+            }
+            registeredPlayers.add(name);
+            return true;
+        } finally {
+            lock.writeLock().unlock();
         }
     }
 }

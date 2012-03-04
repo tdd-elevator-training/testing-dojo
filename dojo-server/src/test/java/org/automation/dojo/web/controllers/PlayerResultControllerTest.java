@@ -34,7 +34,6 @@ public class PlayerResultControllerTest {
     @Mock ScoreService service;
     @Captor ArgumentCaptor<Integer> scenarioCaptor;
     @Captor ArgumentCaptor<Boolean> successCaptor;
-    @Captor ArgumentCaptor<String> addressCaptor;
     @Captor ArgumentCaptor<String> nameCaptor;
 
     @Before
@@ -47,7 +46,7 @@ public class PlayerResultControllerTest {
 
     @Test
     public void shouldReturnSucceedWhenScenarioPassed() throws IOException, ServletException {
-        when(service.testResult(anyString(), anyString(), anyInt(), anyBoolean())).thenReturn(true);
+        when(service.testResult(anyString(), anyInt(), anyBoolean())).thenReturn(true);
         request.setupAddParameter("scenario1", "passed");
 
         controller.service(request, response);
@@ -57,39 +56,39 @@ public class PlayerResultControllerTest {
 
     @Test
     public void shouldReportScenarioResultWhenPassed() throws IOException, ServletException {
-        setupRequest("vasya", "10.10.0.1", "passed");
+        setupRequest("vasya", "passed");
 
         controller.service(request, response);
 
         captureTestResultValues();
-        assertResultReported("vasya", "10.10.0.1", 1, true);
+        assertResultReported("vasya", 1, true);
     }
 
     @Test
     public void shouldReportScenarioResultWhenFailed() throws IOException, ServletException {
-        setupRequest("petya", "10.10.0.2", "failed");
+        setupRequest("petya", "failed");
 
         controller.service(request, response);
 
         captureTestResultValues();
-        assertResultReported("petya", "10.10.0.2", 1, false);
+        assertResultReported("petya", 1, false);
     }
 
     @Test
     public void shouldReportSeveralScenarioResultWhenSeveralReported() throws IOException, ServletException {
-        setupRequest("petya", "10.10.0.2", "passed", "failed");
+        setupRequest("petya", "passed", "failed");
 
         controller.service(request, response);
 
         captureTestResultValues();
-        assertResultReported("petya", "10.10.0.2", 1, true);
-        assertResultReported("petya", "10.10.0.2", 2, false);
+        assertResultReported("petya", 1, true);
+        assertResultReported("petya", 2, false);
     }
 
     @Test
     public void shouldHaveServiceActualResultsWhenReported() throws IOException, ServletException {
-        when(service.testResult("masha", "10.10.0.1", 1, true)).thenReturn(false);
-        setupRequest("masha", "10.10.0.1", "passed");
+        when(service.testResult("masha", 1, true)).thenReturn(false);
+        setupRequest("masha", "passed");
 
         controller.service(request, response);
 
@@ -105,26 +104,23 @@ public class PlayerResultControllerTest {
         controller.service(request, response);
 
         captureTestResultValues();
-        assertResultReported(null, "127.0.0.1", 5, true);
-        assertResultReported(null, "127.0.0.1", 11, false);
+        assertResultReported(null, 5, true);
+        assertResultReported(null, 11, false);
     }
     
-    private void assertResultReported(String expectedName, String expectedAddress, int scenarioNumber, boolean expectedResult) {
+    private void assertResultReported(String expectedName, int scenarioNumber, boolean expectedResult) {
         int index = scenarioCaptor.getAllValues().indexOf(scenarioNumber);
         assertThat(scenarioCaptor.getAllValues()).contains(scenarioNumber, Index.atIndex(index));
         assertThat(successCaptor.getAllValues()).contains(expectedResult, Index.atIndex(index));
         assertThat(nameCaptor.getAllValues()).contains(expectedName, Index.atIndex(index));
-        assertThat(addressCaptor.getAllValues()).contains(expectedAddress, Index.atIndex(index));
     }
 
     private void captureTestResultValues() {
         verify(service, atLeastOnce()).testResult(
-                nameCaptor.capture(), addressCaptor.capture(),
-                scenarioCaptor.capture(), successCaptor.capture());
+                nameCaptor.capture(), scenarioCaptor.capture(), successCaptor.capture());
     }
 
-    private void setupRequest(String name, String address, String ... scenarioResults) {
-        request.setRemoteAddr(address);
+    private void setupRequest(String name, String... scenarioResults) {
         request.setupAddParameter("name", name);
 
         for (int i = 0; i < scenarioResults.length; i++) {

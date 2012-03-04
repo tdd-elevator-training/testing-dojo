@@ -14,13 +14,10 @@ public class PlayerRecord {
     private Type type;
     private BasicScenario scenario;
     private boolean passed;
-    private String clientName;
-    private String clientAddress;
+    private String playerName;
 
-    public PlayerRecord(String clientName, String clientAddress, BasicScenario scenario, boolean passed, int score,
-            String description, Type type) {
-        this.clientName = clientName;
-        this.clientAddress = clientAddress;
+    public PlayerRecord(String playerName, BasicScenario scenario, boolean passed, int score, String description, Type type) {
+        this.playerName = playerName;
         this.scenario = scenario;
         this.passed = passed;
         this.score = score;
@@ -44,11 +41,11 @@ public class PlayerRecord {
         return type;
     }
 
-    public String getClientAddress() {
-        return clientAddress;
-    }
-
     public String getDescription() {
         return description;
+    }
+
+    public String getPlayerName() {
+        return playerName;
     }
 }

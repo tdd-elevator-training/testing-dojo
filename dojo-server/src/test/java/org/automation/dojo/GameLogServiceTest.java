@@ -10,9 +10,7 @@ import org.junit.Test;
 
 import java.util.List;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertFalse;
-import static junit.framework.Assert.assertTrue;
+import static junit.framework.Assert.*;
 import static org.fest.assertions.Assertions.assertThat;
 
 /**
@@ -20,11 +18,13 @@ import static org.fest.assertions.Assertions.assertThat;
  */
 public class GameLogServiceTest {
 
+    private static final String CLIENT_NAME = "test";
     private GameLogService gameLogService;
 
     @Before
     public void setUp() throws Exception {
         gameLogService = new GameLogService();
+        gameLogService.registerPlayer(CLIENT_NAME);
     }
 
     @Test
@@ -55,15 +55,15 @@ public class GameLogServiceTest {
     @Test
     public void shouldReturnPlayerLogs() {
         MockScenario scenario = new MockScenario(1, "scenario1", null);
-
+        gameLogService.registerPlayer("vasya");
         gameLogService.createGameLog(new Release(scenario));
-        gameLogService.playerLog(record(scenario, "127.0.0.1"));
-        gameLogService.playerLog(record(scenario, "10.10.1.1"));
+        gameLogService.playerLog(record(scenario, CLIENT_NAME));
+        gameLogService.playerLog(record(scenario, "vasya"));
 
-        List<GameLog> gameLogs = gameLogService.getGameLogs("10.10.1.1", scenario);
+        List<GameLog> gameLogs = gameLogService.getGameLogs("vasya", scenario);
 
         assertFalse(Iterables.all(gameLogs, new EmptyPlayerLogs()));
-        assertTrue(Iterables.all(gameLogs, new AllRecordsForAddress("10.10.1.1")));
+        assertTrue(Iterables.all(gameLogs, new AllRecordsFor("vasya")));
     }
 
     @Test
@@ -72,10 +72,10 @@ public class GameLogServiceTest {
         MockScenario scenario2 = new MockScenario(2, "scenario2", null);
 
         gameLogService.createGameLog(new Release(scenario1, scenario2));
-        gameLogService.playerLog(record(scenario1, "127.0.0.1"));
-        gameLogService.playerLog(record(scenario2, "127.0.0.1"));
+        gameLogService.playerLog(record(scenario1, CLIENT_NAME));
+        gameLogService.playerLog(record(scenario2, CLIENT_NAME));
         
-        List<GameLog> gameLogs = gameLogService.getGameLogs("127.0.0.1", scenario1);
+        List<GameLog> gameLogs = gameLogService.getGameLogs(CLIENT_NAME, scenario1);
 
         assertEquals(1, gameLogs.size());
         assertAllGameLogsForScenario(gameLogs, scenario1);
@@ -84,34 +84,54 @@ public class GameLogServiceTest {
 
     @Test
     public void shouldStoreUniqueAddresses() {
-        MockScenario scenario = new MockScenario(1, "", null);
-        gameLogService.createGameLog(new Release(scenario));
-        gameLogService.playerLog(record(scenario, "10.10.1.1"));
-        gameLogService.playerLog(record(scenario, "127.0.0.1"));
-        gameLogService.playerLog(record(scenario, "127.0.0.1"));
+        gameLogService.registerPlayer("vasya");
+        gameLogService.registerPlayer(CLIENT_NAME);
+        gameLogService.registerPlayer(CLIENT_NAME);
 
-        assertThat(gameLogService.getUniqueClientAddresses()).doesNotHaveDuplicates().contains("10.10.1.1", "127.0.0.1");
+        assertThat(gameLogService.getRegisteredPlayers()).doesNotHaveDuplicates().contains(CLIENT_NAME, "vasya");
     } 
     
     @Test
-    public void shouldReturnGameLogsForHost() {
+    public void shouldReturnGameLogsForPlayer() {
         MockScenario scenario1 = new MockScenario(1, "", null);
         MockScenario scenario2 = new MockScenario(2, "", null);
         gameLogService.createGameLog(new Release(scenario1, scenario2));
-        gameLogService.playerLog(record(scenario1,"127.0.0.1"));
-        gameLogService.playerLog(record(scenario2,"127.0.0.1"));
+        gameLogService.playerLog(record(scenario1, CLIENT_NAME));
+        gameLogService.playerLog(record(scenario2, CLIENT_NAME));
 
-        List<ReleaseLog> releaseLogs = gameLogService.getReleaseLogsForHost("127.0.0.1");
+        List<ReleaseLog> releaseLogs = gameLogService.getReleaseLogs();
         ReleaseLog releaseLog = releaseLogs.get(0);
 
-        List<PlayerRecord> records = releaseLog.getRecordsForHost("127.0.0.1");
+        List<PlayerRecord> records = releaseLog.getRecordsForPlayer(CLIENT_NAME);
 
-        assertTrue(Iterables.all(records, new RecordsForAddress("127.0.0.1")));
+        assertTrue(Iterables.all(records, new RecordsForPlayer(CLIENT_NAME)));
         
     }
+
+    @Test
+    public void testShouldRegister(){
+        assertTrue(gameLogService.registerPlayer("vasya"));
+    }
+
+    @Test
+    public void testShouldNotRegisterWhenNameAndAddressRegistered(){
+        assertTrue(gameLogService.registerPlayer("vasya"));
+        assertFalse(gameLogService.registerPlayer("vasya"));
+    }
+
+    @Test
+    public void shouldSkipLogWhenPlayerUnregistered(){
+        MockScenario scenario = new MockScenario(1, "", null);
+        gameLogService.createGameLog(new Release(scenario));
+        try {
+            gameLogService.playerLog(record(scenario, "vasya"));
+            fail();
+        } catch (IllegalArgumentException e) {
+        }
+    } 
     
-    private PlayerRecord record(MockScenario scenario, String clientAddress) {
-        return new PlayerRecord("test", clientAddress, scenario, false, 100, "", PlayerRecord.Type.LIAR);
+    private PlayerRecord record(MockScenario scenario, String playerName) {
+        return new PlayerRecord(playerName, scenario, false, 100, "", PlayerRecord.Type.LIAR);
     }
 
     private ListAssert assertAllGameLogsForScenario(List<GameLog> gameLogs, MockScenario scenario) {
@@ -124,29 +144,28 @@ public class GameLogServiceTest {
         }
     }
 
-    private static class AllRecordsForAddress implements Predicate<GameLog> {
-        private final String expectedAddress;
+    private static class AllRecordsFor implements Predicate<GameLog> {
+        private final String expectedPlayer;
 
-        public AllRecordsForAddress(String expectedAddress) {
-            this.expectedAddress = expectedAddress;
+        public AllRecordsFor(String expectedPlayer) {
+            this.expectedPlayer = expectedPlayer;
         }
 
         public boolean apply(GameLog gameLog) {
-            return Iterables.all(gameLog.getPlayerRecords(), new RecordsForAddress(expectedAddress));
+            return Iterables.all(gameLog.getPlayerRecords(), new RecordsForPlayer(expectedPlayer));
         }
 
     }
 
-    private static class RecordsForAddress implements Predicate<PlayerRecord> {
-        private String expectedAddress;
+    private static class RecordsForPlayer implements Predicate<PlayerRecord> {
+        private String expectedPlayer;
 
-        public RecordsForAddress(String expectedAddress) {
-
-            this.expectedAddress = expectedAddress;
+        public RecordsForPlayer(String expectedPlayer) {
+            this.expectedPlayer = expectedPlayer;
         }
 
         public boolean apply(PlayerRecord input) {
-            return input.getClientAddress().equals(expectedAddress);
+            return input.getPlayerName().equals(expectedPlayer);
         }
     }
 
