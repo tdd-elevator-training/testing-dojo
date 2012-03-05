@@ -7,7 +7,9 @@ import org.automation.dojo.web.scenario.BasicScenario;
 import org.automation.dojo.web.scenario.Release;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author serhiy.zelenin
@@ -45,6 +47,18 @@ public class ReleaseLog {
             if (playerRecord.getPlayerName().equals(player)) {
                 result.add(playerRecord);
             }
+        }
+        return result;
+    }
+
+    public Map<String, Integer> getBoardRecords() {
+        HashMap<String, Integer> result = new HashMap<String, Integer>();
+        for (PlayerRecord record : records) {
+            int score = record.getScore();
+            if (result.containsKey(record.getPlayerName())) {
+                score+=result.get(record.getPlayerName());
+            }
+            result.put(record.getPlayerName(), score);
         }
         return result;
     }

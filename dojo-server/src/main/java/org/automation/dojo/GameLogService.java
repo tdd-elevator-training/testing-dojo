@@ -83,4 +83,44 @@ public class GameLogService implements LogService {
             lock.writeLock().unlock();
         }
     }
+
+    public List<BoardRecord> getBoardRecords() {
+        lock.readLock().lock();
+        try {
+            Map<String, Integer> gameScores = new HashMap<String, Integer>();
+            for (ReleaseLog release : releases) {
+                addReleaseScoresToGameScores(release, gameScores);
+            }
+            ArrayList<BoardRecord> result = convertGameScores(gameScores);
+            Collections.sort(result);
+            return result;
+        } finally {
+            lock.readLock().unlock();
+        }
+    }
+
+    private ArrayList<BoardRecord> convertGameScores(Map<String, Integer> gameScores) {
+        ArrayList<BoardRecord> result = new ArrayList<BoardRecord>();
+        for (Map.Entry<String, Integer> entry : gameScores.entrySet()) {
+            result.add(new BoardRecord(entry.getKey(), entry.getValue()));
+        }
+        return result;
+    }
+
+    private void addReleaseScoresToGameScores(ReleaseLog release, Map<String, Integer> gameScores) {
+        Map<String, Integer> releaseBoard = release.getBoardRecords();
+        for (Map.Entry<String, Integer> releaseEntry : releaseBoard.entrySet()) {
+            int total = totalForRelease(gameScores, releaseEntry);
+            gameScores.put(releaseEntry.getKey(), total);
+        }
+    }
+
+    private int totalForRelease(Map<String, Integer> board, Map.Entry<String, Integer> releaseEntry) {
+        int total = releaseEntry.getValue();
+        String playerName = releaseEntry.getKey();
+        if (board.containsKey(playerName)) {
+            total += board.get(playerName);
+        }
+        return total;
+    }
 }
