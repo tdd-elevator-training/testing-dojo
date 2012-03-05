@@ -18,11 +18,9 @@ public class GameLogService implements LogService {
     public void playerLog(PlayerRecord record) {
         lock.writeLock().lock();
         try {
-/*
             if (!registeredPlayers.contains(record.getPlayerName())) {
                 throw new IllegalArgumentException("Player " + record.getPlayerName() + " does not exist!");
             }
-*/
             currentRelease.putRecord(record);
         } finally {
             lock.writeLock().unlock();

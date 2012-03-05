@@ -121,7 +121,6 @@ public class GameLogServiceTest {
     }
 
     @Test
-    @Ignore //TODO: Finish registration form
     public void shouldSkipLogWhenPlayerUnregistered(){
         MockScenario scenario = new MockScenario(1, "", null);
         gameLogService.createGameLog(new Release(scenario));
