@@ -7,7 +7,7 @@ import org.automation.dojo.web.scenario.BasicScenario;
  */
 public class PlayerRecord {
 
-    public enum Type{DUPLICATE, VALID_BUG, MISSED, LIAR}
+    public enum Type{DUPLICATE, VALID_BUG, MISSED, LIAR, PASSED}
 
     private int score;
     private String description;

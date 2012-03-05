@@ -56,6 +56,12 @@ public class DojoScoreService implements ScoreService {
             return scenario.bugsFree();
         }
 
+        if (testPassed && scenario.bugsFree()) {
+            logService.playerLog(new PlayerRecord(clientName, scenario, testPassed, 0,
+                    "Good! No bugs reported for bugs free scenario #" + scenario.getId(), PlayerRecord.Type.PASSED));
+            return scenario.bugsFree();
+        }
+        
         int weight = currentBug.getWeight();
         int score = weight/(reportedBugs.size() + 1);
         logService.playerLog(new PlayerRecord(clientName, scenario, testPassed, score, "Scores for bug #" + currentBug.getId() +

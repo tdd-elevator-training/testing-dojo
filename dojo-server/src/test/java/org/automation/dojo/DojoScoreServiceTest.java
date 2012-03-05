@@ -244,7 +244,6 @@ public class DojoScoreServiceTest {
     }
 
     @Test
-    @Ignore
     public void shouldLogZeroWhenReportedNoBugsForBugsFreeScenario() {
         BasicScenario scenario = setupScenario(1, 0);
         setupGameLogs(scenario,
@@ -254,7 +253,7 @@ public class DojoScoreServiceTest {
 
         PlayerRecord record = captureLogRecord();
         assertEquals(0, record.getScore());
-//        assertEquals(PlayerRecord.Type.LIAR, record.getType()); what type?
+        assertEquals(PlayerRecord.Type.PASSED, record.getType());
     }
 
     @Test
