@@ -17,12 +17,14 @@
             <artifactId>jetty-maven-plugin</artifactId>
             <version>8.1.0.v20120127</version>
         </dependency>
+<!--
         <dependency>
             <groupId>javax</groupId>
             <artifactId>javaee-web-api</artifactId>
             <version>6.0</version>
             <scope>provided</scope>
         </dependency>
+-->
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>

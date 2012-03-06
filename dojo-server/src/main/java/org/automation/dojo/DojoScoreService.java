@@ -97,7 +97,7 @@ public class DojoScoreService implements ScoreService {
                 if (gameLog.bugReported()) {
                     continue;
                 }
-                logService.playerLog(new PlayerRecord("<system>", scenario,
+                logService.playerLog(new PlayerRecord(player, scenario,
                         true, -scenario.getBug().getWeight(), 
                         "After Minor Release check. Missed bug #"+scenario.getBug().getId() + 
                                 " for scenario #" + scenario.getId(), PlayerRecord.Type.MISSED));
