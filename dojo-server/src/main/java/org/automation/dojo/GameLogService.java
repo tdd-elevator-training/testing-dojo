@@ -111,8 +111,8 @@ public class GameLogService implements LogService {
         }
     }
 
-    public ReleaseLog getLastReleaseLog() {
-        return null;
+    public ReleaseLog getCurrentReleaseLog() {
+        return currentRelease;
     }
 
     private ArrayList<BoardRecord> convertGameScores(Map<String, Integer> gameScores) {

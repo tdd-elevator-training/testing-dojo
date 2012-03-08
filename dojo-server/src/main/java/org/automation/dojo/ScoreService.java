@@ -6,4 +6,6 @@ public interface ScoreService {
     boolean testResult(String clientName, int scenarioNumber, boolean testPassed);
 
     void nextRelease(Release previousRelease);
+
+    void tick(long currentTime);
 }

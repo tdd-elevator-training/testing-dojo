@@ -2,7 +2,6 @@ package org.automation.dojo;
 
 import org.automation.dojo.web.scenario.Release;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Matchers;
@@ -99,7 +98,7 @@ public class DojoScoreServiceTickScenariosTest extends DojoScoreBaseTest {
 
     private ReleaseLog setupLastReleaseLog(int releaseTime, MockScenario... scenario) {
         ReleaseLog releaseLog = new ReleaseLog(new Release(scenario), new Date(releaseTime));
-        when(logService.getLastReleaseLog()).thenReturn(releaseLog);
+        when(logService.getCurrentReleaseLog()).thenReturn(releaseLog);
         return releaseLog;
     }
 

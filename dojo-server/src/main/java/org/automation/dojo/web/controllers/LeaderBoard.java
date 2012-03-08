@@ -1,6 +1,7 @@
 package org.automation.dojo.web.controllers;
 
 import org.automation.dojo.BoardRecord;
+import org.automation.dojo.ConfigurationService;
 import org.automation.dojo.LogService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -19,6 +20,9 @@ public class LeaderBoard {
     @Autowired
     private LogService logService;
 
+    @Autowired
+    private ConfigurationService configurationService;
+
     public LeaderBoard(LogService logService) {
         this.logService = logService;
     }
@@ -29,6 +33,7 @@ public class LeaderBoard {
     @RequestMapping(method = RequestMethod.GET)
     public String board(ModelMap model) {
         model.addAttribute("records", logService.getBoardRecords());
+        model.addAttribute("configuration", configurationService);
         return "board";
     }
 }

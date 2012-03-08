@@ -1,13 +1,59 @@
 package org.automation.dojo;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
+
 /**
  * @author serhiy.zelenin
  */
-public class ConfigurationService {
+public class ConfigurationService implements Runnable {
     private long minorReleaseFrequency = 10 * 60 * 1000;
     private long penaltyTimeOut = 60 * 1000;
     private int penaltyValue = 2;
+    private boolean manualReleaseTriggering = true;
+    
+    @Autowired
+    private ScoreService scoreService;
+    @Autowired
+    private ReleaseEngine releaseEngine;
+    @Autowired
+    private TimeService timeService;
+    private ScheduledThreadPoolExecutor executor;
+    private ScheduledFuture<?> future;
+    private Date nextMinorRelease;
+    private Date previousRelease;
+    private Date nextPenaltyTickTime;
+    private Date previousTick;
 
+    public ConfigurationService() {
+    }
+
+
+    public ConfigurationService(TimeService timeService, ScoreService scoreService, ReleaseEngine releaseEngine) {
+        this.timeService = timeService;
+        this.scoreService = scoreService;
+        this.releaseEngine = releaseEngine;
+    }
+
+    public void init() {
+        executor = new ScheduledThreadPoolExecutor(1);
+        executor.scheduleAtFixedRate(this, 60, 60, TimeUnit.SECONDS);
+        calculateNextTickTime();
+    }
+
+    public void destroy() {
+        executor.shutdown();
+        try {
+            executor.awaitTermination(20, TimeUnit.SECONDS);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
     public long getMinorReleaseFrequency() {
         return minorReleaseFrequency;
     }
@@ -32,4 +78,73 @@ public class ConfigurationService {
         this.penaltyValue = penaltyValue;
     }
 
+    public boolean isManualReleaseTriggering() {
+        return manualReleaseTriggering;
+    }
+
+    public void setManualReleaseTriggering(boolean manualReleaseTriggering) {
+        this.manualReleaseTriggering = manualReleaseTriggering;
+    }
+
+    public void run() {
+        try {
+            if (nextPenaltyTickTime.getTime() < timeService.now().getTime()) {
+                scoreService.tick(timeService.now().getTime());
+                previousTick = nextPenaltyTickTime;
+                calculateNextTickTime();
+            }
+
+            if (nextMinorRelease == null || manualReleaseTriggering) {
+                return;
+            }
+            if (nextMinorRelease.getTime() < timeService.now().getTime()) {
+                releaseEngine.nextMinorRelease();
+                previousRelease = nextMinorRelease;
+                calculateNextReleaseDate();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public Date getNextMinorReleaseTime() {
+        return nextMinorRelease;
+    }
+
+
+    public void adjustChanges() {
+        calculateNextTickTime();
+
+        if (manualReleaseTriggering) {
+            return;
+        }
+        calculateNextReleaseDate();
+    }
+
+    private void calculateNextTickTime() {
+        if (previousTick == null) {
+            previousTick = timeService.now();
+        }
+        nextPenaltyTickTime = new Date(previousTick.getTime() + penaltyTimeOut);
+    }
+
+    private void calculateNextReleaseDate() {
+        if (previousRelease == null) {
+            previousRelease = timeService.now();
+        }
+        nextMinorRelease = new Date(previousRelease.getTime() + minorReleaseFrequency);
+    }
+
+    public Date getNextPenaltyTickTime() {
+        return nextPenaltyTickTime;
+    }
+
+    public String getNextReleaseRemaining() {
+        if (manualReleaseTriggering) {
+            return "[ask trainer]";
+        }
+
+        Date diff = new Date(nextMinorRelease.getTime() - timeService.now().getTime());
+        return new SimpleDateFormat("mm 'min' ss 'sec'").format(diff);        
+    }
 }

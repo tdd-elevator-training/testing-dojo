@@ -69,7 +69,7 @@ public class DojoScoreService implements ScoreService {
 
         if (testPassed && scenario.bugsFree()) {
             logService.playerLog(new PlayerRecord(clientName, scenario, testPassed, 0,
-                    "Good! No bugs reported for bugs free scenario #" + scenario.getId(), PlayerRecord.Type.PASSED));
+                    "Good! No bugs reported for bugs free scenario", PlayerRecord.Type.PASSED));
             return scenario.bugsFree();
         }
 
@@ -116,10 +116,9 @@ public class DojoScoreService implements ScoreService {
         }
     }
 
-    //This should be called under release read lock
     public void tick(long currentTime) {
         Collection<String> players = logService.getRegisteredPlayers();
-        ReleaseLog lastReleaseLog = logService.getLastReleaseLog();
+        ReleaseLog lastReleaseLog = logService.getCurrentReleaseLog();
         if (currentTime - lastReleaseLog.getReleaseTime() < configurationService.getPenaltyTimeOut()) {
             return;
         }
@@ -140,7 +139,7 @@ public class DojoScoreService implements ScoreService {
                 int penalty = (int) (currentScenarioDelay / configurationService.getPenaltyTimeOut());
                         
                 logService.playerLog(new PlayerRecord(player, scenario, false, -penalty * configurationService.getPenaltyValue(),
-                        "Where are your test results? Waiting for " + (currentScenarioDelay / 1000 * 60) + " minutes",
+                        "Where are your test results? Waiting for " + (currentScenarioDelay / (1000 * 60)) + " minutes",
                         PlayerRecord.Type.TIMEOUT));
             }
         }

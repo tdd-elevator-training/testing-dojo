@@ -10,6 +10,9 @@
             <td>Minor release frequency, ms: <form:input path="minorReleaseFrequency"/></td>
         </tr>
         <tr>
+            <td>Manual release triggering: <form:checkbox path="manualReleaseTriggering"/></td>
+        </tr>
+        <tr>
             <td><form:errors path="penaltyTimeOut"/></td>
         </tr>
         <tr>
@@ -31,6 +34,8 @@
 <br/>
 Release info
 <span id="indicator">Now we have major ${majorNumber} and minor ${minorInfo}</span> </br>
+Next Release in: ${configuration.nextReleaseRemaining} <br>
+Next Penlty tick at: ${configuration.nextPenaltyTickTime} <br>
 <table>
     <tr>
         <td>Current Major Release</td>
