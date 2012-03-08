@@ -1,3 +1,3 @@
 1,Level 1 - Simple search,1,org.automation.dojo.web.scenario.SearchByTextLevel1Scenario
-1,Level 1 - Search with price,2,org.automation.dojo.web.scenario.SearchByTextLevel2Scenario
-2,Level 1 - Search with price,2,org.automation.dojo.web.scenario.SearchByPriceLevel2Scenario
+1,Level 2 - Search with price,2,org.automation.dojo.web.scenario.SearchByTextLevel2Scenario
+2,Level 2 - Search with price,2,org.automation.dojo.web.scenario.SearchByPriceLevel2Scenario

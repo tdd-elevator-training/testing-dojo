@@ -2,20 +2,12 @@ package org.automation.dojo.web;
 
 import org.automation.dojo.ApplicationContextLocator;
 import org.automation.dojo.ReleaseEngine;
-import org.automation.dojo.web.bugs.AddSomeOtherElementIfListNotEmptyBug;
-import org.automation.dojo.web.scenario.SearchByTextLevel1Scenario;
 import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.runner.RunWith;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.htmlunit.HtmlUnitDriver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.FileSystemXmlApplicationContext;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -33,16 +25,13 @@ public abstract class FunctionalTestCase {
     private static String baseUrl;
     private ReleaseEngine releaseEngine;
 
-    @BeforeClass
-    public static void init() throws Exception {
+    @Before
+    public void init() throws Exception {
         int port = ServerRunner.getInstance().start();
         baseUrl = "http://localhost:" + port + "/Shop";
 
         tester = new HtmlUnitDriver();
-    }
 
-    @Before
-    public void loadPage(){
         instance = ApplicationContextLocator.getInstance();
         instance.setApplicationContext(context);
         releaseEngine = (ReleaseEngine) context.getBean("releaseEngine");
@@ -88,8 +77,8 @@ public abstract class FunctionalTestCase {
 
     protected abstract List<?> getMinorRelease();
 
-    @AfterClass
-    public static void end() throws Exception {
+    @After
+    public void end() throws Exception {
         ApplicationContextLocator.clearInstance();
         ServerRunner.getInstance().stop();
     }
