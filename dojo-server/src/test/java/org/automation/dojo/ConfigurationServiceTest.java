@@ -139,7 +139,7 @@ public class ConfigurationServiceTest {
     @Test
     public void shouldFormatReleaseTimeRemainingNullWhenManual() throws ParseException {
         setupReleaseParams(100, true);
-        assertEquals("<ask trainer>", configurationService.getNextReleaseRemaining());
+        assertEquals("[ask trainer]", configurationService.getNextReleaseRemaining());
     }
 
     @Test
