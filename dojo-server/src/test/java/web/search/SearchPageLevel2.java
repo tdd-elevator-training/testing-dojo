@@ -22,11 +22,8 @@ import static org.junit.Assert.assertNotNull;
 
 @ContextConfiguration(locations = {"classpath:/org/automation/dojo/applicationContext.xml"})
 @RunWith(SpringJUnit4ClassRunner.class)
-public class SearchPageLevel2 extends FunctionalTestCase {
+public class SearchPageLevel2 extends SearchPageLevel1 {
 
-    private WebElement search;
-    private WebElement searchButton;
-    private WebElement searchText;
     private WebElement price;
     private WebElement priceOption;
 
@@ -49,58 +46,9 @@ public class SearchPageLevel2 extends FunctionalTestCase {
 
     @Override
     protected void resetAllElements() {
-        search = tester.findElement(By.name("search"));
-        searchButton = tester.findElement(By.id("search_button"));
-        searchText = tester.findElement(By.id("search_text"));
+        super.resetAllElements();
         price = tester.findElement(By.id("price"));
         priceOption = tester.findElement(By.id("price_search_option"));
-    }
-
-    @Test
-    public void shouldSearchPageAsWelcomePage() {
-        assertSearchForm();
-    }
-
-    @Test
-    public void shouldFoundSomeRecordsWhenSearchItByPartOfDescription() {
-        enterText("mouse");
-        submitSearchForm();
-
-        assertSearchForm();
-
-        assertPageContain("List:");
-        assertPageContain("Mouse 1");
-        assertPageContain("Mouse 2");
-        assertPageContain("Mouse 3");
-        assertPageContain("Mouse 4 - the best mouse!");
-    }
-
-    @Test
-    public void shouldEmptyListWhenFirstComeIn() {
-        assertPageNotContain("List:");
-    }
-
-    @Test
-    public void shouldFoundSomeAnotherRecordsWhenSearchItByPartOfDescription() {
-        enterText("monitor");
-        submitSearchForm();
-
-        assertSearchForm();
-
-        assertPageContain("List:");
-        assertPageContain("Monitor 1");
-        assertPageContain("Monitor 2");
-        assertPageContain("Monitor 3 - the best monitor!");
-        assertPageNotContain("Mouse");
-    }
-
-    @Test
-    public void shouldAllListWhenNotFound() {
-        enterText("keyboard");
-        submitSearchForm();
-
-        assertNotFound();
-        allElementsPresent();
     }
 
     @Test
@@ -206,10 +154,6 @@ public class SearchPageLevel2 extends FunctionalTestCase {
         return getSelected(this.priceOption);
     }
 
-    private String getSearchText() {
-        return searchText.getAttribute("value");
-    }
-
     private String gtePrice() {
         return this.price.getAttribute("value");
     }
@@ -248,11 +192,7 @@ public class SearchPageLevel2 extends FunctionalTestCase {
         }
     }
 
-    private void assertNotFound() {
-        assertPageContain("Sorry no results for your request, but we have another devices:");
-    }
-
-    private void allElementsPresent() {
+    protected void allElementsPresent() {
         assertPageContain("'Mouse 1' 30.0$");
         assertPageContain("'Mouse 3' 40.0$");
         assertPageContain("'Mouse 2' 50.0$");
@@ -260,23 +200,6 @@ public class SearchPageLevel2 extends FunctionalTestCase {
         assertPageContain("'Monitor 2' 120.0$");
         assertPageContain("'Monitor 1' 150.0$");
         assertPageContain("'Monitor 3 - the best monitor!' 190.0$");
-    }
-
-    private void assertSearchForm() {
-        assertPageContain("Please enter text to find");
-
-        assertNotNull(search);
-        assertNotNull(searchButton);
-        assertNotNull(searchText);
-    }
-
-    protected void enterText(String string) {
-        searchText.sendKeys(string);
-    }
-
-    protected void submitSearchForm() {
-        searchButton.submit();
-        resetAllElements();
     }
 
 }

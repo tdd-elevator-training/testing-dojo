@@ -23,7 +23,7 @@ public class SearchPageLevel1 extends FunctionalTestCase {
 
     private WebElement search;
     private WebElement searchButton;
-    private WebElement searchText;
+    protected WebElement searchText;
 
     @Override
     protected int getMajorRelease() {
@@ -102,7 +102,7 @@ public class SearchPageLevel1 extends FunctionalTestCase {
         assertEquals("some device", getSearchText());
     }
 
-    private String getSearchText() {
+    protected String getSearchText() {
         return searchText.getAttribute("value");
     }
 
