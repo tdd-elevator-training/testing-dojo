@@ -4,11 +4,13 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 	<head>
+        <meta http-equiv="refresh" content="5">
 		<meta http-equiv="Content-Type" content="text/html;">
 		<title>Leader Board</title>
 	</head>
 	<body>
 	Leader Board<br>
+    Next Release in: ${configuration.nextReleaseRemaining} <br>
 	    <table>
 	        <tr>
 	            <td>#</td><td>Player</td><td>Total Score</td>

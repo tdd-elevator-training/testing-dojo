@@ -54,6 +54,8 @@ public class Admin {
         configurationService.setMinorReleaseFrequency(configuration.getMinorReleaseFrequency());
         configurationService.setPenaltyValue(configuration.getPenaltyValue());
         configurationService.setPenaltyTimeOut(configuration.getPenaltyTimeOut());
+        configurationService.setManualReleaseTriggering(configuration.isManualReleaseTriggering());
+        configurationService.adjustChanges();
         return "redirect:/admin";
     }
 

@@ -1,9 +1,6 @@
 package org.automation.dojo.web.controllers;
 
-import org.automation.dojo.LogService;
-import org.automation.dojo.PlayerRecord;
-import org.automation.dojo.ReleaseEngine;
-import org.automation.dojo.ReleaseLog;
+import org.automation.dojo.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -12,7 +9,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.HttpServletRequest;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -25,6 +24,8 @@ public class LogsController {
 
     @Autowired
     private ReleaseEngine releaseEngine;
+    @Autowired
+    private ConfigurationService configurationService;
     
     @RequestMapping(value = "/logs/{playerName}", method = RequestMethod.GET)
     public String playerRecords(ModelMap model, @PathVariable String playerName) {
@@ -35,6 +36,7 @@ public class LogsController {
         }
         model.addAttribute("releaseLogs", releaseLogs);
         model.addAttribute("playerName", playerName);
+        model.addAttribute("configuration", configurationService);
         return "logs";
     }
 }

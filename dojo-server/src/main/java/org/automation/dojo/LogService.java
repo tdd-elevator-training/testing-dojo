@@ -24,5 +24,5 @@ public interface LogService {
 
     List<BoardRecord> getBoardRecords();
 
-    ReleaseLog getLastReleaseLog();
+    ReleaseLog getCurrentReleaseLog();
 }
