@@ -1,8 +1,8 @@
-package org.automation.dojo.web.search;
+package web.search;
 
 
-import org.automation.dojo.web.FunctionalTestCase;
-import org.automation.dojo.web.bugs.BrokenSortingBug;
+import web.FunctionalTestCase;
+import org.automation.dojo.web.bugs.HideSomePriceBug;
 import org.automation.dojo.web.bugs.NullBug;
 import org.automation.dojo.web.scenario.SearchByPriceLevel2Scenario;
 import org.automation.dojo.web.scenario.SearchByTextLevel2Scenario;
@@ -22,7 +22,7 @@ import static org.junit.Assert.assertNotNull;
 
 @ContextConfiguration(locations = {"classpath:/org/automation/dojo/applicationContext.xml"})
 @RunWith(SpringJUnit4ClassRunner.class)
-public class SearchPageLevel2_Bug2 extends FunctionalTestCase {
+public class SearchPageLevel2_Bug1 extends FunctionalTestCase {
 
     private WebElement search;
     private WebElement searchButton;
@@ -38,7 +38,7 @@ public class SearchPageLevel2_Bug2 extends FunctionalTestCase {
     @Override
     protected List<?> getMinorRelease() {
         return Arrays.asList(SearchByTextLevel2Scenario.class, NullBug.class,
-                SearchByPriceLevel2Scenario.class, BrokenSortingBug.class);
+                SearchByPriceLevel2Scenario.class, HideSomePriceBug.class);
     }
 
     @Override
@@ -102,29 +102,37 @@ public class SearchPageLevel2_Bug2 extends FunctionalTestCase {
         allElementsPresent();
     }
 
-    @Test(expected = AssertionError.class)
+    @Test
     public void shouldAllElementsSortedByPrice() {
         enterText("");
         submitSearchForm();
 
-        assertPageContain("List: " +
-                "'Mouse 1' 30.0$ " +
-                "'Mouse 3' 40.0$ " +
-                "'Mouse 2' 50.0$ " +
-                "'Mouse 4 - the best mouse!' 66.0$ " +
-                "'Monitor 2' 120.0$ " +
-                "'Monitor 1' 150.0$ " +
-                "'Monitor 3 - the best monitor!' 190.0$");
+        try {
+            assertPageContain("List: " +
+                    "'Mouse 1' 30.0$ " +
+                    "'Mouse 3' 40.0$ " +
+                    "'Mouse 2' 50.0$ " +
+                    "'Mouse 4 - the best mouse!' 66.0$ " +
+                    "'Monitor 2' 120.0$ " +
+                    "'Monitor 1' 150.0$ " +
+                    "'Monitor 3 - the best monitor!' 190.0$");
+            throw new RuntimeException("Expected exception");
+        } catch (AssertionError e) {
+        }
     }
 
-    @Test(expected = AssertionError.class)
+    @Test
     public void shouldFoundElementsSortedByPrice() {
         enterText("the best");
         submitSearchForm();
 
-        assertPageContain("List: " +
-                "'Mouse 4 - the best mouse!' 66.0$ " +
-                "'Monitor 3 - the best monitor!' 190.0$");
+        try {
+            assertPageContain("List: " +
+                    "'Mouse 4 - the best mouse!' 66.0$ " +
+                    "'Monitor 3 - the best monitor!' 190.0$");
+            throw new RuntimeException("Expected exception");
+        } catch (AssertionError e) {
+        }
     }
 
     @Test
@@ -133,13 +141,43 @@ public class SearchPageLevel2_Bug2 extends FunctionalTestCase {
         enterPrice(MORE_THAN, 120);
         submitSearchForm();
 
-        assertPageNotContain("'Mouse 1' 30.0$");
-        assertPageNotContain("'Mouse 3' 40.0$");
-        assertPageNotContain("'Mouse 2' 50.0$");
-        assertPageNotContain("'Mouse 4 - the best mouse!' 66.0$");
-        assertPageContain("'Monitor 2' 120.0$");
-        assertPageContain("'Monitor 1' 150.0$");
-        assertPageContain("'Monitor 3 - the best monitor!' 190.0$");
+        int countErrors = 0;
+        try {
+            assertPageNotContain("'Mouse 1' 30.0$");
+        } catch (AssertionError e) {
+            countErrors++;
+        }
+        try {
+            assertPageNotContain("'Mouse 3' 40.0$");
+        } catch (AssertionError e) {
+            countErrors++;
+        }
+        try {
+            assertPageNotContain("'Mouse 2' 50.0$");
+        } catch (AssertionError e) {
+            countErrors++;
+        }
+        try {
+            assertPageNotContain("'Mouse 4 - the best mouse!' 66.0$");
+        } catch (AssertionError e) {
+            countErrors++;
+        }
+        try {
+            assertPageContain("'Monitor 2' 120.0$");
+        } catch (AssertionError e) {
+            countErrors++;
+        }
+        try {
+            assertPageContain("'Monitor 1' 150.0$");
+        } catch (AssertionError e) {
+            countErrors++;
+        }
+        try {
+            assertPageContain("'Monitor 3 - the best monitor!' 190.0$");
+        } catch (AssertionError e) {
+            countErrors++;
+        }
+        assertEquals(1, countErrors);
     }
 
     @Test
@@ -148,13 +186,43 @@ public class SearchPageLevel2_Bug2 extends FunctionalTestCase {
         enterPrice(LESS_THAN, 120);
         submitSearchForm();
 
-        assertPageContain("'Mouse 1' 30.0$");
-        assertPageContain("'Mouse 3' 40.0$");
-        assertPageContain("'Mouse 2' 50.0$");
-        assertPageContain("'Mouse 4 - the best mouse!' 66.0$");
-        assertPageContain("'Monitor 2' 120.0$");
-        assertPageNotContain("'Monitor 1' 150.0$");
-        assertPageNotContain("'Monitor 3 - the best monitor!' 190.0$");
+        int countErrors = 0;
+        try {
+            assertPageContain("'Mouse 1' 30.0$");
+        } catch (AssertionError e) {
+            countErrors++;
+        }
+        try {
+            assertPageContain("'Mouse 3' 40.0$");
+        } catch (AssertionError e) {
+            countErrors++;
+        }
+        try {
+            assertPageContain("'Mouse 2' 50.0$");
+        } catch (AssertionError e) {
+            countErrors++;
+        }
+        try {
+            assertPageContain("'Mouse 4 - the best mouse!' 66.0$");
+        } catch (AssertionError e) {
+            countErrors++;
+        }
+        try {
+            assertPageContain("'Monitor 2' 120.0$");
+        } catch (AssertionError e) {
+            countErrors++;
+        }
+        try {
+            assertPageNotContain("'Monitor 1' 150.0$");
+        } catch (AssertionError e) {
+            countErrors++;
+        }
+        try {
+            assertPageNotContain("'Monitor 3 - the best monitor!' 190.0$");
+        } catch (AssertionError e) {
+            countErrors++;
+        }
+        assertEquals(1, countErrors);
     }
 
     @Test
@@ -242,13 +310,43 @@ public class SearchPageLevel2_Bug2 extends FunctionalTestCase {
     }
 
     private void allElementsPresent() {
-        assertPageContain("'Mouse 1' 30.0$");
-        assertPageContain("'Mouse 3' 40.0$");
-        assertPageContain("'Mouse 2' 50.0$");
-        assertPageContain("'Mouse 4 - the best mouse!' 66.0$");
-        assertPageContain("'Monitor 2' 120.0$");
-        assertPageContain("'Monitor 1' 150.0$");
-        assertPageContain("'Monitor 3 - the best monitor!' 190.0$");
+        int countErrors = 0;
+        try {
+            assertPageContain("'Mouse 1' 30.0$");
+        } catch (AssertionError e) {
+            countErrors++;
+        }
+        try {
+            assertPageContain("'Mouse 3' 40.0$");
+        } catch (AssertionError e) {
+            countErrors++;
+        }
+        try {
+            assertPageContain("'Mouse 2' 50.0$");
+        } catch (AssertionError e) {
+            countErrors++;
+        }
+        try {
+            assertPageContain("'Mouse 4 - the best mouse!' 66.0$");
+        } catch (AssertionError e) {
+            countErrors++;
+        }
+        try {
+            assertPageContain("'Monitor 2' 120.0$");
+        } catch (AssertionError e) {
+            countErrors++;
+        }
+        try {
+            assertPageContain("'Monitor 1' 150.0$");
+        } catch (AssertionError e) {
+            countErrors++;
+        }
+        try {
+            assertPageContain("'Monitor 3 - the best monitor!' 190.0$");
+        } catch (AssertionError e) {
+            countErrors++;
+        }
+        assertEquals(1, countErrors);
     }
 
     private void assertSearchForm() {

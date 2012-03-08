@@ -1,4 +1,4 @@
-package org.automation.dojo.web;
+package web;
 
 public final class JettyServerRunner {
 

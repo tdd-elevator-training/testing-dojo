@@ -1,7 +1,7 @@
-package org.automation.dojo.web.releases;
+package web.releases;
 
 
-import org.automation.dojo.web.FunctionalTestCase;
+import web.FunctionalTestCase;
 import org.automation.dojo.web.bugs.NullBug;
 import org.automation.dojo.web.scenario.SearchByTextLevel1Scenario;
 import org.junit.Test;

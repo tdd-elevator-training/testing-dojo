@@ -1,8 +1,8 @@
-package org.automation.dojo.web.search;
+package web.search;
 
 
-import org.automation.dojo.web.FunctionalTestCase;
-import org.automation.dojo.web.bugs.NullBug;
+import web.FunctionalTestCase;
+import org.automation.dojo.web.bugs.AddSomeOtherElementIfListNotEmptyBug;
 import org.automation.dojo.web.scenario.SearchByTextLevel1Scenario;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -19,7 +19,7 @@ import static org.junit.Assert.assertNotNull;
 
 @ContextConfiguration(locations = {"classpath:/org/automation/dojo/applicationContext.xml"})
 @RunWith(SpringJUnit4ClassRunner.class)
-public class SearchPageLevel1 extends FunctionalTestCase {
+public class SearchPageLevel1_Bug3 extends FunctionalTestCase {
 
     private WebElement search;
     private WebElement searchButton;
@@ -32,7 +32,7 @@ public class SearchPageLevel1 extends FunctionalTestCase {
 
     @Override
     protected List<?> getMinorRelease() {
-        return Arrays.asList(SearchByTextLevel1Scenario.class, NullBug.class);
+        return Arrays.asList(SearchByTextLevel1Scenario.class, AddSomeOtherElementIfListNotEmptyBug.class);
     }
 
     @Override
@@ -64,11 +64,21 @@ public class SearchPageLevel1 extends FunctionalTestCase {
         assertPageContain("Mouse 2");
         assertPageContain("Mouse 3");
         assertPageContain("Mouse 4 - the best mouse!");
+        assertPageContain("Monitor"); // это воздействие баги
     }
 
     @Test
     public void shouldEmptyListWhenFirstComeIn() {
         assertPageNotContain("List:");
+    }
+
+    @Test
+    public void shouldAllListWhenFindEmptyString() {
+        enterText("");
+        submitSearchForm();
+
+        assertPageContain("List:");
+        allElementsPresent();
     }
 
     @Test
@@ -82,7 +92,7 @@ public class SearchPageLevel1 extends FunctionalTestCase {
         assertPageContain("Monitor 1");
         assertPageContain("Monitor 2");
         assertPageContain("Monitor 3 - the best monitor!");
-        assertPageNotContain("Mouse");
+        assertPageContain("Mouse"); // это воздействие баги
     }
 
     @Test

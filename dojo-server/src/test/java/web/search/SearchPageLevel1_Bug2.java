@@ -1,8 +1,8 @@
-package org.automation.dojo.web.search;
+package web.search;
 
 
-import org.automation.dojo.web.FunctionalTestCase;
-import org.automation.dojo.web.bugs.NoResultWhenExpectedBug;
+import web.FunctionalTestCase;
+import org.automation.dojo.web.bugs.FoundNotExistsProductBug;
 import org.automation.dojo.web.scenario.SearchByTextLevel1Scenario;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -19,7 +19,7 @@ import static org.junit.Assert.assertNotNull;
 
 @ContextConfiguration(locations = {"classpath:/org/automation/dojo/applicationContext.xml"})
 @RunWith(SpringJUnit4ClassRunner.class)
-public class SearchPageLevel1_Bug1 extends FunctionalTestCase {
+public class SearchPageLevel1_Bug2 extends FunctionalTestCase {
 
     private WebElement search;
     private WebElement searchButton;
@@ -32,7 +32,7 @@ public class SearchPageLevel1_Bug1 extends FunctionalTestCase {
 
     @Override
     protected List<?> getMinorRelease() {
-        return Arrays.asList(SearchByTextLevel1Scenario.class, NoResultWhenExpectedBug.class);
+        return Arrays.asList(SearchByTextLevel1Scenario.class, FoundNotExistsProductBug.class);
     }
 
     @Override
@@ -76,16 +76,8 @@ public class SearchPageLevel1_Bug1 extends FunctionalTestCase {
         enterText("");
         submitSearchForm();
 
-        try {
-            assertPageContain("List:");
-            throw new RuntimeException("Expected exception");
-        } catch (AssertionError e) {
-        }
-        try {
-            allElementsPresent();
-            throw new RuntimeException("Expected exception");
-        } catch (AssertionError e) {
-        }
+        assertPageContain("List:");
+        allElementsPresent();
     }
 
     @Test
@@ -107,8 +99,16 @@ public class SearchPageLevel1_Bug1 extends FunctionalTestCase {
         enterText("keyboard");
         submitSearchForm();
 
-        assertNotFound();
-        allElementsPresent();
+        try {
+            assertNotFound();
+            throw new RuntimeException("Expected exception");
+        } catch (AssertionError e) {
+        }
+        try {
+            allElementsPresent();
+            throw new RuntimeException("Expected exception");
+        } catch (AssertionError e) {
+        }
     }
 
     @Test

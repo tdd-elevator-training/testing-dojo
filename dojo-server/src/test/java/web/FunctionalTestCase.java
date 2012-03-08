@@ -1,4 +1,4 @@
-package org.automation.dojo.web;
+package web;
 
 import org.automation.dojo.ApplicationContextLocator;
 import org.automation.dojo.ReleaseEngine;

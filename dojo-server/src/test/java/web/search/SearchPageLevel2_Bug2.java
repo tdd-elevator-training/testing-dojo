@@ -1,7 +1,8 @@
-package org.automation.dojo.web.search;
+package web.search;
 
 
-import org.automation.dojo.web.FunctionalTestCase;
+import web.FunctionalTestCase;
+import org.automation.dojo.web.bugs.BrokenSortingBug;
 import org.automation.dojo.web.bugs.NullBug;
 import org.automation.dojo.web.scenario.SearchByPriceLevel2Scenario;
 import org.automation.dojo.web.scenario.SearchByTextLevel2Scenario;
@@ -21,7 +22,7 @@ import static org.junit.Assert.assertNotNull;
 
 @ContextConfiguration(locations = {"classpath:/org/automation/dojo/applicationContext.xml"})
 @RunWith(SpringJUnit4ClassRunner.class)
-public class SearchPageLevel2 extends FunctionalTestCase {
+public class SearchPageLevel2_Bug2 extends FunctionalTestCase {
 
     private WebElement search;
     private WebElement searchButton;
@@ -37,7 +38,7 @@ public class SearchPageLevel2 extends FunctionalTestCase {
     @Override
     protected List<?> getMinorRelease() {
         return Arrays.asList(SearchByTextLevel2Scenario.class, NullBug.class,
-                SearchByPriceLevel2Scenario.class, NullBug.class);
+                SearchByPriceLevel2Scenario.class, BrokenSortingBug.class);
     }
 
     @Override
@@ -101,7 +102,7 @@ public class SearchPageLevel2 extends FunctionalTestCase {
         allElementsPresent();
     }
 
-    @Test
+    @Test(expected = AssertionError.class)
     public void shouldAllElementsSortedByPrice() {
         enterText("");
         submitSearchForm();
@@ -116,7 +117,7 @@ public class SearchPageLevel2 extends FunctionalTestCase {
                 "'Monitor 3 - the best monitor!' 190.0$");
     }
 
-    @Test
+    @Test(expected = AssertionError.class)
     public void shouldFoundElementsSortedByPrice() {
         enterText("the best");
         submitSearchForm();

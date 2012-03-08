@@ -1,4 +1,4 @@
-package org.automation.dojo.web;
+package web;
 
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.webapp.WebAppContext;

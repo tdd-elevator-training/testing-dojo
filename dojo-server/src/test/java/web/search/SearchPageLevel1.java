@@ -1,8 +1,8 @@
-package org.automation.dojo.web.search;
+package web.search;
 
 
-import org.automation.dojo.web.FunctionalTestCase;
-import org.automation.dojo.web.bugs.FoundNotExistsProductBug;
+import web.FunctionalTestCase;
+import org.automation.dojo.web.bugs.NullBug;
 import org.automation.dojo.web.scenario.SearchByTextLevel1Scenario;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -19,7 +19,7 @@ import static org.junit.Assert.assertNotNull;
 
 @ContextConfiguration(locations = {"classpath:/org/automation/dojo/applicationContext.xml"})
 @RunWith(SpringJUnit4ClassRunner.class)
-public class SearchPageLevel1_Bug2 extends FunctionalTestCase {
+public class SearchPageLevel1 extends FunctionalTestCase {
 
     private WebElement search;
     private WebElement searchButton;
@@ -32,7 +32,7 @@ public class SearchPageLevel1_Bug2 extends FunctionalTestCase {
 
     @Override
     protected List<?> getMinorRelease() {
-        return Arrays.asList(SearchByTextLevel1Scenario.class, FoundNotExistsProductBug.class);
+        return Arrays.asList(SearchByTextLevel1Scenario.class, NullBug.class);
     }
 
     @Override
@@ -72,15 +72,6 @@ public class SearchPageLevel1_Bug2 extends FunctionalTestCase {
     }
 
     @Test
-    public void shouldAllListWhenFindEmptyString() {
-        enterText("");
-        submitSearchForm();
-
-        assertPageContain("List:");
-        allElementsPresent();
-    }
-
-    @Test
     public void shouldFoundSomeAnotherRecordsWhenSearchItByPartOfDescription() {
         enterText("monitor");
         submitSearchForm();
@@ -99,16 +90,8 @@ public class SearchPageLevel1_Bug2 extends FunctionalTestCase {
         enterText("keyboard");
         submitSearchForm();
 
-        try {
-            assertNotFound();
-            throw new RuntimeException("Expected exception");
-        } catch (AssertionError e) {
-        }
-        try {
-            allElementsPresent();
-            throw new RuntimeException("Expected exception");
-        } catch (AssertionError e) {
-        }
+        assertNotFound();
+        allElementsPresent();
     }
 
     @Test
