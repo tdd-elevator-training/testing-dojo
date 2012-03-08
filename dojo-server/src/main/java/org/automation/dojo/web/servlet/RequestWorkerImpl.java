@@ -8,7 +8,7 @@ import java.util.List;
 
 public class RequestWorkerImpl implements RequestWorker {
 
-    private List<String> priceOptions = Arrays.asList("", "more than", "less than");
+    public static List<String> priceOptions = Arrays.asList("", "more than", "less than");
     private HttpServletRequest request;
 
     public RequestWorkerImpl(HttpServletRequest request) {
