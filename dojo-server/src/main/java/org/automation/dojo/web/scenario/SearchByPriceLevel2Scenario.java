@@ -2,6 +2,7 @@ package org.automation.dojo.web.scenario;
 
 import org.automation.dojo.ApplicationContextLocator;
 import org.automation.dojo.web.bugs.AddExistingItemWithPriceLessThanEntered;
+import org.automation.dojo.web.bugs.AddExistingItemWithPriceMoreThanEntered;
 import org.automation.dojo.web.bugs.Bug;
 import org.automation.dojo.BugsQueue;
 import org.automation.dojo.web.bugs.BrokenSortingBug;
@@ -40,7 +41,9 @@ public class SearchByPriceLevel2Scenario extends BasicScenario<RequestWorker> {
     }
 
     public List<? extends Bug> getPossibleBugs() {
-        return Arrays.asList(new BrokenSortingBug(), new AddExistingItemWithPriceLessThanEntered());
+        return Arrays.asList(new BrokenSortingBug(),
+                new AddExistingItemWithPriceLessThanEntered(),
+                new AddExistingItemWithPriceMoreThanEntered());
     }
 
 }

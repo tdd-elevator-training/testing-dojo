@@ -5,15 +5,14 @@ import org.automation.dojo.ApplicationContextLocator;
 import org.automation.dojo.web.model.Record;
 import org.automation.dojo.web.model.ShopService;
 import org.automation.dojo.web.servlet.RequestWorker;
-import org.automation.dojo.web.servlet.RequestWorkerImpl;
 
 import java.util.List;
 
 /**
- * Если выбран режим поиска по прайсу (опция "больше чем"), тогда добавлять в
- * начало списка один элемент с ценой меньше, если он не был пуст.
+ * Если выбран режим поиска по прайсу (опция "меньше чем"), тогда добавлять в
+ * конец списка один элемент с ценой больше, если он не был пуст.
  */
-public class AddExistingItemWithPriceLessThanEntered extends Bug<RequestWorker> {
+public class AddExistingItemWithPriceMoreThanEntered extends Bug<RequestWorker> {
 
     @Override
     public RequestWorker apply(RequestWorker result) {
@@ -22,11 +21,11 @@ public class AddExistingItemWithPriceLessThanEntered extends Bug<RequestWorker> 
            !list.isEmpty() &&
            !result.isNoResultsFound() &&
            !StringUtils.isEmpty(result.getStringPrice()) &&
-           result.getPriceOptionIndex() == ShopService.MORE_THAN)
+           result.getPriceOptionIndex() == ShopService.LESS_THAN)
         {
             Record otherRecord = findLessThan(result);
             if (otherRecord != null) {
-                list.add(0, otherRecord);
+                list.add(otherRecord);
             }
         }
         return result;
@@ -35,7 +34,7 @@ public class AddExistingItemWithPriceLessThanEntered extends Bug<RequestWorker> 
     private Record findLessThan(RequestWorker request) {
         ShopService shop = ApplicationContextLocator.getInstance().getBean("shopService");
         List<Record> all = shop.selectByText(request.getSearchText());
-        List<Record> filtered = shop.priceFilter(all, ShopService.LESS_THAN, request.getPrice());
+        List<Record> filtered = shop.priceFilter(all, ShopService.MORE_THAN, request.getPrice());
         if (filtered.size() < 2) { // два потому как один элемент уже включен, условие LESS_THAN = это LESS_THAN_AND_EQUALS
             return null;
         }

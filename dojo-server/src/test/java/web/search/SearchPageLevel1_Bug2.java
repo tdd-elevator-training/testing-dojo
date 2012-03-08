@@ -99,12 +99,12 @@ public class SearchPageLevel1_Bug2 extends FunctionalTestCase {
         enterText("keyboard");
         submitSearchForm();
 
-        try {
+        try { // это баг делает
             assertNotFound();
             throw new RuntimeException("Expected exception");
         } catch (AssertionError e) {
         }
-        try {
+        try { // это баг делает
             allElementsPresent();
             throw new RuntimeException("Expected exception");
         } catch (AssertionError e) {

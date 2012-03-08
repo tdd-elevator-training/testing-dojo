@@ -64,7 +64,7 @@ public class SearchPageLevel1_Bug3 extends FunctionalTestCase {
         assertPageContain("Mouse 2");
         assertPageContain("Mouse 3");
         assertPageContain("Mouse 4 - the best mouse!");
-        assertPageContain("Monitor"); // это воздействие баги
+        assertPageContain("Monitor"); // это баг делает
     }
 
     @Test
@@ -92,7 +92,7 @@ public class SearchPageLevel1_Bug3 extends FunctionalTestCase {
         assertPageContain("Monitor 1");
         assertPageContain("Monitor 2");
         assertPageContain("Monitor 3 - the best monitor!");
-        assertPageContain("Mouse"); // это воздействие баги
+        assertPageContain("Mouse"); // это баг делает
     }
 
     @Test

@@ -76,12 +76,12 @@ public class SearchPageLevel1_Bug1 extends FunctionalTestCase {
         enterText("");
         submitSearchForm();
 
-        try {
+        try { // это баг делает
             assertPageContain("List:");
             throw new RuntimeException("Expected exception");
         } catch (AssertionError e) {
         }
-        try {
+        try { // это баг делает
             allElementsPresent();
             throw new RuntimeException("Expected exception");
         } catch (AssertionError e) {
