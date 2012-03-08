@@ -12,9 +12,9 @@ import org.automation.dojo.web.servlet.RequestWorker;
 import java.util.Arrays;
 import java.util.List;
 
-public class TerminatorLevel2Scenario extends BasicScenario<RequestWorker> {
+public class Level2TerminatorScenario extends BasicScenario<RequestWorker> {
 
-    public TerminatorLevel2Scenario(int id, String description, BugsQueue bugsQueue) {
+    public Level2TerminatorScenario(int id, String description, BugsQueue bugsQueue) {
         super(id, description, bugsQueue);
     }
 

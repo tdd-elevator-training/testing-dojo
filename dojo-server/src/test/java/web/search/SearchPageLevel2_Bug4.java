@@ -1,12 +1,11 @@
 package web.search;
 
 
-import org.automation.dojo.web.bugs.AddExistingItemWithPriceMoreThanEntered;
 import org.automation.dojo.web.bugs.IgnorePriceSortingOrderBug;
 import org.automation.dojo.web.bugs.NullBug;
-import org.automation.dojo.web.scenario.PriceSortingAscDescLevel2Scenario;
-import org.automation.dojo.web.scenario.SearchByPriceLevel2Scenario;
-import org.automation.dojo.web.scenario.SearchByTextLevel2Scenario;
+import org.automation.dojo.web.scenario.PriceSortingAscDescScenario;
+import org.automation.dojo.web.scenario.SearchByPriceScenario;
+import org.automation.dojo.web.scenario.SearchByTextScenario;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
@@ -15,7 +14,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.automation.dojo.web.model.ShopService.LESS_THAN;
 import static org.automation.dojo.web.model.ShopService.MORE_THAN;
 
 @ContextConfiguration(locations = {"classpath:/org/automation/dojo/applicationContext.xml"})
@@ -24,9 +22,9 @@ public class SearchPageLevel2_Bug4 extends SearchPageLevel2 {
 
     @Override
     protected List<?> getMinorRelease() {
-        return Arrays.asList(SearchByTextLevel2Scenario.class, NullBug.class,
-                SearchByPriceLevel2Scenario.class, NullBug.class,
-                PriceSortingAscDescLevel2Scenario.class, IgnorePriceSortingOrderBug.class);
+        return Arrays.asList(SearchByTextScenario.class, NullBug.class,
+                SearchByPriceScenario.class, NullBug.class,
+                PriceSortingAscDescScenario.class, IgnorePriceSortingOrderBug.class);
     }
 
     @Test

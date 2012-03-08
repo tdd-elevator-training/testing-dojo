@@ -1,13 +1,10 @@
 package web.search;
 
 
-import web.FunctionalTestCase;
 import org.automation.dojo.web.bugs.FoundNotExistsProductBug;
-import org.automation.dojo.web.scenario.SearchByTextLevel1Scenario;
+import org.automation.dojo.web.scenario.SearchByTextScenario;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebElement;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -23,7 +20,7 @@ public class SearchPageLevel1_Bug2 extends SearchPageLevel1 {
 
     @Override
     protected List<?> getMinorRelease() {
-        return Arrays.asList(SearchByTextLevel1Scenario.class, FoundNotExistsProductBug.class);
+        return Arrays.asList(SearchByTextScenario.class, FoundNotExistsProductBug.class);
     }
 
     @Test

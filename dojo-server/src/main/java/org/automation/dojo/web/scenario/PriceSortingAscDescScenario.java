@@ -10,9 +10,9 @@ import org.automation.dojo.web.servlet.RequestWorker;
 import java.util.Arrays;
 import java.util.List;
 
-public class PriceSortingAscDescLevel2Scenario extends BasicScenario<RequestWorker> {
+public class PriceSortingAscDescScenario extends BasicScenario<RequestWorker> {
 
-    public PriceSortingAscDescLevel2Scenario(int id, String description, BugsQueue bugsQueue) {
+    public PriceSortingAscDescScenario(int id, String description, BugsQueue bugsQueue) {
         super(id, description, bugsQueue);
     }
 
@@ -29,7 +29,7 @@ public class PriceSortingAscDescLevel2Scenario extends BasicScenario<RequestWork
         }
 
         bug.apply(request);
-        return "search_level2.jsp";
+        return null;
     }
 
     public List<? extends Bug> getPossibleBugs() {

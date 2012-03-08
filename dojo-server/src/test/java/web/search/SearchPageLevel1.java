@@ -3,7 +3,7 @@ package web.search;
 
 import web.FunctionalTestCase;
 import org.automation.dojo.web.bugs.NullBug;
-import org.automation.dojo.web.scenario.SearchByTextLevel1Scenario;
+import org.automation.dojo.web.scenario.SearchByTextScenario;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.openqa.selenium.By;
@@ -32,7 +32,7 @@ public class SearchPageLevel1 extends FunctionalTestCase {
 
     @Override
     protected List<?> getMinorRelease() {
-        return Arrays.asList(SearchByTextLevel1Scenario.class, NullBug.class);
+        return Arrays.asList(SearchByTextScenario.class, NullBug.class);
     }
 
     @Override

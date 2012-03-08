@@ -1,20 +1,15 @@
 package web.search;
 
 
-import org.automation.dojo.web.bugs.AddExistingItemWithPriceLessThanEntered;
 import org.automation.dojo.web.bugs.AddExistingItemWithPriceMoreThanEntered;
 import org.automation.dojo.web.bugs.NullBug;
-import org.automation.dojo.web.scenario.PriceSortingAscDescLevel2Scenario;
-import org.automation.dojo.web.scenario.SearchByPriceLevel2Scenario;
-import org.automation.dojo.web.scenario.SearchByTextLevel2Scenario;
+import org.automation.dojo.web.scenario.PriceSortingAscDescScenario;
+import org.automation.dojo.web.scenario.SearchByPriceScenario;
+import org.automation.dojo.web.scenario.SearchByTextScenario;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.internal.matchers.Null;
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebElement;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import web.FunctionalTestCase;
 
 import java.util.Arrays;
 import java.util.List;
@@ -29,9 +24,9 @@ public class SearchPageLevel2_Bug3 extends SearchPageLevel2 {
 
     @Override
     protected List<?> getMinorRelease() {
-        return Arrays.asList(SearchByTextLevel2Scenario.class, NullBug.class,
-                SearchByPriceLevel2Scenario.class, AddExistingItemWithPriceMoreThanEntered.class,
-                PriceSortingAscDescLevel2Scenario.class, NullBug.class);
+        return Arrays.asList(SearchByTextScenario.class, NullBug.class,
+                SearchByPriceScenario.class, AddExistingItemWithPriceMoreThanEntered.class,
+                PriceSortingAscDescScenario.class, NullBug.class);
     }
 
     @Test

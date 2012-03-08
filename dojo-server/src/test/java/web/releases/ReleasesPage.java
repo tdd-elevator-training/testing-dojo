@@ -3,7 +3,7 @@ package web.releases;
 
 import web.FunctionalTestCase;
 import org.automation.dojo.web.bugs.NullBug;
-import org.automation.dojo.web.scenario.SearchByTextLevel1Scenario;
+import org.automation.dojo.web.scenario.SearchByTextScenario;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.openqa.selenium.By;
@@ -36,7 +36,7 @@ public class ReleasesPage extends FunctionalTestCase {
 
     @Override
     protected List<?> getMinorRelease() {
-        return Arrays.asList(SearchByTextLevel1Scenario.class, NullBug.class);
+        return Arrays.asList(SearchByTextScenario.class, NullBug.class);
     }
 
     @Override
@@ -58,7 +58,7 @@ public class ReleasesPage extends FunctionalTestCase {
     @Test
     public void shouldMajorRelease0WithoutBugsAtStart(){
         assertMach("Now we have major 0 and minor " +
-                "\\[Scenario SearchByTextLevel1Scenario with bug NullBug\\]",
+                "\\[Scenario SearchByTextScenario with bug NullBug\\]",
                 indicator.getText());
     }
 
@@ -67,9 +67,9 @@ public class ReleasesPage extends FunctionalTestCase {
         goTo(nextMajor.getAttribute("href"));
 
         assertMach("Now we have major 1 and minor " +
-                "\\[Scenario SearchByTextLevel2Scenario with bug NullBug, " +
-                "Scenario SearchByPriceLevel2Scenario with bug NullBug, " +
-                "Scenario PriceSortingAscDescLevel2Scenario with bug NullBug\\]",
+                "\\[Scenario SearchByTextScenario with bug NullBug, " +
+                "Scenario SearchByPriceScenario with bug NullBug, " +
+                "Scenario PriceSortingAscDescScenario with bug NullBug\\]",
                 indicator.getText());
     }
 
@@ -78,7 +78,7 @@ public class ReleasesPage extends FunctionalTestCase {
         goTo(nextMinor.getAttribute("href"));
 
         assertMach("Now we have major 0 and minor " +
-                "\\[Scenario SearchByTextLevel1Scenario with bug .*\\]",
+                "\\[Scenario SearchByTextScenario with bug .*\\]",
                 indicator.getText());
     }
 
@@ -88,23 +88,23 @@ public class ReleasesPage extends FunctionalTestCase {
         goTo(nextMinor.getAttribute("href"));
 
         assertMach("Now we have major 1 and minor " +
-                "\\[Scenario SearchByTextLevel2Scenario with bug .*" +
-                "Scenario SearchByPriceLevel2Scenario with bug .*\\]",
+                "\\[Scenario SearchByTextScenario with bug .*" +
+                "Scenario SearchByPriceScenario with bug .*\\]",
                 indicator.getText());
     }
 
     @Test
     public void shouldStopIfNoMoreMajorRevisions() {
         assertMach("Now we have major 0 and minor " +
-                "\\[Scenario SearchByTextLevel1Scenario with bug NullBug\\]",
+                "\\[Scenario SearchByTextScenario with bug NullBug\\]",
                 indicator.getText());
 
         goTo(nextMajor.getAttribute("href"));
 
         assertMach("Now we have major 1 and minor " +
-                "\\[Scenario SearchByTextLevel2Scenario with bug NullBug, " +
-                "Scenario SearchByPriceLevel2Scenario with bug NullBug, " +
-                "Scenario PriceSortingAscDescLevel2Scenario with bug NullBug\\]",
+                "\\[Scenario SearchByTextScenario with bug NullBug, " +
+                "Scenario SearchByPriceScenario with bug NullBug, " +
+                "Scenario PriceSortingAscDescScenario with bug NullBug\\]",
                 indicator.getText());
 
         goTo(nextMajor.getAttribute("href"));
@@ -112,9 +112,9 @@ public class ReleasesPage extends FunctionalTestCase {
         goTo(nextMajor.getAttribute("href"));
 
         assertMach("Now we have major 1 and minor " +
-                "\\[Scenario SearchByTextLevel2Scenario with bug NullBug, " +
-                "Scenario SearchByPriceLevel2Scenario with bug NullBug, " +
-                "Scenario PriceSortingAscDescLevel2Scenario with bug NullBug\\]",
+                "\\[Scenario SearchByTextScenario with bug NullBug, " +
+                "Scenario SearchByPriceScenario with bug NullBug, " +
+                "Scenario PriceSortingAscDescScenario with bug NullBug\\]",
                 indicator.getText());
     }
 

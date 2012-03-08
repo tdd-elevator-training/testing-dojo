@@ -1,10 +1,10 @@
 package web.search;
 
 
-import org.automation.dojo.web.scenario.PriceSortingAscDescLevel2Scenario;
+import org.automation.dojo.web.scenario.PriceSortingAscDescScenario;
 import org.automation.dojo.web.bugs.NullBug;
-import org.automation.dojo.web.scenario.SearchByPriceLevel2Scenario;
-import org.automation.dojo.web.scenario.SearchByTextLevel2Scenario;
+import org.automation.dojo.web.scenario.SearchByPriceScenario;
+import org.automation.dojo.web.scenario.SearchByTextScenario;
 import org.automation.dojo.web.servlet.RequestWorker;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -37,9 +37,9 @@ public class SearchPageLevel2 extends SearchPageLevel1 {
 
     @Override
     protected List<?> getMinorRelease() {
-        return Arrays.asList(SearchByTextLevel2Scenario.class, NullBug.class,
-                SearchByPriceLevel2Scenario.class, NullBug.class,
-                PriceSortingAscDescLevel2Scenario.class, NullBug.class);
+        return Arrays.asList(SearchByTextScenario.class, NullBug.class,
+                SearchByPriceScenario.class, NullBug.class,
+                PriceSortingAscDescScenario.class, NullBug.class);
     }
 
     @Override
