@@ -5,6 +5,7 @@ import org.automation.dojo.web.scenario.Scenario;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -52,7 +53,10 @@ public class Release<T> implements Scenario<T>, Serializable {
 
     @Override
     public String toString() {
-        return getScenarios().toString();
+        // терминаторы мы не учитываем, они тупо вконце цепочки и указывают на jsp
+        LinkedList<BasicScenario> copy = new LinkedList<BasicScenario>(getScenarios());
+        copy.removeLast();
+        return copy.toString();
     }
 
     public BasicScenario getScenario(int scenarioId) {
