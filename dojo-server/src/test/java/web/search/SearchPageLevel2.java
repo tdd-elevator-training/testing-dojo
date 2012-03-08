@@ -80,6 +80,18 @@ public class SearchPageLevel2 extends SearchPageLevel1 {
     }
 
     @Test
+    public void shouldFoundElementsSortedByPriceIfDesc() {
+        enterText("the best");
+        submitSearchForm();
+        selectSortingOrder(DESC);
+        submitSearchForm();
+
+        assertPageContain("List: Description Price " +
+                "'Monitor 3 - the best monitor!' 190.0$ " +
+                "'Mouse 4 - the best mouse!' 66.0$");
+    }
+
+    @Test
     public void shouldOnlyElementsMoreThanSomePrice() {
         enterText("");
         enterPrice(MORE_THAN, 120);

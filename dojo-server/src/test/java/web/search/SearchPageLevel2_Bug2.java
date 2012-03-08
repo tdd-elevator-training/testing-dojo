@@ -34,26 +34,16 @@ public class SearchPageLevel2_Bug2 extends SearchPageLevel2 {
 
     @Test(expected = AssertionError.class) // это баг делает
     public void shouldAllElementsSortedByPrice() {
-        enterText("");
-        submitSearchForm();
-
-        assertPageContain("List: Description Price " +
-                "'Mouse 1' 30.0$ " +
-                "'Mouse 3' 40.0$ " +
-                "'Mouse 2' 50.0$ " +
-                "'Mouse 4 - the best mouse!' 66.0$ " +
-                "'Monitor 2' 120.0$ " +
-                "'Monitor 1' 150.0$ " +
-                "'Monitor 3 - the best monitor!' 190.0$");
+        super.shouldAllElementsSortedByPrice();
     }
 
     @Test(expected = AssertionError.class) // это баг делает
     public void shouldFoundElementsSortedByPrice() {
-        enterText("the best");
-        submitSearchForm();
+        super.shouldFoundElementsSortedByPrice();
+    }
 
-        assertPageContain("List: Description Price " +
-                "'Mouse 4 - the best mouse!' 66.0$ " +
-                "'Monitor 3 - the best monitor!' 190.0$");
+    @Test(expected = AssertionError.class) // это баг делает
+    public void shouldFoundElementsSortedByPriceIfDesc() {
+        super.shouldFoundElementsSortedByPriceIfDesc();
     }
 }

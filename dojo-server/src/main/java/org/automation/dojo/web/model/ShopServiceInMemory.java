@@ -53,13 +53,14 @@ public class ShopServiceInMemory implements ShopService, Serializable {
     }
 
     @Override
-    public List<Record> sortByPrice(List<Record> records, boolean isAsc) {
+    public List<Record> sortByPrice(List<Record> records, final boolean isAsc) {
         List<Record> result = new LinkedList<Record>(records);
 
         Collections.sort(result, new Comparator<Record>() {
             @Override
             public int compare(Record o1, Record o2) {
-                return new Double(o1.getPrice()).compareTo(new Double(o2.getPrice()));
+                int ascDesc = (isAsc) ? 1 : -1;
+                return ascDesc*new Double(o1.getPrice()).compareTo(new Double(o2.getPrice()));
             }
         });
 
