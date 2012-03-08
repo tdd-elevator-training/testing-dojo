@@ -106,6 +106,7 @@ public class RequestWorkerImpl implements RequestWorker {
 
     @Override
     public void setPriceSortingOrderOption(boolean isAsc) {
-        request.setAttribute("price_sorting_order_option", sortingOptions.get((isAsc)?0:1));
+        String option = sortingOptions.get((isAsc) ? 0 : 1);
+        request.setAttribute("price_sorting_order_option", option);
     }
 }

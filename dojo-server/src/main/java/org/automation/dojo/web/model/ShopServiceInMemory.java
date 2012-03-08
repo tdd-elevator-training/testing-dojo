@@ -54,6 +54,10 @@ public class ShopServiceInMemory implements ShopService, Serializable {
 
     @Override
     public List<Record> sortByPrice(List<Record> records, final boolean isAsc) {
+        if (records == null || records.isEmpty()) {
+            return records;
+        }
+
         List<Record> result = new LinkedList<Record>(records);
 
         Collections.sort(result, new Comparator<Record>() {

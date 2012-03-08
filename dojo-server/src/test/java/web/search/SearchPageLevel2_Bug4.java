@@ -46,4 +46,16 @@ public class SearchPageLevel2_Bug4 extends SearchPageLevel2 {
 
         assertSortingOrder(ASC);
     }
+
+    @Test
+    public void shouldFoundElementsSortedByPriceIfDesc() {
+        enterText("the best");
+        submitSearchForm();
+        selectSortingOrder(DESC);
+        submitSearchForm();
+
+        assertPageContain("List: Description Price " +   // это баг длает
+                "'Mouse 4 - the best mouse!' 66.0$ " +
+                "'Monitor 3 - the best monitor!' 190.0$");
+    }
 }
