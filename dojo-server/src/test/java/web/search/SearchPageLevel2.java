@@ -218,7 +218,7 @@ public class SearchPageLevel2 extends FunctionalTestCase {
         return select.findElement(By.xpath("//option[@selected='']")).getAttribute("value");
     }
 
-    private void enterPrice(int priceOptionNumber, int price) {
+    protected void enterPrice(int priceOptionNumber, int price) {
         setMoreThan(priceOptionNumber);
         setPrice(price);
     }
@@ -270,11 +270,11 @@ public class SearchPageLevel2 extends FunctionalTestCase {
         assertNotNull(searchText);
     }
 
-    private void enterText(String string) {
+    protected void enterText(String string) {
         searchText.sendKeys(string);
     }
 
-    private void submitSearchForm() {
+    protected void submitSearchForm() {
         searchButton.submit();
         resetAllElements();
     }
