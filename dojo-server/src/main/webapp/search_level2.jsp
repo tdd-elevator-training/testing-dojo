@@ -40,11 +40,20 @@
                 </c:otherwise>
             </c:choose>
             </br>
-            <c:forEach items="${requestScope.records}" var="record" varStatus="status">
-                <input type="checkbox" value="<c:out value="${status.index+1}"/>" name="record">
-                '<c:out value="${record.description}"/>' <c:out value="${record.price}"/>$
-                </br>
-            </c:forEach>
+            <table>
+                <tr>
+                    <td></td>
+                    <td>Description</td>
+                    <td>Price</td>
+                </tr>
+                <c:forEach items="${requestScope.records}" var="record" varStatus="status">
+                    <tr>
+                        <td><input type="checkbox" value="<c:out value="${status.index+1}"/>" name="record"></td>
+                        <td>'<c:out value="${record.description}"/>'</td>
+                        <td><c:out value="${record.price}"/>$</td>
+                    </tr>
+                </c:forEach>
+            </table>
         </c:if>
 	</body>
 </html>

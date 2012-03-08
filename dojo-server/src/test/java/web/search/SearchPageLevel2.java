@@ -106,7 +106,7 @@ public class SearchPageLevel2 extends FunctionalTestCase {
         enterText("");
         submitSearchForm();
 
-        assertPageContain("List: " +
+        assertPageContain("List: Description Price " +
                 "'Mouse 1' 30.0$ " +
                 "'Mouse 3' 40.0$ " +
                 "'Mouse 2' 50.0$ " +
@@ -121,7 +121,7 @@ public class SearchPageLevel2 extends FunctionalTestCase {
         enterText("the best");
         submitSearchForm();
 
-        assertPageContain("List: " +
+        assertPageContain("List: Description Price " +
                 "'Mouse 4 - the best mouse!' 66.0$ " +
                 "'Monitor 3 - the best monitor!' 190.0$");
     }
