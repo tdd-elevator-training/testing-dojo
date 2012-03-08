@@ -1,11 +1,11 @@
 package org.automation.dojo.web.scenario;
 
 import org.automation.dojo.ApplicationContextLocator;
+import org.automation.dojo.BugsQueue;
 import org.automation.dojo.web.bugs.AddExistingItemWithPriceLessThanEntered;
 import org.automation.dojo.web.bugs.AddExistingItemWithPriceMoreThanEntered;
-import org.automation.dojo.web.bugs.Bug;
-import org.automation.dojo.BugsQueue;
 import org.automation.dojo.web.bugs.BrokenSortingBug;
+import org.automation.dojo.web.bugs.Bug;
 import org.automation.dojo.web.model.Record;
 import org.automation.dojo.web.model.ShopService;
 import org.automation.dojo.web.servlet.RequestWorker;
@@ -13,9 +13,9 @@ import org.automation.dojo.web.servlet.RequestWorker;
 import java.util.Arrays;
 import java.util.List;
 
-public class SearchByPriceLevel2Scenario extends BasicScenario<RequestWorker> {
+public class PriceSortingAscDescLevel2Scenario extends BasicScenario<RequestWorker> {
 
-    public SearchByPriceLevel2Scenario(int id, String description, BugsQueue bugsQueue) {
+    public PriceSortingAscDescLevel2Scenario(int id, String description, BugsQueue bugsQueue) {
         super(id, description, bugsQueue);
     }
 
@@ -24,16 +24,9 @@ public class SearchByPriceLevel2Scenario extends BasicScenario<RequestWorker> {
         ShopService service = ApplicationContextLocator.getInstance().getBean("shopService");
 
         List<Record> records = request.getRecords();
-        if (records != null &&
-            !request.isNoResultsFound()) {
-            List<Record> result = service.priceFilter(records,
-                    request.getPriceOptionIndex(), request.getPrice());
-
-            if (result.isEmpty()) {
-                result = service.selectByText("");
-                request.noResultsFound();
-            }
-
+        if (records != null && !records.isEmpty()) {
+            List<Record> result = service.sortByPrice(records,
+                    request.isAsc());
             request.setRecords(result);
         }
 
@@ -42,8 +35,7 @@ public class SearchByPriceLevel2Scenario extends BasicScenario<RequestWorker> {
     }
 
     public List<? extends Bug> getPossibleBugs() {
-        return Arrays.asList(new AddExistingItemWithPriceLessThanEntered(),
-                new AddExistingItemWithPriceMoreThanEntered());
+        return Arrays.asList(new BrokenSortingBug());
     }
 
 }

@@ -20,7 +20,7 @@ public class AddExistingItemWithPriceMoreThanEnteredBugTest extends BugTest {
         foundSomeRecords();
         weHaveSomeResults(record1, record2);
         tryToFoundLessThan(String.valueOf(record2.getPrice()));
-        filteredByPrice(record2, record3, record4);
+        filteredByPrice(record3, record4);
 
         bug.apply(request);
 
@@ -33,7 +33,7 @@ public class AddExistingItemWithPriceMoreThanEnteredBugTest extends BugTest {
         foundSomeRecords();
         weHaveSomeResults(record1, record2);
         tryToFoundMoreThan(String.valueOf(record2.getPrice()));
-        filteredByPrice(record2, record3, record4);
+        filteredByPrice(record3, record4);
 
         bug.apply(request);
 
@@ -46,7 +46,7 @@ public class AddExistingItemWithPriceMoreThanEnteredBugTest extends BugTest {
         foundSomeRecords();
         weHaveSomeResults(record1, record2);
         tryToFoundLessThan("");
-        filteredByPrice(record2, record3, record4);
+        filteredByPrice(record3, record4);
 
         bug.apply(request);
 
@@ -59,7 +59,7 @@ public class AddExistingItemWithPriceMoreThanEnteredBugTest extends BugTest {
         nothingToFound();
         weHaveSomeResults(record1, record2);
         tryToFoundLessThan(String.valueOf(record2.getPrice()));
-        filteredByPrice(record2, record3, record4);
+        filteredByPrice(record3, record4);
 
         bug.apply(request);
 
@@ -72,7 +72,7 @@ public class AddExistingItemWithPriceMoreThanEnteredBugTest extends BugTest {
         foundSomeRecords();
         weHaveSomeResults();
         tryToFoundLessThan(String.valueOf(record2.getPrice()));
-        filteredByPrice(record2, record3, record4);
+        filteredByPrice(record3, record4);
 
         bug.apply(request);
 
@@ -85,7 +85,7 @@ public class AddExistingItemWithPriceMoreThanEnteredBugTest extends BugTest {
         foundSomeRecords();
         when(request.getRecords()).thenReturn(null);
         tryToFoundLessThan(String.valueOf(record2.getPrice()));
-        filteredByPrice(record2, record3, record4);
+        filteredByPrice(record3, record4);
 
         bug.apply(request);
 
@@ -93,12 +93,12 @@ public class AddExistingItemWithPriceMoreThanEnteredBugTest extends BugTest {
     }
 
     @Test
-    public void shouldWorkOnlyWhenHaveSomeRecordsLessThan(){
+    public void shouldWorkOnlyWhenHaveSomeRecordsMoreThan(){
         tryToFoundByString();
         foundSomeRecords();
         weHaveSomeResults(record3, record4);
         tryToFoundLessThan(String.valueOf(record4.getPrice()));
-        filteredByPrice(record4);
+        filteredByPrice();
 
         bug.apply(request);
 

@@ -14,10 +14,10 @@
   					<td>Please enter text to find</td>
   					<td><input type="text" name="search_text" id="search_text" value="<c:out value="${search_text}"/>"></td>
   					<td>
-  					    <select name="price_option" id="price_option">
-  					        <c:forEach items="${requestScope.price_options}" var="option" varStatus="status">
+  					    <select name="price_search_option" id="price_search_option">
+  					        <c:forEach items="${requestScope.price_search_options}" var="option" varStatus="status">
                                 <option value="<c:out value="${option}"/>"
-                                    <c:if test="${option == price_option}">
+                                    <c:if test="${option == price_search_option}">
                                         selected
                                     </c:if>
                                 ><c:out value="${option}"/></option>
@@ -44,7 +44,17 @@
                 <tr>
                     <td></td>
                     <td>Description</td>
-                    <td>Price</td>
+                    <td>Price
+                        <select name="price_sorting_order_option" id="price_sorting_order_option">
+  					        <c:forEach items="${requestScope.asc_desc_options}" var="option" varStatus="status">
+                                <option value="<c:out value="${option}"/>"
+                                    <c:if test="${option == price_sorting_order}">
+                                        selected
+                                    </c:if>
+                                ><c:out value="${option}"/></option>
+      			            </c:forEach>
+                        </select>
+                    </td>
                 </tr>
                 <c:forEach items="${requestScope.records}" var="record" varStatus="status">
                     <tr>

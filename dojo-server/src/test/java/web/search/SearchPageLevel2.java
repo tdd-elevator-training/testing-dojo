@@ -1,6 +1,7 @@
 package web.search;
 
 
+import org.automation.dojo.web.scenario.PriceSortingAscDescLevel2Scenario;
 import web.FunctionalTestCase;
 import org.automation.dojo.web.bugs.NullBug;
 import org.automation.dojo.web.scenario.SearchByPriceLevel2Scenario;
@@ -37,7 +38,8 @@ public class SearchPageLevel2 extends FunctionalTestCase {
     @Override
     protected List<?> getMinorRelease() {
         return Arrays.asList(SearchByTextLevel2Scenario.class, NullBug.class,
-                SearchByPriceLevel2Scenario.class, NullBug.class);
+                SearchByPriceLevel2Scenario.class, NullBug.class,
+                PriceSortingAscDescLevel2Scenario.class, NullBug.class);
     }
 
     @Override
@@ -51,7 +53,7 @@ public class SearchPageLevel2 extends FunctionalTestCase {
         searchButton = tester.findElement(By.id("search_button"));
         searchText = tester.findElement(By.id("search_text"));
         price = tester.findElement(By.id("price"));
-        priceOption = tester.findElement(By.id("price_option"));
+        priceOption = tester.findElement(By.id("price_search_option"));
     }
 
     @Test
@@ -169,6 +171,16 @@ public class SearchPageLevel2 extends FunctionalTestCase {
     public void shouldAllListIfNotFoundByPrice() {
         enterText("1");
         enterPrice(LESS_THAN, 1);
+        submitSearchForm();
+
+        assertNotFound();
+        allElementsPresent();
+    }
+
+    @Test
+    public void shouldIgnorePriceOptionWhenNotFoundByString() {
+        enterText("blablablabl");
+        enterPrice(LESS_THAN, 120);
         submitSearchForm();
 
         assertNotFound();

@@ -34,11 +34,13 @@ public class AddExistingItemWithPriceMoreThanEntered extends Bug<RequestWorker> 
     private Record findLessThan(RequestWorker request) {
         ShopService shop = ApplicationContextLocator.getInstance().getBean("shopService");
         List<Record> all = shop.selectByText(request.getSearchText());
-        List<Record> filtered = shop.priceFilter(all, ShopService.MORE_THAN, request.getPrice());
-        if (filtered.size() < 2) { // два потому как один элемент уже включен, условие LESS_THAN = это LESS_THAN_AND_EQUALS
+        List<Record> filtered = shop.priceFilter(all,
+                ShopService.MORE_THAN, request.getPrice() +
+                0.000001); // 0.000001 - хак, чтобы не учитывать текущий элемент
+        if (filtered.size() == 0) {
             return null;
         }
-        return filtered.get(filtered.size() - 2);
+        return filtered.get(0);
     }
 
 

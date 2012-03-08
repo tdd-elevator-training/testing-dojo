@@ -26,4 +26,8 @@ public interface RequestWorker {
     int getPriceOptionIndex();
 
     void clearNoResultsFound();
+
+    boolean isAsc();
+
+    String getAscDescString();
 }

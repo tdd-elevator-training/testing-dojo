@@ -36,11 +36,6 @@ public class ShopServiceInMemory implements ShopService, Serializable {
 
     @Override
     public List<Record> priceFilter(List<Record> records, int priceOption, Double price) {
-        List<Record> foundByPrice = removeByPrice(priceOption, price, records);
-        return sortByPrice(foundByPrice);
-    }
-
-    private List<Record> removeByPrice(int priceOption, double price, List<Record> records) {
         if (priceOption == IGNORE) {
             return records;
         }
@@ -57,7 +52,8 @@ public class ShopServiceInMemory implements ShopService, Serializable {
         return result;
     }
 
-    private List<Record> sortByPrice(List<Record> records) {
+    @Override
+    public List<Record> sortByPrice(List<Record> records, boolean isAsc) {
         List<Record> result = new LinkedList<Record>(records);
 
         Collections.sort(result, new Comparator<Record>() {

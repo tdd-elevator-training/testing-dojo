@@ -4,10 +4,12 @@ package web.search;
 import org.automation.dojo.web.bugs.AddExistingItemWithPriceLessThanEntered;
 import org.automation.dojo.web.bugs.AddExistingItemWithPriceMoreThanEntered;
 import org.automation.dojo.web.bugs.NullBug;
+import org.automation.dojo.web.scenario.PriceSortingAscDescLevel2Scenario;
 import org.automation.dojo.web.scenario.SearchByPriceLevel2Scenario;
 import org.automation.dojo.web.scenario.SearchByTextLevel2Scenario;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.internal.matchers.Null;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.springframework.test.context.ContextConfiguration;
@@ -39,7 +41,8 @@ public class SearchPageLevel2_Bug3 extends FunctionalTestCase {
     @Override
     protected List<?> getMinorRelease() {
         return Arrays.asList(SearchByTextLevel2Scenario.class, NullBug.class,
-                SearchByPriceLevel2Scenario.class, AddExistingItemWithPriceMoreThanEntered.class);
+                SearchByPriceLevel2Scenario.class, AddExistingItemWithPriceMoreThanEntered.class,
+                PriceSortingAscDescLevel2Scenario.class, NullBug.class);
     }
 
     @Override
@@ -53,7 +56,7 @@ public class SearchPageLevel2_Bug3 extends FunctionalTestCase {
         searchButton = tester.findElement(By.id("search_button"));
         searchText = tester.findElement(By.id("search_text"));
         price = tester.findElement(By.id("price"));
-        priceOption = tester.findElement(By.id("price_option"));
+        priceOption = tester.findElement(By.id("price_search_option"));
     }
 
     @Test
@@ -171,6 +174,16 @@ public class SearchPageLevel2_Bug3 extends FunctionalTestCase {
     public void shouldAllListIfNotFoundByPrice() {
         enterText("1");
         enterPrice(LESS_THAN, 1);
+        submitSearchForm();
+
+        assertNotFound();
+        allElementsPresent();
+    }
+
+    @Test
+    public void shouldIgnorePriceOptionWhenNotFoundByString() {
+        enterText("blablablabl");
+        enterPrice(LESS_THAN, 120);
         submitSearchForm();
 
         assertNotFound();

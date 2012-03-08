@@ -9,6 +9,8 @@ import java.util.List;
 public class RequestWorkerImpl implements RequestWorker {
 
     public static List<String> priceOptions = Arrays.asList("", "more than", "less than");
+    public static List<String> sortingOptions = Arrays.asList("ascending", "descending");
+
     private HttpServletRequest request;
 
     public RequestWorkerImpl(HttpServletRequest request) {
@@ -38,11 +40,13 @@ public class RequestWorkerImpl implements RequestWorker {
 
     @Override
     public void saveFormState() {
-        request.setAttribute("price_options", priceOptions);
+        request.setAttribute("price_search_options", priceOptions);
+        request.setAttribute("asc_desc_options", sortingOptions);
 
-        request.setAttribute("price_option", getPriceOption());
+        request.setAttribute("price_search_option", getPriceOption());
         request.setAttribute("price", getStringPrice());
         request.setAttribute("search_text", getSearchText());
+        request.setAttribute("price_sorting_order_option", getAscDescString());
     }
 
     @Override
@@ -52,7 +56,7 @@ public class RequestWorkerImpl implements RequestWorker {
 
     @Override
     public String getPriceOption() {
-        return request.getParameter("price_option");
+        return request.getParameter("price_search_option");
     }
 
     @Override
@@ -81,5 +85,15 @@ public class RequestWorkerImpl implements RequestWorker {
     @Override
     public void clearNoResultsFound() {
         request.setAttribute("no_results", false);
+    }
+
+    @Override
+    public boolean isAsc() {
+        return sortingOptions.indexOf(getAscDescString()) == 0;
+    }
+
+    @Override
+    public String getAscDescString() {
+        return (String)request.getAttribute("price_sorting_order_option");
     }
 }
