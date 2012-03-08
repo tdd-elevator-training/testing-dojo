@@ -2,6 +2,8 @@ package org.automation.dojo.web.search;
 
 
 import org.automation.dojo.web.FunctionalTestCase;
+import org.automation.dojo.web.bugs.NullBug;
+import org.automation.dojo.web.scenario.SearchByTextLevel1Scenario;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.openqa.selenium.By;
@@ -9,7 +11,9 @@ import org.openqa.selenium.WebElement;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import static org.automation.dojo.web.model.ShopService.*;
+import java.util.Arrays;
+import java.util.List;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
@@ -27,8 +31,8 @@ public class SearchPageLevel1 extends FunctionalTestCase {
     }
 
     @Override
-    protected String getMinorRelease() {
-        return "[Scenario SearchByTextLevel1Scenario with bug NullBug]";
+    protected List<?> getMinorRelease() {
+        return Arrays.asList(SearchByTextLevel1Scenario.class, NullBug.class);
     }
 
     @Override

@@ -2,6 +2,8 @@ package org.automation.dojo.web.search;
 
 
 import org.automation.dojo.web.FunctionalTestCase;
+import org.automation.dojo.web.bugs.NoResultWhenExpectedBug;
+import org.automation.dojo.web.scenario.SearchByTextLevel1Scenario;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.openqa.selenium.By;
@@ -9,9 +11,11 @@ import org.openqa.selenium.WebElement;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import java.util.Arrays;
+import java.util.List;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.fail;
 
 @ContextConfiguration(locations = {"classpath:/org/automation/dojo/applicationContext.xml"})
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -27,8 +31,8 @@ public class SearchPageLevel1_Bug1 extends FunctionalTestCase {
     }
 
     @Override
-    protected String getMinorRelease() {
-        return "[Scenario SearchByTextLevel1Scenario with bug NoResultWhenExpectedBug]";
+    protected List<?> getMinorRelease() {
+        return Arrays.asList(SearchByTextLevel1Scenario.class, NoResultWhenExpectedBug.class);
     }
 
     @Override
@@ -74,12 +78,12 @@ public class SearchPageLevel1_Bug1 extends FunctionalTestCase {
 
         try {
             assertPageContain("List:");
-            fail("Expected exception");
+            throw new RuntimeException("Expected exception");
         } catch (AssertionError e) {
         }
         try {
             allElementsPresent();
-            fail("Expected exception");
+            throw new RuntimeException("Expected exception");
         } catch (AssertionError e) {
         }
     }

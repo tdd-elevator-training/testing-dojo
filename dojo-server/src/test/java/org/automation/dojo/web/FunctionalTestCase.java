@@ -2,6 +2,8 @@ package org.automation.dojo.web;
 
 import org.automation.dojo.ApplicationContextLocator;
 import org.automation.dojo.ReleaseEngine;
+import org.automation.dojo.web.bugs.AddSomeOtherElementIfListNotEmptyBug;
+import org.automation.dojo.web.scenario.SearchByTextLevel1Scenario;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -14,6 +16,9 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.FileSystemXmlApplicationContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+
+import java.util.LinkedList;
+import java.util.List;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -43,16 +48,32 @@ public abstract class FunctionalTestCase {
         releaseEngine = (ReleaseEngine) context.getBean("releaseEngine");
 
         switchToMajorRelease(getMajorRelease());
-        switchToMinorRelease(getMinorRelease());
+        switchToMinorRelease(getMinorReleaseAsString((List<Class>) getMinorRelease()));
 
         tester.get(baseUrl + getPageUrl());
         resetAllElements();
     }
 
+    private String getMinorReleaseAsString(List<Class> minorRelease) {
+        List<String> result = new LinkedList<String>();
+        for (int count = 0; count < minorRelease.size()/2; count++) {
+            Class scenarioClass = minorRelease.get(count*2);
+            Class bugClass = minorRelease.get(count*2 + 1);
+            result.add(String.format("Scenario %s with bug %s",
+                    scenarioClass.getSimpleName(), bugClass.getSimpleName()));
+        }
+        return result.toString();
+    }
+
     private void switchToMinorRelease(String minorRelease) {
+        int countLoop = 0;
         do {
             releaseEngine.nextMinorRelease();
-        } while (!minorRelease.equals(releaseEngine.getMinorInfo()));
+            countLoop++;
+        } while (!minorRelease.equals(releaseEngine.getMinorInfo()) && countLoop < 1000);
+        if (countLoop == 1000) {
+            throw new IllegalArgumentException(minorRelease + " not found");
+        }
     }
 
     private void switchToMajorRelease(int majorRelease) {
@@ -65,7 +86,7 @@ public abstract class FunctionalTestCase {
 
     protected abstract void resetAllElements();
 
-    protected abstract String getMinorRelease();
+    protected abstract List<?> getMinorRelease();
 
     @AfterClass
     public static void end() throws Exception {

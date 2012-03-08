@@ -14,6 +14,7 @@
     <bean class="org.automation.dojo.ReleaseEngine" id="releaseEngine" init-method="init">
         <property name="scenarioResource" value="classpath:/org/automation/dojo/scenarios.csv"/>
     </bean>
+    <bean class="org.automation.dojo.web.model.ShopServiceInMemory" id="shopService"/>
 
     <bean class="org.automation.dojo.ApplicationContextLocator" id="applicationContextLocator"/>
 </beans>

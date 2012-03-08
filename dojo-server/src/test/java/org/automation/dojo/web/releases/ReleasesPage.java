@@ -2,7 +2,8 @@ package org.automation.dojo.web.releases;
 
 
 import org.automation.dojo.web.FunctionalTestCase;
-import org.junit.Before;
+import org.automation.dojo.web.bugs.NullBug;
+import org.automation.dojo.web.scenario.SearchByTextLevel1Scenario;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.openqa.selenium.By;
@@ -10,6 +11,8 @@ import org.openqa.selenium.WebElement;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.regex.Pattern;
 
 import static org.junit.Assert.assertEquals;
@@ -32,8 +35,8 @@ public class ReleasesPage extends FunctionalTestCase {
     }
 
     @Override
-    protected String getMinorRelease() {
-        return "[Scenario SearchByTextLevel1Scenario with bug NullBug]";
+    protected List<?> getMinorRelease() {
+        return Arrays.asList(SearchByTextLevel1Scenario.class, NullBug.class);
     }
 
     @Override
