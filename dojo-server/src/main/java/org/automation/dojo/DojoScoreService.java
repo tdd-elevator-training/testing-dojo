@@ -39,14 +39,14 @@ public class DojoScoreService implements ScoreService {
         //last log will be a log for current release
         GameLog currentGame = lastGameLog(gameLogs);
         Bug currentBug = scenario.getBug();
-        if (!testPassed && currentGame.bugReported()) {
+        if (!testPassed && currentGame.bugReported(currentBug)) {
             logService.playerLog(new PlayerRecord(clientName, scenario, testPassed, 0,
                     "Bug already reported for this Minor Release. " +
                             "Bug #" + currentBug.getId(), PlayerRecord.Type.DUPLICATE));
             return scenario.bugsFree();
         }
 
-        List<PlayerRecord> reportedBugs = findFailedRecords(gameLogs);
+        List<PlayerRecord> reportedBugs = findFailedRecords(gameLogs, scenario.getBug());
         boolean reportMismatchedWithScenarioState = testPassed ^ scenario.bugsFree();
         boolean isLiar = reportMismatchedWithScenarioState && !reportedBugs.isEmpty();
 
@@ -61,7 +61,7 @@ public class DojoScoreService implements ScoreService {
         }
 
         if (reportMismatchedWithScenarioState) {
-            logService.playerLog(new PlayerRecord(clientName, scenario, testPassed, 0,
+            logService.playerLog(new PlayerRecord(clientName, scenario, testPassed, currentGame.liarReported()? 0 : -100,
                     "Fix the test! It shows wrong result. Current scenario #" + scenario.getId() +
                             (scenario.bugsFree() ? " is bugs free." : " contains bug."), PlayerRecord.Type.LIAR));
             return scenario.bugsFree();
@@ -81,10 +81,10 @@ public class DojoScoreService implements ScoreService {
         return scenario.bugsFree();
     }
 
-    private List<PlayerRecord> findFailedRecords(List<GameLog> gameLogs) {
+    private List<PlayerRecord> findFailedRecords(List<GameLog> gameLogs, Bug bug) {
         ArrayList<PlayerRecord> result = new ArrayList<PlayerRecord>();
         for (GameLog gameLog : gameLogs) {
-            PlayerRecord failedRecord = gameLog.findReportedBugs();
+            PlayerRecord failedRecord = gameLog.findReportedBugs(bug);
             if (failedRecord != null) {
                 result.add(failedRecord);
             }
@@ -106,7 +106,7 @@ public class DojoScoreService implements ScoreService {
                 }
                 List<GameLog> gameLogs = logService.getGameLogs(player, scenario);
                 GameLog gameLog = lastGameLog(gameLogs);
-                if (gameLog.bugReported()) {
+                if (gameLog.bugReported(scenario.getBug())) {
                     continue;
                 }
                 logService.playerLog(new PlayerRecord(player, scenario, true, -scenario.getBug().getWeight(),
