@@ -8,6 +8,7 @@ import java.util.Arrays;
 /**
  * Добавлять существующий продукт ТОЛЬКО если результат поиска пуст
  */
+// TODO написать юнит тест
 public class FoundNotExistsProductBug extends Bug<RequestWorker> {
 
     @Override
