@@ -9,7 +9,7 @@ import java.util.Random;
 /**
  * Поменять местами 2 элемента в списке с разными ценами
  */
-
+// TODO написать юнит тест
 public class BrokenSortingBug extends Bug<RequestWorker> {
 
     @Override

@@ -5,6 +5,10 @@ import org.automation.dojo.web.model.Record;
 import java.util.List;
 
 public interface RequestWorker {
+
+    public static boolean ASC = true;
+    public static boolean DESC = !ASC;
+
     List<Record> getRecords();
 
     void setRecords(List<Record> filtered);
@@ -17,7 +21,7 @@ public interface RequestWorker {
 
     String getSearchText();
 
-    String getPriceOption();
+    String getPriceSearchOption();
 
     Double getPrice();
 
@@ -26,4 +30,10 @@ public interface RequestWorker {
     int getPriceOptionIndex();
 
     void clearNoResultsFound();
+
+    boolean isAsc();
+
+    String getPriceSortingOrderOption();
+
+    void setPriceSortingOrderOption(boolean isAsc);
 }

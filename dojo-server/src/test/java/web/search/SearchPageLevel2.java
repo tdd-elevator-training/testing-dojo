@@ -1,10 +1,11 @@
 package web.search;
 
 
-import web.FunctionalTestCase;
+import org.automation.dojo.web.scenario.PriceSortingAscDescLevel2Scenario;
 import org.automation.dojo.web.bugs.NullBug;
 import org.automation.dojo.web.scenario.SearchByPriceLevel2Scenario;
 import org.automation.dojo.web.scenario.SearchByTextLevel2Scenario;
+import org.automation.dojo.web.servlet.RequestWorker;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.openqa.selenium.By;
@@ -21,13 +22,13 @@ import static org.junit.Assert.assertNotNull;
 
 @ContextConfiguration(locations = {"classpath:/org/automation/dojo/applicationContext.xml"})
 @RunWith(SpringJUnit4ClassRunner.class)
-public class SearchPageLevel2 extends FunctionalTestCase {
+public class SearchPageLevel2 extends SearchPageLevel1 {
 
-    private WebElement search;
-    private WebElement searchButton;
-    private WebElement searchText;
     private WebElement price;
-    private WebElement priceOption;
+    private WebElement priceSearchOption;
+
+    protected static final boolean DESC = RequestWorker.DESC;
+    protected static final boolean ASC = RequestWorker.ASC;
 
     @Override
     protected int getMajorRelease() {
@@ -37,7 +38,8 @@ public class SearchPageLevel2 extends FunctionalTestCase {
     @Override
     protected List<?> getMinorRelease() {
         return Arrays.asList(SearchByTextLevel2Scenario.class, NullBug.class,
-                SearchByPriceLevel2Scenario.class, NullBug.class);
+                SearchByPriceLevel2Scenario.class, NullBug.class,
+                PriceSortingAscDescLevel2Scenario.class, NullBug.class);
     }
 
     @Override
@@ -47,58 +49,9 @@ public class SearchPageLevel2 extends FunctionalTestCase {
 
     @Override
     protected void resetAllElements() {
-        search = tester.findElement(By.name("search"));
-        searchButton = tester.findElement(By.id("search_button"));
-        searchText = tester.findElement(By.id("search_text"));
+        super.resetAllElements();
         price = tester.findElement(By.id("price"));
-        priceOption = tester.findElement(By.id("price_option"));
-    }
-
-    @Test
-    public void shouldSearchPageAsWelcomePage() {
-        assertSearchForm();
-    }
-
-    @Test
-    public void shouldFoundSomeRecordsWhenSearchItByPartOfDescription() {
-        enterText("mouse");
-        submitSearchForm();
-
-        assertSearchForm();
-
-        assertPageContain("List:");
-        assertPageContain("Mouse 1");
-        assertPageContain("Mouse 2");
-        assertPageContain("Mouse 3");
-        assertPageContain("Mouse 4 - the best mouse!");
-    }
-
-    @Test
-    public void shouldEmptyListWhenFirstComeIn() {
-        assertPageNotContain("List:");
-    }
-
-    @Test
-    public void shouldFoundSomeAnotherRecordsWhenSearchItByPartOfDescription() {
-        enterText("monitor");
-        submitSearchForm();
-
-        assertSearchForm();
-
-        assertPageContain("List:");
-        assertPageContain("Monitor 1");
-        assertPageContain("Monitor 2");
-        assertPageContain("Monitor 3 - the best monitor!");
-        assertPageNotContain("Mouse");
-    }
-
-    @Test
-    public void shouldAllListWhenNotFound() {
-        enterText("keyboard");
-        submitSearchForm();
-
-        assertNotFound();
-        allElementsPresent();
+        priceSearchOption = tester.findElement(By.id("price_search_option"));
     }
 
     @Test
@@ -106,7 +59,7 @@ public class SearchPageLevel2 extends FunctionalTestCase {
         enterText("");
         submitSearchForm();
 
-        assertPageContain("List: " +
+        assertPageContain("List: Description Price " +
                 "'Mouse 1' 30.0$ " +
                 "'Mouse 3' 40.0$ " +
                 "'Mouse 2' 50.0$ " +
@@ -121,9 +74,21 @@ public class SearchPageLevel2 extends FunctionalTestCase {
         enterText("the best");
         submitSearchForm();
 
-        assertPageContain("List: " +
+        assertPageContain("List: Description Price " +
                 "'Mouse 4 - the best mouse!' 66.0$ " +
                 "'Monitor 3 - the best monitor!' 190.0$");
+    }
+
+    @Test
+    public void shouldFoundElementsSortedByPriceIfDesc() {
+        enterText("the best");
+        submitSearchForm();
+        selectSortingOrder(DESC);
+        submitSearchForm();
+
+        assertPageContain("List: Description Price " +
+                "'Monitor 3 - the best monitor!' 190.0$ " +
+                "'Mouse 4 - the best mouse!' 66.0$");
     }
 
     @Test
@@ -176,6 +141,16 @@ public class SearchPageLevel2 extends FunctionalTestCase {
     }
 
     @Test
+    public void shouldIgnorePriceOptionWhenNotFoundByString() {
+        enterText("blablablabl");
+        enterPrice(LESS_THAN, 120);
+        submitSearchForm();
+
+        assertNotFound();
+        allElementsPresent();
+    }
+
+    @Test
     public void shouldSavePreviousSelection() {
         enterText("some device");
         enterPrice(MORE_THAN, 111);
@@ -184,39 +159,74 @@ public class SearchPageLevel2 extends FunctionalTestCase {
         assertFormContains("some device", MORE_THAN, 111);
     }
 
+    @Test
+    public void shouldSavePreviousSortingOrderWhen() {
+        enterText("some device");
+        enterPrice(MORE_THAN, 111);
+        submitSearchForm();
+        assertSortingOrder(ASC);
+
+        selectSortingOrder(DESC);
+        submitSearchForm();
+
+        assertSortingOrder(DESC);
+
+        selectSortingOrder(ASC);
+        submitSearchForm();
+
+        assertSortingOrder(ASC);
+    }
+
+    protected void selectSortingOrder(boolean isAsc) {
+        findOption(getPriceSortingOrderOption(), getAscDesc(isAsc)).click();
+    }
+
+    private String getAscDesc(boolean isAsc) {
+        if (isAsc) {
+            return "ascending";
+        } else {
+            return "descending";
+        }
+    }
+
+    protected void assertSortingOrder(boolean isAsc) {
+        assertEquals(getAscDesc(isAsc), getSelectedPriceSortingOrderOption());
+    }
+
     private void assertFormContains(String text, int priceOptionNumber, int price) {
         assertEquals(text, getSearchText());
-        assertEquals(String.valueOf(price), gtePrice());
+        assertEquals(String.valueOf(price), getPrice());
         assertEquals(getPriceOption(priceOptionNumber), getSelectedPriceOption());
     }
 
     private String getSelectedPriceOption() {
-        return getSelected(this.priceOption);
+        return getSelected(priceSearchOption);
     }
 
-    private String getSearchText() {
-        return searchText.getAttribute("value");
+    private String getSelectedPriceSortingOrderOption() {
+        return getSelected(getPriceSortingOrderOption());
     }
 
-    private String gtePrice() {
-        return this.price.getAttribute("value");
+    private String getPrice() {
+        return price.getAttribute("value");
     }
 
     private String getSelected(WebElement select) {
-        return select.findElement(By.xpath("//option[@selected='']")).getAttribute("value");
+        String xpath = "//select[@id='" + select.getAttribute("id") + "']//option[@selected='']";
+        return tester.findElement(By.xpath(xpath)).getAttribute("value");
     }
 
-    private void enterPrice(int priceOptionNumber, int price) {
+    protected void enterPrice(int priceOptionNumber, int price) {
         setMoreThan(priceOptionNumber);
         setPrice(price);
     }
 
     private void setPrice(int price) {
-        tester.findElement(By.id("price")).sendKeys(String.valueOf(price));
+        this.price.sendKeys(String.valueOf(price));
     }
 
     private void setMoreThan(int priceOptionNumber) {
-        findOption(this.priceOption, getPriceOption(priceOptionNumber)).click();
+        findOption(priceSearchOption, getPriceOption(priceOptionNumber)).click();
     }
 
     private WebElement findOption(WebElement priceSelect, String preceOption) {
@@ -236,11 +246,7 @@ public class SearchPageLevel2 extends FunctionalTestCase {
         }
     }
 
-    private void assertNotFound() {
-        assertPageContain("Sorry no results for your request, but we have another devices:");
-    }
-
-    private void allElementsPresent() {
+    protected void allElementsPresent() {
         assertPageContain("'Mouse 1' 30.0$");
         assertPageContain("'Mouse 3' 40.0$");
         assertPageContain("'Mouse 2' 50.0$");
@@ -250,21 +256,7 @@ public class SearchPageLevel2 extends FunctionalTestCase {
         assertPageContain("'Monitor 3 - the best monitor!' 190.0$");
     }
 
-    private void assertSearchForm() {
-        assertPageContain("Please enter text to find");
-
-        assertNotNull(search);
-        assertNotNull(searchButton);
-        assertNotNull(searchText);
+    public WebElement getPriceSortingOrderOption() {
+        return tester.findElement(By.id("price_sorting_order_option"));
     }
-
-    private void enterText(String string) {
-        searchText.sendKeys(string);
-    }
-
-    private void submitSearchForm() {
-        searchButton.submit();
-        resetAllElements();
-    }
-
 }

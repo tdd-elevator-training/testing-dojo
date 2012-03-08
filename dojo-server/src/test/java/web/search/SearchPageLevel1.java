@@ -23,7 +23,7 @@ public class SearchPageLevel1 extends FunctionalTestCase {
 
     private WebElement search;
     private WebElement searchButton;
-    private WebElement searchText;
+    protected WebElement searchText;
 
     @Override
     protected int getMajorRelease() {
@@ -102,15 +102,15 @@ public class SearchPageLevel1 extends FunctionalTestCase {
         assertEquals("some device", getSearchText());
     }
 
-    private String getSearchText() {
+    protected String getSearchText() {
         return searchText.getAttribute("value");
     }
 
-    private void assertNotFound() {
+    protected void assertNotFound() {
         assertPageContain("Sorry no results for your request, but we have another devices:");
     }
 
-    private void allElementsPresent() {
+    protected void allElementsPresent() {
         assertPageContain("'Mouse 1'");
         assertPageContain("'Mouse 3'");
         assertPageContain("'Mouse 2'");
@@ -120,7 +120,7 @@ public class SearchPageLevel1 extends FunctionalTestCase {
         assertPageContain("'Monitor 3 - the best monitor!'");
     }
 
-    private void assertSearchForm() {
+    protected void assertSearchForm() {
         assertPageContain("Please enter text to find");
 
         assertNotNull(search);
@@ -128,13 +128,22 @@ public class SearchPageLevel1 extends FunctionalTestCase {
         assertNotNull(searchText);
     }
 
-    private void enterText(String string) {
+    protected void enterText(String string) {
         searchText.sendKeys(string);
     }
 
-    private void submitSearchForm() {
+    protected void submitSearchForm() {
         searchButton.submit();
         resetAllElements();
+    }
+
+    @Test
+    public void shouldAllListWhenFindEmptyString() {
+        enterText("");
+        submitSearchForm();
+
+        assertPageContain("List:");
+        allElementsPresent();
     }
 
 }

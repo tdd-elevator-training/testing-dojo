@@ -106,15 +106,20 @@ public abstract class FunctionalTestCase {
     }
 
     private String getPageText() {
-        return tester.getPageSource().replaceAll("<.*?>", "")
+        return tester.getPageSource()
                 .replaceAll("\\n", "").replaceAll("\\r", "")
+                .replaceAll("(  )+", " ")
+                .replaceAll("<option.*?</option>", "")
+                .replaceAll("<.*?>", "")
+                .replaceAll("(  )+", " ")
                 .replaceAll("(  )+", " ");
     }
 
     protected void assertPageNotContain(String string) {
         String page = getPageText();
-        assertFalse(String.format("Expected page NOT contains " +
-                "'%s' but was '%s'.", string, page),
+        assertFalse(String.format(
+                "Expected page NOT contains '%s'\n" +
+                "but was '%s'.", string, page),
                 page.contains(string));
     }
 }

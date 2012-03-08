@@ -13,12 +13,12 @@ import java.util.LinkedList;
 import java.util.List;
 
 import static junit.framework.Assert.assertEquals;
-import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 public class BugTest {
-    private ShopService shop;
+    protected ShopService shop;
     protected RequestWorker request;
     protected Record record1;
     protected Record record2;
@@ -84,5 +84,25 @@ public class BugTest {
      */
     protected void tryToFoundByString() {
         when(request.getSearchText()).thenReturn("bla");
+    }
+
+    /**
+     * Тут мы говорим, что был произведен поиск по цене
+     */
+    protected void tryToFoundMoreThan(String price) {
+        when(request.getStringPrice()).thenReturn(price);
+        when(request.getPriceOptionIndex()).thenReturn(ShopService.MORE_THAN);
+    }
+
+    protected void tryToFoundLessThan(String price) {
+        when(request.getStringPrice()).thenReturn(price);
+        when(request.getPriceOptionIndex()).thenReturn(ShopService.LESS_THAN);
+    }
+
+    /**
+     * Если кто-то захочет пофильтровать список через сервис, то мы ему выдадим че надо
+     */
+    protected void filteredByPrice(Record...records) {
+        when(shop.priceFilter(anyList(), anyInt(), anyDouble())).thenReturn(Arrays.asList(records));
     }
 }

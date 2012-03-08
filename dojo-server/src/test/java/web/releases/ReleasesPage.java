@@ -68,7 +68,8 @@ public class ReleasesPage extends FunctionalTestCase {
 
         assertMach("Now we have major 1 and minor " +
                 "\\[Scenario SearchByTextLevel2Scenario with bug NullBug, " +
-                "Scenario SearchByPriceLevel2Scenario with bug NullBug\\]",
+                "Scenario SearchByPriceLevel2Scenario with bug NullBug, " +
+                "Scenario PriceSortingAscDescLevel2Scenario with bug NullBug\\]",
                 indicator.getText());
     }
 
@@ -102,7 +103,8 @@ public class ReleasesPage extends FunctionalTestCase {
 
         assertMach("Now we have major 1 and minor " +
                 "\\[Scenario SearchByTextLevel2Scenario with bug NullBug, " +
-                "Scenario SearchByPriceLevel2Scenario with bug NullBug\\]",
+                "Scenario SearchByPriceLevel2Scenario with bug NullBug, " +
+                "Scenario PriceSortingAscDescLevel2Scenario with bug NullBug\\]",
                 indicator.getText());
 
         goTo(nextMajor.getAttribute("href"));
@@ -111,7 +113,8 @@ public class ReleasesPage extends FunctionalTestCase {
 
         assertMach("Now we have major 1 and minor " +
                 "\\[Scenario SearchByTextLevel2Scenario with bug NullBug, " +
-                "Scenario SearchByPriceLevel2Scenario with bug NullBug\\]",
+                "Scenario SearchByPriceLevel2Scenario with bug NullBug, " +
+                "Scenario PriceSortingAscDescLevel2Scenario with bug NullBug\\]",
                 indicator.getText());
     }
 

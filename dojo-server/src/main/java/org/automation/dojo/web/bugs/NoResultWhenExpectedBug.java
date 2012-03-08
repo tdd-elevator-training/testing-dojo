@@ -6,7 +6,7 @@ import org.automation.dojo.web.servlet.RequestWorker;
 /**
  * Ничего не отобразилось, когда выводится весь список при пустом запросе
  */
-
+// TODO написать юнит тест
 public class NoResultWhenExpectedBug extends Bug<RequestWorker> {
 
     @Override

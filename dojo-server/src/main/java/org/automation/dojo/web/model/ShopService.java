@@ -11,4 +11,6 @@ public interface ShopService {
     List<Record> selectByText(String foundString);
 
     List<Record> priceFilter(List<Record> records, int priceOptionIndex, Double price);
+
+    List<Record> sortByPrice(List<Record> records, boolean isAsc);
 }

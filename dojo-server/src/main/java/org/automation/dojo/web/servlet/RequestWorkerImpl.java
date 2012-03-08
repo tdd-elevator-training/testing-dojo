@@ -8,7 +8,9 @@ import java.util.List;
 
 public class RequestWorkerImpl implements RequestWorker {
 
-    private List<String> priceOptions = Arrays.asList("", "more than", "less than");
+    public static List<String> priceOptions = Arrays.asList("", "more than", "less than");
+    public static List<String> sortingOptions = Arrays.asList("ascending", "descending");
+
     private HttpServletRequest request;
 
     public RequestWorkerImpl(HttpServletRequest request) {
@@ -38,9 +40,10 @@ public class RequestWorkerImpl implements RequestWorker {
 
     @Override
     public void saveFormState() {
-        request.setAttribute("price_options", priceOptions);
+        request.setAttribute("price_search_options", priceOptions);
+        request.setAttribute("asc_desc_options", sortingOptions);
 
-        request.setAttribute("price_option", getPriceOption());
+        request.setAttribute("price_search_option", getPriceSearchOption());
         request.setAttribute("price", getStringPrice());
         request.setAttribute("search_text", getSearchText());
     }
@@ -51,8 +54,8 @@ public class RequestWorkerImpl implements RequestWorker {
     }
 
     @Override
-    public String getPriceOption() {
-        return request.getParameter("price_option");
+    public String getPriceSearchOption() {
+        return request.getParameter("price_search_option");
     }
 
     @Override
@@ -75,11 +78,35 @@ public class RequestWorkerImpl implements RequestWorker {
 
     @Override
     public int getPriceOptionIndex() {
-        return priceOptions.indexOf(getPriceOption());
+        return priceOptions.indexOf(getPriceSearchOption());
     }
 
     @Override
     public void clearNoResultsFound() {
         request.setAttribute("no_results", false);
+    }
+
+    @Override
+    public boolean isAsc() {
+        String string = getPriceSortingOrderOption();
+        return isAsc(string);
+    }
+
+    private boolean isAsc(String string) {
+        if (isEmpty(string)) {
+            return true;
+        }
+        return sortingOptions.indexOf(string) == 0;
+    }
+
+    @Override
+    public String getPriceSortingOrderOption() {
+        return request.getParameter("price_sorting_order_option");
+    }
+
+    @Override
+    public void setPriceSortingOrderOption(boolean isAsc) {
+        String option = sortingOptions.get((isAsc) ? 0 : 1);
+        request.setAttribute("price_sorting_order_option", option);
     }
 }

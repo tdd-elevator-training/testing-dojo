@@ -14,13 +14,13 @@
   					<td>Please enter text to find</td>
   					<td><input type="text" name="search_text" id="search_text" value="<c:out value="${search_text}"/>"></td>
   					<td>
-  					    <select name="price_option" id="price_option">
-  					        <c:forEach items="${requestScope.price_options}" var="option" varStatus="status">
-                                <option value="<c:out value="${option}"/>"
-                                    <c:if test="${option == price_option}">
+  					    <select name="price_search_option" id="price_search_option">
+  					        <c:forEach items="${requestScope.price_search_options}" var="search_option" varStatus="status">
+                                <option value="<c:out value="${search_option}"/>"
+                                    <c:if test="${search_option == price_search_option}">
                                         selected
                                     </c:if>
-                                ><c:out value="${option}"/></option>
+                                ><c:out value="${search_option}"/></option>
       			            </c:forEach>
                         </select>
                     </td>
@@ -28,23 +28,42 @@
                     <td><input type="submit" value="Search" id="search_button"></td>
  				</tr>
 			</table>
- 		</form>
 
-        <c:if test="${requestScope.records != null}">
-            <c:choose>
-                <c:when test="${requestScope.no_results}">
-                    Sorry no results for your request, but we have another devices:
-                </c:when>
-                <c:otherwise>
-                    List:
-                </c:otherwise>
-            </c:choose>
-            </br>
-            <c:forEach items="${requestScope.records}" var="record" varStatus="status">
-                <input type="checkbox" value="<c:out value="${status.index+1}"/>" name="record">
-                '<c:out value="${record.description}"/>' <c:out value="${record.price}"/>$
+            <c:if test="${requestScope.records != null}">
+                <c:choose>
+                    <c:when test="${requestScope.no_results}">
+                        Sorry no results for your request, but we have another devices:
+                    </c:when>
+                    <c:otherwise>
+                        List:
+                    </c:otherwise>
+                </c:choose>
                 </br>
-            </c:forEach>
-        </c:if>
+                <table>
+                    <tr>
+                        <td></td>
+                        <td>Description</td>
+                        <td>Price
+                            <select name="price_sorting_order_option" id="price_sorting_order_option">
+                                <c:forEach items="${requestScope.asc_desc_options}" var="order_option" varStatus="status">
+                                    <option value="<c:out value="${order_option}"/>"
+                                        <c:if test="${order_option == price_sorting_order_option}">
+                                            selected
+                                        </c:if>
+                                    ><c:out value="${order_option}"/></option>
+                                </c:forEach>
+                            </select>
+                        </td>
+                    </tr>
+                    <c:forEach items="${requestScope.records}" var="record" varStatus="status">
+                        <tr>
+                            <td><input type="checkbox" value="<c:out value="${status.index+1}"/>" name="record"></td>
+                            <td>'<c:out value="${record.description}"/>'</td>
+                            <td><c:out value="${record.price}"/>$</td>
+                        </tr>
+                    </c:forEach>
+                </table>
+            </c:if>
+        </form>
 	</body>
 </html>
