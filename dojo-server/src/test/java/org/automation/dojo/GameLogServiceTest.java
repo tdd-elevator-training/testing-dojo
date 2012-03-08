@@ -4,28 +4,34 @@ import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import org.automation.dojo.web.scenario.BasicScenario;
 import org.automation.dojo.web.scenario.Release;
-import org.automation.dojo.web.scenario.Scenario;
 import org.fest.assertions.ListAssert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.stubbing.OngoingStubbing;
 
+import java.util.Date;
 import java.util.List;
 
 import static junit.framework.Assert.*;
 import static org.fest.assertions.Assertions.assertThat;
+import static org.mockito.Mockito.when;
 
 /**
  * @author serhiy.zelenin
  */
+@RunWith(MockitoJUnitRunner.class)
 public class GameLogServiceTest {
 
     private static final String CLIENT_NAME = "test";
     private GameLogService gameLogService;
-
+    @Mock TimeService timeService;
+    
     @Before
     public void setUp() throws Exception {
-        gameLogService = new GameLogService();
+        gameLogService = new GameLogService(timeService);
         gameLogService.registerPlayer(CLIENT_NAME);
     }
 
@@ -174,6 +180,29 @@ public class GameLogServiceTest {
 
         assertThat(boardRecords).onProperty("player").containsExactly(CLIENT_NAME);
         assertThat(boardRecords).onProperty("total").containsExactly(100+50);
+    }
+
+    @Test
+    public void shouldStoreReleaseTimeWhenGameLogAsked() {
+        setCurrentTime(100);
+        MockScenario scenario = scenario(1);
+        gameLogService.createGameLog(new Release(scenario));
+
+        assertEquals(100, gameLogService.getGameLogs(CLIENT_NAME, scenario).get(0).getReleaseDateMilis());
+    }
+
+    @Test
+    public void shouldStoreCurrentTimeWhenPlayerReport() {
+        setCurrentTime(123);
+        MockScenario scenario = scenario(1);
+        createGameLog(scenario).playerLog(CLIENT_NAME, 0);
+
+        List<GameLog> gameLogs = gameLogService.getGameLogs(CLIENT_NAME, scenario);
+        assertEquals(123, gameLogs.get(0).getPlayerRecords().get(0).getLogTime());
+    }
+
+    private OngoingStubbing<Date> setCurrentTime(int currentTimeMilis) {
+        return when(timeService.now()).thenReturn(new Date(currentTimeMilis));
     }
 
     private PlayerRecord record(BasicScenario scenario, String playerName) {

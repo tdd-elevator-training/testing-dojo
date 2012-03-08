@@ -20,7 +20,9 @@ public interface LogService {
 
     List<ReleaseLog> getReleaseLogs();
 
-    public boolean registerPlayer(String name);
+    boolean registerPlayer(String name);
 
     List<BoardRecord> getBoardRecords();
+
+    ReleaseLog getLastReleaseLog();
 }

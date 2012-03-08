@@ -3,17 +3,14 @@ package org.automation.dojo;
 import org.automation.dojo.web.bugs.Bug;
 import org.automation.dojo.web.scenario.BasicScenario;
 import org.automation.dojo.web.scenario.Release;
-import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Captor;
 import org.mockito.Matchers;
-import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.Arrays;
+import java.util.Date;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
@@ -24,19 +21,10 @@ import static org.mockito.Mockito.*;
  * @author serhiy.zelenin
  */
 @RunWith(MockitoJUnitRunner.class)
-public class DojoScoreServiceTest {
+public class DojoScoreServiceTest extends DojoScoreBaseTest {
     private static final String PLAYER_NAME = "vasyad";
-    @Captor ArgumentCaptor<PlayerRecord> recordCaptor;
-    @Mock LogService logService;
-    @Mock ReleaseEngine releaseEngine;
-
-    private DojoScoreService scoreService;
 
 
-    @Before
-    public void setUp() throws Exception {
-        scoreService = new DojoScoreService(logService, releaseEngine);
-    }
 
     @Test
     public void shouldReturnFailureWhenReportFailure() {
@@ -114,7 +102,7 @@ public class DojoScoreServiceTest {
         BasicScenario scenario = setupScenario(1, 100);
         setupGameLogs(scenario, gameLog(scenario));
 
-        setupClientAddressesDb();
+        setupRegisteredPlayers();
 
         scoreService.nextRelease(new Release(scenario));
 
@@ -123,15 +111,15 @@ public class DojoScoreServiceTest {
         assertTrue(record.isPassed());
     }
 
-    private void setupClientAddressesDb() {
-        when(logService.getRegisteredPlayers()).thenReturn(Arrays.asList(PLAYER_NAME));
+    private void setupRegisteredPlayers() {
+        setupRegisteredPlayers(PLAYER_NAME);
     }
 
     @Test
     public void shouldDecreaseScoreWhenBugNotFound() {
         BasicScenario scenario = setupScenario(1, 50);
         setupGameLogs(scenario, gameLog(scenario, record(scenario, true, 0)));
-        setupClientAddressesDb();
+        setupRegisteredPlayers();
 
         scoreService.nextRelease(new Release(scenario));
 
@@ -142,7 +130,7 @@ public class DojoScoreServiceTest {
     public void shouldNotDecreaseScoreWhenNoBugsInPreviousRelease() {
         BasicScenario scenario = createScneario(1, 0);
         setupGameLogs(scenario, gameLog(scenario));
-        setupClientAddressesDb();
+        setupRegisteredPlayers();
 
         scoreService.nextRelease(new Release(scenario));
 
@@ -153,7 +141,7 @@ public class DojoScoreServiceTest {
     public void shouldNotDecreaseScoreWhenBugReportedOnPreviousMinorRelease() {
         BasicScenario scenario = createScneario(1, 100);
         setupGameLogs(scenario, gameLog(scenario, record(scenario, false, 100)));
-        setupClientAddressesDb();
+        setupRegisteredPlayers();
 
         scoreService.nextRelease(new Release(scenario));
 
@@ -293,21 +281,12 @@ public class DojoScoreServiceTest {
                 .thenReturn(Arrays.asList(gameLogs));
     }
 
-    private PlayerRecord record(BasicScenario scenario, boolean passed, int score) {
-        return record(scenario, passed, score, PlayerRecord.Type.VALID_BUG);
-    }
-
-    private PlayerRecord record(BasicScenario scenario, boolean passed, int score, PlayerRecord.Type type) {
-        return new PlayerRecord("", scenario, passed, score, "", type);
-    }
-
     private GameLog gameLog(BasicScenario scenario,PlayerRecord ... records) {
-        return new GameLog(scenario, records);
+        return gameLog(scenario, new Date(), records);
     }
-
-    private PlayerRecord captureLogRecord() {
-        verify(logService, atLeastOnce()).playerLog(recordCaptor.capture());
-        return recordCaptor.getValue();
+    
+    private GameLog gameLog(BasicScenario scenario, Date releaseLog, PlayerRecord ... records) {
+        return new GameLog(scenario, releaseLog, records);
     }
 
     private BasicScenario setupScenario(int scenarioId, int bugWeight) {

@@ -7,9 +7,7 @@
        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd">
 
     <context:annotation-config/>
-    <bean class="org.automation.dojo.ConfigurationService" id="configurationService">
-        <property name="minorReleaseFrequency" value="10"/>
-    </bean>
+    <bean class="org.automation.dojo.ConfigurationService" id="configurationService"/>
     <bean class="org.automation.dojo.GameLogService" id="logService"/>
     <bean class="org.automation.dojo.DojoScoreService" id="scoreService"/>
     <bean class="org.automation.dojo.ShopBugsQueue" id="bugsQueue"/>
@@ -17,6 +15,6 @@
         <property name="scenarioResource" value="classpath:/org/automation/dojo/scenarios.csv"/>
     </bean>
     <bean class="org.automation.dojo.web.model.ShopServiceInMemory" id="shopService"/>
-
+    <bean class="org.automation.dojo.TimeService" id="timeService"/>
     <bean class="org.automation.dojo.ApplicationContextLocator" id="applicationContextLocator"/>
 </beans>

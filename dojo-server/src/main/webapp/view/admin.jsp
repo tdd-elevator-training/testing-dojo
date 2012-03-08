@@ -7,7 +7,19 @@
             <td><form:errors path="minorReleaseFrequency"/></td>
         </tr>
         <tr>
-        <td>Minor release frequency: <form:input path="minorReleaseFrequency"/></td>
+            <td>Minor release frequency, ms: <form:input path="minorReleaseFrequency"/></td>
+        </tr>
+        <tr>
+            <td><form:errors path="penaltyTimeOut"/></td>
+        </tr>
+        <tr>
+            <td>Silence timeout for penalty, ms : <form:input path="penaltyTimeOut"/></td>
+        </tr>
+        <tr>
+            <td><form:errors path="penaltyValue"/></td>
+        </tr>
+        <tr>
+            <td>Penalty value for silence : <form:input path="penaltyValue"/></td>
         </tr>
         <tr>
             <td colspan="3">
