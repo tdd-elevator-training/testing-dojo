@@ -5,6 +5,7 @@ import org.automation.dojo.web.scenario.PriceSortingAscDescLevel2Scenario;
 import org.automation.dojo.web.bugs.NullBug;
 import org.automation.dojo.web.scenario.SearchByPriceLevel2Scenario;
 import org.automation.dojo.web.scenario.SearchByTextLevel2Scenario;
+import org.automation.dojo.web.servlet.RequestWorker;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.openqa.selenium.By;
@@ -26,8 +27,8 @@ public class SearchPageLevel2 extends SearchPageLevel1 {
     private WebElement price;
     private WebElement priceSearchOption;
 
-    private static final boolean DESC = false;
-    private static final boolean ASC = !DESC;
+    protected static final boolean DESC = RequestWorker.DESC;
+    protected static final boolean ASC = RequestWorker.ASC;
 
     @Override
     protected int getMajorRelease() {
@@ -147,7 +148,7 @@ public class SearchPageLevel2 extends SearchPageLevel1 {
     }
 
     @Test
-    public void shouldSavePreviousSortingOrder() {
+    public void shouldSavePreviousSortingOrderWhen() {
         enterText("some device");
         enterPrice(MORE_THAN, 111);
         submitSearchForm();
@@ -164,7 +165,7 @@ public class SearchPageLevel2 extends SearchPageLevel1 {
         assertSortingOrder(ASC);
     }
 
-    private void selectSortingOrder(boolean isAsc) {
+    protected void selectSortingOrder(boolean isAsc) {
         findOption(getPriceSortingOrderOption(), getAscDesc(isAsc)).click();
     }
 
@@ -176,7 +177,7 @@ public class SearchPageLevel2 extends SearchPageLevel1 {
         }
     }
 
-    private void assertSortingOrder(boolean isAsc) {
+    protected void assertSortingOrder(boolean isAsc) {
         assertEquals(getAscDesc(isAsc), getSelectedPriceSortingOrderOption());
     }
 

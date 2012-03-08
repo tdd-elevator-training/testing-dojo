@@ -5,6 +5,10 @@ import org.automation.dojo.web.model.Record;
 import java.util.List;
 
 public interface RequestWorker {
+
+    public static boolean ASC = true;
+    public static boolean DESC = !ASC;
+
     List<Record> getRecords();
 
     void setRecords(List<Record> filtered);

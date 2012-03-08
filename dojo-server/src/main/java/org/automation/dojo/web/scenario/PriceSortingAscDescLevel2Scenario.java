@@ -2,10 +2,7 @@ package org.automation.dojo.web.scenario;
 
 import org.automation.dojo.ApplicationContextLocator;
 import org.automation.dojo.BugsQueue;
-import org.automation.dojo.web.bugs.AddExistingItemWithPriceLessThanEntered;
-import org.automation.dojo.web.bugs.AddExistingItemWithPriceMoreThanEntered;
-import org.automation.dojo.web.bugs.BrokenSortingBug;
-import org.automation.dojo.web.bugs.Bug;
+import org.automation.dojo.web.bugs.*;
 import org.automation.dojo.web.model.Record;
 import org.automation.dojo.web.model.ShopService;
 import org.automation.dojo.web.servlet.RequestWorker;
@@ -36,7 +33,8 @@ public class PriceSortingAscDescLevel2Scenario extends BasicScenario<RequestWork
     }
 
     public List<? extends Bug> getPossibleBugs() {
-        return Arrays.asList(new BrokenSortingBug());
+        return Arrays.asList(new BrokenSortingBug(),
+                new IgnorePriceSortingOrderBug());
     }
 
 }

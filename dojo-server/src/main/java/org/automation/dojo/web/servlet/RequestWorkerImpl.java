@@ -89,6 +89,10 @@ public class RequestWorkerImpl implements RequestWorker {
     @Override
     public boolean isAsc() {
         String string = getPriceSortingOrderOption();
+        return isAsc(string);
+    }
+
+    private boolean isAsc(String string) {
         if (isEmpty(string)) {
             return true;
         }
