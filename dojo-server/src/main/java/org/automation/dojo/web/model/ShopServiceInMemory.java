@@ -1,11 +1,12 @@
 package org.automation.dojo.web.model;
 
+import java.io.Serializable;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 
-public class ShopServiceInMemory implements ShopService {
+public class ShopServiceInMemory implements ShopService, Serializable {
 
     private List<Record> data;
 
@@ -21,13 +22,16 @@ public class ShopServiceInMemory implements ShopService {
     }
 
     @Override
-    public List<Record> selectByTextAndPrice(String foundString, int priceOption, double price) {
-        return priceFilter(selectByText(foundString), priceOption, price);
+    public List<Record> selectByText(String foundString) {
+        return foundTextAtDescription(copy(data), foundString);
     }
 
-    @Override
-    public List<Record> selectByText(String foundString) {
-        return foundTextAtDescription(data, foundString);
+    private List<Record> copy(List<Record> data) {
+        List<Record> result = new LinkedList<Record>();
+        for (Record record : data) {
+            result.add(record.clone());
+        }
+        return result;
     }
 
     @Override

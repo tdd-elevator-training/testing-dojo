@@ -1,13 +1,13 @@
 package org.automation.dojo.web.scenario;
 
+import org.automation.dojo.ApplicationContextLocator;
 import org.automation.dojo.web.bugs.Bug;
 import org.automation.dojo.BugsQueue;
-import org.automation.dojo.web.bugs.ChangeDescriptionIfListNotEmptyBug;
+import org.automation.dojo.web.bugs.AddSomeOtherElementIfListNotEmptyBug;
 import org.automation.dojo.web.bugs.FoundNotExistsProductBug;
 import org.automation.dojo.web.bugs.NoResultWhenExpectedBug;
 import org.automation.dojo.web.model.Record;
 import org.automation.dojo.web.model.ShopService;
-import org.automation.dojo.web.model.ShopServiceFactory;
 import org.automation.dojo.web.servlet.RequestWorker;
 
 import java.util.Arrays;
@@ -21,7 +21,7 @@ public class SearchByTextLevel2Scenario extends BasicScenario<RequestWorker> {
 
     @Override
     public String process(RequestWorker request) {
-        ShopService service = ShopServiceFactory.gtInstance();
+        ShopService service = ApplicationContextLocator.getInstance().getBean("shopService");
 
         request.saveFormState();
 
@@ -43,7 +43,7 @@ public class SearchByTextLevel2Scenario extends BasicScenario<RequestWorker> {
 
     public List<? extends Bug> getPossibleBugs() {
         return Arrays.asList(new NoResultWhenExpectedBug(),
-                new ChangeDescriptionIfListNotEmptyBug(),
+                new AddSomeOtherElementIfListNotEmptyBug(),
                 new FoundNotExistsProductBug());
     }
 

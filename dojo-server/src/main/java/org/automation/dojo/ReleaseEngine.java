@@ -4,14 +4,11 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.SerializationUtils;
 import org.automation.dojo.web.scenario.BasicScenario;
 import org.automation.dojo.web.scenario.Release;
-import org.automation.dojo.web.scenario.Scenario;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
-import sun.misc.JavaSecurityProtectionDomainAccess;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
