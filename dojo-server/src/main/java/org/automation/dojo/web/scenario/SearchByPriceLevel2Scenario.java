@@ -4,7 +4,6 @@ import org.automation.dojo.ApplicationContextLocator;
 import org.automation.dojo.web.bugs.Bug;
 import org.automation.dojo.BugsQueue;
 import org.automation.dojo.web.bugs.BrokenSortingBug;
-import org.automation.dojo.web.bugs.HideSomePriceBug;
 import org.automation.dojo.web.model.Record;
 import org.automation.dojo.web.model.ShopService;
 import org.automation.dojo.web.servlet.RequestWorker;
@@ -40,7 +39,7 @@ public class SearchByPriceLevel2Scenario extends BasicScenario<RequestWorker> {
     }
 
     public List<? extends Bug> getPossibleBugs() {
-        return Arrays.asList(new BrokenSortingBug(), new HideSomePriceBug());
+        return Arrays.asList(new BrokenSortingBug());
     }
 
 }
