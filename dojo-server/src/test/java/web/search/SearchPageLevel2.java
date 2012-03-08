@@ -2,7 +2,6 @@ package web.search;
 
 
 import org.automation.dojo.web.scenario.PriceSortingAscDescLevel2Scenario;
-import web.FunctionalTestCase;
 import org.automation.dojo.web.bugs.NullBug;
 import org.automation.dojo.web.scenario.SearchByPriceLevel2Scenario;
 import org.automation.dojo.web.scenario.SearchByTextLevel2Scenario;
@@ -25,7 +24,10 @@ import static org.junit.Assert.assertNotNull;
 public class SearchPageLevel2 extends SearchPageLevel1 {
 
     private WebElement price;
-    private WebElement priceOption;
+    private WebElement priceSearchOption;
+
+    private static final boolean DESC = false;
+    private static final boolean ASC = !DESC;
 
     @Override
     protected int getMajorRelease() {
@@ -48,7 +50,7 @@ public class SearchPageLevel2 extends SearchPageLevel1 {
     protected void resetAllElements() {
         super.resetAllElements();
         price = tester.findElement(By.id("price"));
-        priceOption = tester.findElement(By.id("price_search_option"));
+        priceSearchOption = tester.findElement(By.id("price_search_option"));
     }
 
     @Test
@@ -144,22 +146,61 @@ public class SearchPageLevel2 extends SearchPageLevel1 {
         assertFormContains("some device", MORE_THAN, 111);
     }
 
+    @Test
+    public void shouldSavePreviousSortingOrder() {
+        enterText("some device");
+        enterPrice(MORE_THAN, 111);
+        submitSearchForm();
+        assertSortingOrder(ASC);
+
+        selectSortingOrder(DESC);
+        submitSearchForm();
+
+        assertSortingOrder(DESC);
+
+        selectSortingOrder(ASC);
+        submitSearchForm();
+
+        assertSortingOrder(ASC);
+    }
+
+    private void selectSortingOrder(boolean isAsc) {
+        findOption(getPriceSortingOrderOption(), getAscDesc(isAsc)).click();
+    }
+
+    private String getAscDesc(boolean isAsc) {
+        if (isAsc) {
+            return "ascending";
+        } else {
+            return "descending";
+        }
+    }
+
+    private void assertSortingOrder(boolean isAsc) {
+        assertEquals(getAscDesc(isAsc), getSelectedPriceSortingOrderOption());
+    }
+
     private void assertFormContains(String text, int priceOptionNumber, int price) {
         assertEquals(text, getSearchText());
-        assertEquals(String.valueOf(price), gtePrice());
+        assertEquals(String.valueOf(price), getPrice());
         assertEquals(getPriceOption(priceOptionNumber), getSelectedPriceOption());
     }
 
     private String getSelectedPriceOption() {
-        return getSelected(this.priceOption);
+        return getSelected(priceSearchOption);
     }
 
-    private String gtePrice() {
-        return this.price.getAttribute("value");
+    private String getSelectedPriceSortingOrderOption() {
+        return getSelected(getPriceSortingOrderOption());
+    }
+
+    private String getPrice() {
+        return price.getAttribute("value");
     }
 
     private String getSelected(WebElement select) {
-        return select.findElement(By.xpath("//option[@selected='']")).getAttribute("value");
+        String xpath = "//select[@id='" + select.getAttribute("id") + "']//option[@selected='']";
+        return tester.findElement(By.xpath(xpath)).getAttribute("value");
     }
 
     protected void enterPrice(int priceOptionNumber, int price) {
@@ -168,11 +209,11 @@ public class SearchPageLevel2 extends SearchPageLevel1 {
     }
 
     private void setPrice(int price) {
-        tester.findElement(By.id("price")).sendKeys(String.valueOf(price));
+        this.price.sendKeys(String.valueOf(price));
     }
 
     private void setMoreThan(int priceOptionNumber) {
-        findOption(this.priceOption, getPriceOption(priceOptionNumber)).click();
+        findOption(priceSearchOption, getPriceOption(priceOptionNumber)).click();
     }
 
     private WebElement findOption(WebElement priceSelect, String preceOption) {
@@ -202,4 +243,7 @@ public class SearchPageLevel2 extends SearchPageLevel1 {
         assertPageContain("'Monitor 3 - the best monitor!' 190.0$");
     }
 
+    public WebElement getPriceSortingOrderOption() {
+        return tester.findElement(By.id("price_sorting_order_option"));
+    }
 }

@@ -43,10 +43,9 @@ public class RequestWorkerImpl implements RequestWorker {
         request.setAttribute("price_search_options", priceOptions);
         request.setAttribute("asc_desc_options", sortingOptions);
 
-        request.setAttribute("price_search_option", getPriceOption());
+        request.setAttribute("price_search_option", getPriceSearchOption());
         request.setAttribute("price", getStringPrice());
         request.setAttribute("search_text", getSearchText());
-        request.setAttribute("price_sorting_order_option", getAscDescString());
     }
 
     @Override
@@ -55,7 +54,7 @@ public class RequestWorkerImpl implements RequestWorker {
     }
 
     @Override
-    public String getPriceOption() {
+    public String getPriceSearchOption() {
         return request.getParameter("price_search_option");
     }
 
@@ -79,7 +78,7 @@ public class RequestWorkerImpl implements RequestWorker {
 
     @Override
     public int getPriceOptionIndex() {
-        return priceOptions.indexOf(getPriceOption());
+        return priceOptions.indexOf(getPriceSearchOption());
     }
 
     @Override
@@ -89,11 +88,20 @@ public class RequestWorkerImpl implements RequestWorker {
 
     @Override
     public boolean isAsc() {
-        return sortingOptions.indexOf(getAscDescString()) == 0;
+        String string = getPriceSortingOrderOption();
+        if (isEmpty(string)) {
+            return true;
+        }
+        return sortingOptions.indexOf(string) == 0;
     }
 
     @Override
-    public String getAscDescString() {
-        return (String)request.getAttribute("price_sorting_order_option");
+    public String getPriceSortingOrderOption() {
+        return request.getParameter("price_sorting_order_option");
+    }
+
+    @Override
+    public void setPriceSortingOrderOption(boolean isAsc) {
+        request.setAttribute("price_sorting_order_option", sortingOptions.get((isAsc)?0:1));
     }
 }

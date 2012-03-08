@@ -23,7 +23,7 @@ public class SearchByTextLevel2Scenario extends BasicScenario<RequestWorker> {
     public String process(RequestWorker request) {
         ShopService service = ApplicationContextLocator.getInstance().getBean("shopService");
 
-        request.saveFormState();
+        request.saveFormState();  // TODO расскидать по сценариям
 
         String foundString = request.getSearchText();
         if (foundString != null) {

@@ -17,7 +17,7 @@ public interface RequestWorker {
 
     String getSearchText();
 
-    String getPriceOption();
+    String getPriceSearchOption();
 
     Double getPrice();
 
@@ -29,5 +29,7 @@ public interface RequestWorker {
 
     boolean isAsc();
 
-    String getAscDescString();
+    String getPriceSortingOrderOption();
+
+    void setPriceSortingOrderOption(boolean isAsc);
 }

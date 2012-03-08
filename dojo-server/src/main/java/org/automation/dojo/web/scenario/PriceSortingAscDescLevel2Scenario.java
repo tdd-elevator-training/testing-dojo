@@ -27,6 +27,7 @@ public class PriceSortingAscDescLevel2Scenario extends BasicScenario<RequestWork
         if (records != null && !records.isEmpty()) {
             List<Record> result = service.sortByPrice(records,
                     request.isAsc());
+            request.setPriceSortingOrderOption(request.isAsc());
             request.setRecords(result);
         }
 
