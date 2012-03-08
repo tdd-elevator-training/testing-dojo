@@ -46,7 +46,7 @@ public class ReleasesPage extends FunctionalTestCase {
 
     @Override
     protected String getPageUrl() {
-        return "/releases";
+        return "/admin";
     }
 
     @Test

@@ -143,6 +143,27 @@ public class ReleaseEngineTest {
         assertServicesNotified(release, 3);
     }
 
+    @Test
+    public void shouldCalculateReleaseNumber(){
+        setScenarioDefinitions("" +
+                "1,scenario1,1,org.automation.dojo.MockScenario\n" +
+                "2,scenario1,1,org.automation.dojo.MockScenario\n" +
+                "1,scenario1,2,org.automation.dojo.MockScenario\n");
+        engine.init();
+        
+        assertEquals(1, engine.getMinorNumber());
+        assertEquals(0, engine.getMajorNumber());
+
+        engine.nextMinorRelease();
+        assertEquals(2, engine.getMinorNumber());
+        assertEquals(0, engine.getMajorNumber());
+
+        engine.nextMajorRelease();
+        assertEquals(1, engine.getMinorNumber());
+        assertEquals(1, engine.getMajorNumber());
+
+    }
+
     private void assertServicesNotified(Release release, int wantedNumberOfInvocations) {
         verify(scoreService, times(wantedNumberOfInvocations)).nextRelease(scoreServiceReleaseCaptor.capture());
         verify(logService, times(wantedNumberOfInvocations)).createGameLog(logServiceReleaseCaptor.capture());

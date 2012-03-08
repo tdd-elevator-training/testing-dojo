@@ -272,6 +272,20 @@ public class DojoScoreServiceTest {
 -->     1	0	true	Liar! Current scenario #1 contains bug.Previously reported bug #0	LIAR
 */
     }
+    @Test
+    @Ignore
+    public void shouldReportLiarWhen2() {
+/*
+    Scenario Score Test result Description Log type
+    Release 1
+    1 0 true Good! No bugs reported for bugs free scenario #1 PASSED
+    Release 2
+    1 0 true Fix the test! It shows wrong result. Current scenario #1 contains bug. LIAR
+    1 100 false Scores for bug #0 scenario #1 VALID_BUG
+    1 0 false Bug already reported for this Minor Release. Bug #0 DUPLICATE
+  ->1 0 true Liar! Current scenario #1 contains bug.Previously reported bug #0 LIAR
+*/
+    }
 
 
     private void setupGameLogs(BasicScenario scenario, GameLog... gameLogs) {

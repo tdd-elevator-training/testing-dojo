@@ -33,7 +33,8 @@ public class ReleaseEngine {
     private LogService logService;
 
     private ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
-    
+    private int minorNumber = 1;
+
     public ReleaseEngine() {
     }
 
@@ -61,6 +62,7 @@ public class ReleaseEngine {
             scoreService.nextRelease(getCurrentRelease());
             setMajorRelease(currentReleaseIndex + 1);
             logService.createGameLog(getCurrentRelease());
+            minorNumber = 1;
         } finally {
             lock.writeLock().unlock();
         }
@@ -72,6 +74,7 @@ public class ReleaseEngine {
             scoreService.nextRelease(getCurrentRelease());
             currentRelease().takeNextBug();
             logService.createGameLog(getCurrentRelease());
+            minorNumber++;
         } finally {
             lock.writeLock().unlock();
         }
@@ -152,10 +155,6 @@ public class ReleaseEngine {
         return currentRelease().toString();
     }
 
-    public String getMajorInfo() {
-        return String.valueOf(currentReleaseIndex);
-    }
-
     //WARN!! public for testing only!!!
     public void setMajorRelease(int index) {
         lock.writeLock().lock();
@@ -174,5 +173,17 @@ public class ReleaseEngine {
         } finally {
             lock.readLock().unlock();
         }
+    }
+
+    public int getMinorNumber() {
+        return minorNumber;
+    }
+
+    public int getMajorNumber() {
+        return currentReleaseIndex;
+    }
+
+    public String getMajorInfo() {
+        return String.valueOf(currentReleaseIndex);
     }
 }
