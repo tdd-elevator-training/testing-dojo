@@ -4,24 +4,23 @@ package org.automation.dojo;
  * @author serhiy.zelenin
  */
 public class ConfigurationService {
-    private int minorReleaseFrequency = 10;
-    private int penaltyTimeOut = 1;
-    private int penaltyValue;
-    private double penaltyMultiplier;
+    private long minorReleaseFrequency = 10 * 60 * 1000;
+    private long penaltyTimeOut = 60 * 1000;
+    private int penaltyValue = 2;
 
-    public int getMinorReleaseFrequency() {
+    public long getMinorReleaseFrequency() {
         return minorReleaseFrequency;
     }
 
-    public void setMinorReleaseFrequency(int minorReleaseFrequency) {
+    public void setMinorReleaseFrequency(long minorReleaseFrequency) {
         this.minorReleaseFrequency = minorReleaseFrequency;
     }
 
-    public void setPenaltyTimeOut(int penaltyTimeOut) {
+    public void setPenaltyTimeOut(long penaltyTimeOut) {
         this.penaltyTimeOut = penaltyTimeOut;
     }
 
-    public int getPenaltyTimeOut() {
+    public long getPenaltyTimeOut() {
         return penaltyTimeOut;
     }
 
@@ -33,11 +32,4 @@ public class ConfigurationService {
         this.penaltyValue = penaltyValue;
     }
 
-    public void setPenaltyMultiplier(double penaltyMultiplier) {
-        this.penaltyMultiplier = penaltyMultiplier;
-    }
-
-    public double getPenaltyMultiplier() {
-        return penaltyMultiplier;
-    }
 }

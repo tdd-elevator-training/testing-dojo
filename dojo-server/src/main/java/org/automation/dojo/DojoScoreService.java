@@ -140,7 +140,8 @@ public class DojoScoreService implements ScoreService {
                 int penalty = (int) (currentScenarioDelay / configurationService.getPenaltyTimeOut());
                         
                 logService.playerLog(new PlayerRecord(player, scenario, false, -penalty * configurationService.getPenaltyValue(),
-                        "Where are your test results?", PlayerRecord.Type.TIMEOUT));
+                        "Where are your test results? Waiting for " + (currentScenarioDelay / 1000 * 60) + " minutes",
+                        PlayerRecord.Type.TIMEOUT));
             }
         }
     }

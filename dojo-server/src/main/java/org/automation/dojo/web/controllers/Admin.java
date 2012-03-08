@@ -43,7 +43,17 @@ public class Admin {
             result.reject("minorReleaseFrequency", "Minor release frequency is too low");
             return "redirect:/admin";
         }
+        if (configuration.getPenaltyTimeOut() < 0) {
+            result.reject("penaltyTimeOut", "Time out can not be less than 0");
+            return "redirect:/admin";
+        }
+        if (configuration.getPenaltyValue() < 0) {
+            result.reject("penaltyTimeOut", "Penalty can not be negative");
+            return "redirect:/admin";
+        }
         configurationService.setMinorReleaseFrequency(configuration.getMinorReleaseFrequency());
+        configurationService.setPenaltyValue(configuration.getPenaltyValue());
+        configurationService.setPenaltyTimeOut(configuration.getPenaltyTimeOut());
         return "redirect:/admin";
     }
 
