@@ -6,21 +6,20 @@ import org.apache.commons.collections.CollectionUtils;
 import org.automation.dojo.web.scenario.BasicScenario;
 import org.automation.dojo.web.scenario.Release;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author serhiy.zelenin
  */
 public class ReleaseLog {
     private Release release;
-    
+    private Date releaseDate;
+
     private List<PlayerRecord> records = new ArrayList<PlayerRecord>();
     
-    public ReleaseLog(Release release) {
+    public ReleaseLog(Release release, Date releaseDate) {
         this.release = release;
+        this.releaseDate = releaseDate;
     }
 
     public void putRecord(PlayerRecord record) {
@@ -61,5 +60,13 @@ public class ReleaseLog {
             result.put(record.getPlayerName(), score);
         }
         return result;
+    }
+
+    public Date getReleaseDate() {
+        return releaseDate;
+    }
+
+    public long getReleaseTime() {
+        return releaseDate.getTime();
     }
 }

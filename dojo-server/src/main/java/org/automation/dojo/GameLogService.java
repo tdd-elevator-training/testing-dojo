@@ -2,6 +2,7 @@ package org.automation.dojo;
 
 import org.automation.dojo.web.scenario.BasicScenario;
 import org.automation.dojo.web.scenario.Release;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.*;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
@@ -15,12 +16,23 @@ public class GameLogService implements LogService {
     private ArrayList<ReleaseLog> releases = new ArrayList<ReleaseLog>();
     private final Set<String> registeredPlayers = new HashSet<String>();
 
+    @Autowired
+    private TimeService timeService;
+
+    public GameLogService(TimeService timeService) {
+        this.timeService = timeService;
+    }
+
+    public GameLogService() {
+    }
+
     public void playerLog(PlayerRecord record) {
         lock.writeLock().lock();
         try {
             if (!registeredPlayers.contains(record.getPlayerName())) {
                 throw new IllegalArgumentException("Player " + record.getPlayerName() + " does not exist!");
             }
+            record.setLogTime(timeService.now());
             currentRelease.putRecord(record);
         } finally {
             lock.writeLock().unlock();
@@ -32,7 +44,7 @@ public class GameLogService implements LogService {
         try {
             ArrayList<GameLog> result = new ArrayList<GameLog>();
             for (ReleaseLog release : releases) {
-                GameLog gameLog = new GameLog(scenario);
+                GameLog gameLog = new GameLog(scenario, release.getReleaseDate());
                 gameLog.addAll(release.getRecordsFor(player, scenario));
                 result.add(gameLog);
             }
@@ -54,7 +66,7 @@ public class GameLogService implements LogService {
     public void createGameLog(Release release) {
         lock.writeLock().lock();
         try {
-            currentRelease = new ReleaseLog(release);
+            currentRelease = new ReleaseLog(release, timeService.now());
             releases.add(currentRelease);
         }finally{
             lock.writeLock().unlock();
@@ -97,6 +109,10 @@ public class GameLogService implements LogService {
         } finally {
             lock.readLock().unlock();
         }
+    }
+
+    public ReleaseLog getLastReleaseLog() {
+        return null;
     }
 
     private ArrayList<BoardRecord> convertGameScores(Map<String, Integer> gameScores) {

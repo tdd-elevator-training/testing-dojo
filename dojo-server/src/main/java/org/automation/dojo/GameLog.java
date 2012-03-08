@@ -5,6 +5,7 @@ import org.automation.dojo.web.scenario.BasicScenario;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -12,10 +13,12 @@ import java.util.List;
  */
 public class GameLog {
     private BasicScenario scenario;
+    private Date releaseDate;
     private List<PlayerRecord> playerRecords = new ArrayList<PlayerRecord>();
 
-    public GameLog(BasicScenario scenario, PlayerRecord ... records) {
+    public GameLog(BasicScenario scenario, Date releaseDate, PlayerRecord ... records) {
         this.scenario = scenario;
+        this.releaseDate = releaseDate;
         this.playerRecords = new ArrayList<PlayerRecord>(Arrays.asList(records));
     }
 
@@ -23,6 +26,8 @@ public class GameLog {
         this.scenario = scenario;
         Iterables.addAll(playerRecords, records);
     }
+
+    
 
     public BasicScenario getScenario() {
         return scenario;
@@ -62,5 +67,9 @@ public class GameLog {
 
     public void addAll(List<PlayerRecord> playerRecords) {
         this.playerRecords.addAll(playerRecords);
+    }
+
+    public long getReleaseDateMilis() {
+        return releaseDate.getTime();
     }
 }
