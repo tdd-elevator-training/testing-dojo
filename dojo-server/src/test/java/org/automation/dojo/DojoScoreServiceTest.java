@@ -149,6 +149,7 @@ public class DojoScoreServiceTest extends DojoScoreBaseTest {
 
     @Test
     public void shouldDecreaseScoreWhenLiar() {
+        configurationService.setLiarWeight(30);
         BasicScenario scenario = setupScenario(1, 0);
         setupGameLogs(scenario,
                 gameLog(scenario, record(scenario(1, 123), false, 123)),
@@ -158,21 +159,22 @@ public class DojoScoreServiceTest extends DojoScoreBaseTest {
 
         //we report a bug for a bug free scenario
         PlayerRecord record = captureLogRecord();
-        assertEquals(-20, record.getScore());
+        assertEquals(-30, record.getScore());
         assertFalse(record.isPassed());
     }
 
     @Test
     public void shouldDecreaseScoreWhenInvertedLiar() {
-        BasicScenario scenario = setupScenario(1, 110);
+        configurationService.setLiarWeight(30);
+        BasicScenario scenario = setupScenario(1, 123);
         setupGameLogs(scenario,
-                gameLog(scenario, record(scenario, false, 110)));
+                gameLog(scenario, record(scenario, false, 123)));
 
         reportScenario(1, true);
 
         //we report test passed for bugged scenario which failed in the same release
         PlayerRecord record = captureLogRecord();
-        assertEquals(-110*2, record.getScore());
+        assertEquals(-30*2, record.getScore());
         assertTrue(record.isPassed());
         assertEquals(PlayerRecord.Type.LIAR, record.getType());
     }

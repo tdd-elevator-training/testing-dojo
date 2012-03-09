@@ -37,9 +37,9 @@ public class DojoScoreService implements ScoreService {
         List<GameLog> gameLogs = logService.getGameLogs(clientName, scenario);
 
         //last log will be a log for current release
-        GameLog currentRelease = lastGameLog(gameLogs);
+        GameLog currentGame = lastGameLog(gameLogs);
         Bug currentBug = scenario.getBug();
-        if (!testPassed && currentRelease.bugReported(currentBug)) {
+        if (!testPassed && currentGame.bugReported(currentBug)) {
             logService.playerLog(new PlayerRecord(clientName, scenario, testPassed, 0,
                     "Bug already reported for this Minor Release. " +
                             "Bug #" + currentBug.getId(), PlayerRecord.Type.DUPLICATE));
@@ -52,7 +52,7 @@ public class DojoScoreService implements ScoreService {
 
         if (isLiar) {
             Bug reportedBug = reportedBugs.get(reportedBugs.size() - 1).getScenario().getBug();
-            int reportedWeight = currentRelease.liarReported() ? 0 : reportedBug.getWeight();
+            int reportedWeight = currentGame.liarReported() ? 0 : configurationService.getLiarWeight();
             logService.playerLog(new PlayerRecord(clientName, scenario, testPassed, -2 * reportedWeight,
                     "Liar! Current scenario #" + scenario.getId() +
                             (scenario.bugsFree() ? " is bugs free." : " contains bug.") +
@@ -61,7 +61,8 @@ public class DojoScoreService implements ScoreService {
         }
 
         if (reportMismatchedWithScenarioState) {
-            logService.playerLog(new PlayerRecord(clientName, scenario, testPassed, currentRelease.liarReported()? 0 : -20,
+            logService.playerLog(new PlayerRecord(clientName, scenario, testPassed,
+                    currentGame.liarReported()? 0 : -configurationService.getLiarWeight(),
                     "Fix the test! It shows wrong result. Current scenario #" + scenario.getId() +
                             (scenario.bugsFree() ? " is bugs free." : " contains bug."), PlayerRecord.Type.LIAR));
             return scenario.bugsFree();
