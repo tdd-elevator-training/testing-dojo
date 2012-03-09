@@ -1,0 +1,11 @@
+<h3>1. Search for a product with some keyword in name</h3>
+<b>Given</b> search box<br/>
+<b>When</b> search by [keyword]<br/>
+<b>Then</b> all items contains [keyword]<br/>
+<br/>
+<b>When</b> search by empty field<br/>
+<b>Then</b> I see all products<br/>
+<br/>
+<b>When</b> search by non existent product<br/>
+<b>Then</b> 'no results found' should be shown<br/>
+<b>And</b> user sees all products<br/>
