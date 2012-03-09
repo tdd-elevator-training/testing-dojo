@@ -29,6 +29,7 @@ public class ConfigurationService implements Runnable {
     private Date previousRelease;
     private Date nextPenaltyTickTime;
     private Date previousTick;
+    private boolean paused = false;
 
     public ConfigurationService() {
     }
@@ -89,7 +90,9 @@ public class ConfigurationService implements Runnable {
     public void run() {
         try {
             if (nextPenaltyTickTime.getTime() < timeService.now().getTime()) {
-                scoreService.tick(timeService.now().getTime());
+                if (!paused) {
+                    scoreService.tick(timeService.now().getTime());
+                }
                 previousTick = nextPenaltyTickTime;
                 calculateNextTickTime();
             }
@@ -98,7 +101,9 @@ public class ConfigurationService implements Runnable {
                 return;
             }
             if (nextMinorRelease.getTime() < timeService.now().getTime()) {
-                releaseEngine.nextMinorRelease();
+                if (!paused) {
+                    releaseEngine.nextMinorRelease();
+                }
                 previousRelease = nextMinorRelease;
                 calculateNextReleaseDate();
             }
@@ -146,5 +151,13 @@ public class ConfigurationService implements Runnable {
 
         Date diff = new Date(nextMinorRelease.getTime() - timeService.now().getTime());
         return new SimpleDateFormat("mm 'min' ss 'sec'").format(diff);        
+    }
+
+    public void setPaused(boolean paused) {
+        this.paused = paused;
+    }
+
+    public boolean isPaused() {
+        return paused;
     }
 }

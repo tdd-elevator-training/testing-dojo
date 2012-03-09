@@ -25,6 +25,10 @@
             <td>Penalty value for silence : <form:input path="penaltyValue"/></td>
         </tr>
         <tr>
+            <td><c:if test="${configuration.paused}"><a href="/admin/resume">Resume Game</a></c:if>
+                <c:if test="${!configuration.paused}"><a href="/admin/pause">Pause Game</a></c:if></td>
+        </tr>
+        <tr>
             <td colspan="3">
                 <input type="submit" value="Save"/>
             </td>
