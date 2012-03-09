@@ -39,34 +39,33 @@
                         List:
                     </c:otherwise>
                 </c:choose>
+                <select name="price_sorting_order_option" id="price_sorting_order_option">
+                    <c:forEach items="${requestScope.asc_desc_options}" var="order_option" varStatus="status">
+                        <option value="<c:out value="${order_option}"/>"
+                            <c:if test="${order_option == price_sorting_order_option}">
+                                selected
+                            </c:if>
+                        ><c:out value="${order_option}"/></option>
+                    </c:forEach>
+                </select>
                 </br>
-                <table>
-                    <tr>
-                        <td></td>
-                        <td>Code</td>
-                        <td>Description</td>
-                        <td>Price
-                            <select name="price_sorting_order_option" id="price_sorting_order_option">
-                                <c:forEach items="${requestScope.asc_desc_options}" var="order_option" varStatus="status">
-                                    <option value="<c:out value="${order_option}"/>"
-                                        <c:if test="${order_option == price_sorting_order_option}">
-                                            selected
-                                        </c:if>
-                                    ><c:out value="${order_option}"/></option>
-                                </c:forEach>
-                            </select>
-                        </td>
-                    </tr>
             </c:if>
         </form>
         <c:if test="${requestScope.records != null}">
             <form name="add_to_cart" method="post" action="cart">
                 <input type="hidden" name="action" value="cart">
                 <table>
+                    <tr>
+                        <td></td>
+                        <td>Code</td>
+                        <td>Description</td>
+                        <td>Price</td>
+                    </tr>
                     <c:forEach items="${requestScope.records}" var="record" varStatus="status">
                         <tr>
                             <td><c:out value="${record.id}"/>&nbsp;</td>
-                            <td><input type="checkbox" value="<c:out value="${status.index+1}"/>" name="record"></td>
+                            <td><input type="checkbox" value="<c:out value="${record.id}"/>"
+                                       name="record" id="record_${status.index+1}"></td>
                             <td>'<c:out value="${record.description}"/>'</td>
                             <td><c:out value="${record.price}"/>$</td>
                         </tr>

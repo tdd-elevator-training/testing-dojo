@@ -16,7 +16,7 @@
 
     <servlet-mapping>
         <servlet-name>WorkflowController</servlet-name>
-        <url-pattern>/search</url-pattern>
+        <url-pattern>/search,/cart</url-pattern>
     </servlet-mapping>
 
 

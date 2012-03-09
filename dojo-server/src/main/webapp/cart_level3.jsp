@@ -36,7 +36,7 @@
                     Your cart is empty now!
                 </c:when>
                 <c:otherwise>
-                    List:
+                    Your cart list:
                 </c:otherwise>
             </c:choose>
             </br>
@@ -48,7 +48,7 @@
                 </tr>
                 <c:forEach items="${requestScope.records}" var="record" varStatus="status">
                     <tr>
-                        <td>'<c:out value="${record.id}"/>'</td>
+                        <td><c:out value="${record.id}"/></td>
                         <td>'<c:out value="${record.description}"/>'</td>
                         <td><c:out value="${record.price}"/>$</td>
                     </tr>

@@ -4,6 +4,7 @@ import org.automation.dojo.web.model.Record;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 
 public class RequestWorkerImpl implements RequestWorker {
@@ -112,7 +113,20 @@ public class RequestWorkerImpl implements RequestWorker {
 
     @Override
     public List<Integer> getRecordIds() {
-        return null;
+        List<Integer> result = new LinkedList<Integer>();
+        String[] records = request.getParameterValues("record");
+        if (records == null) {
+            return result;
+        }
+
+        for (String record : records) {
+            try {
+                result.add(Integer.valueOf(record));
+            } catch (NumberFormatException exception) {
+                // do nothing TODO но вообще-то надо как-то сообщить Сане :)
+            }
+        }
+        return result;
     }
 
     @Override

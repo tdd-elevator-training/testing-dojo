@@ -58,8 +58,7 @@ public class SearchPageLevel3 extends SearchPageLevel2 {
 
     @Test
     public void shouldCartFormPresentIfSomeFound() {
-        enterText("mouse");
-        submitSearchForm();
+        getListFor("mouse");
 
         assertSearchForm();
         assertAddToCartForm();
@@ -85,7 +84,39 @@ public class SearchPageLevel3 extends SearchPageLevel2 {
 
     @Test
     public void shouldAddToCartSelectedRecord(){
+        getListFor("mouse");
 
+        assertPageContain("List: Code Description Price " +
+                "1 'Mouse 1' 30.0$ " +
+                "3 'Mouse 3' 40.0$ " +
+                "2 'Mouse 2' 50.0$ " +
+                "4 'Mouse 4 - the best mouse!' 66.0$ ");
+
+        List<WebElement> checkboxes = getSelectCheckboxes();
+        assertEquals(4, checkboxes.size());
+
+        checkboxes.get(0).click();
+        checkboxes.get(2).click();
+        checkboxes.get(3).click();
+
+        getAddToCartButton().submit();
+        assertCartPage();
+        assertPageContain("1 'Mouse 1' 30.0$");
+        assertPageNotContain("3 'Mouse 3' 40.0$");
+        assertPageContain("2 'Mouse 2' 50.0$");
+        assertPageContain("4 'Mouse 4 - the best mouse!' 66.0$");
     }
 
+    private void assertCartPage() {
+        assertPageContain("Your cart list:");
+    }
+
+    private void getListFor(String text) {
+        enterText(text);
+        submitSearchForm();
+    }
+
+    public List<WebElement> getSelectCheckboxes() {
+        return tester.findElements(By.xpath("//input[contains(@id,'record')]"));
+    }
 }
