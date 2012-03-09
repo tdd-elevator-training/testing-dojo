@@ -31,7 +31,7 @@ public class ConfigurationService implements Runnable {
     private Date nextPenaltyTickTime;
     private Date previousTick;
     private boolean paused = false;
-    private int exceptionWeight;
+    private int exceptionWeight = 10;
 
     public ConfigurationService() {
     }
