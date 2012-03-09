@@ -36,10 +36,6 @@ public class SearchPageLevel3 extends SearchPageLevel2 {
         return tester.findElement(By.id("add_to_cart_button"));
     }
 
-    private WebElement getAddToCartForm() {
-        return tester.findElement(By.name("add_to_cart"));
-    }
-
     @Override
     protected List<?> getMinorRelease() {
         return Arrays.asList(SearchByTextScenario.class, NullBug.class,
@@ -66,16 +62,10 @@ public class SearchPageLevel3 extends SearchPageLevel2 {
     }
 
     private void assertAddToCartForm() {
-        assertNotNull(getAddToCartForm());
         assertNotNull(getAddToCartButton());
     }
 
     private void assertAddToCartFormNotPresent() {
-        try {
-            getAddToCartForm();
-            fail("Expected exception");
-        } catch (Exception e) {
-        }
         try {
             getAddToCartButton();
             fail("Expected exception");
@@ -109,13 +99,44 @@ public class SearchPageLevel3 extends SearchPageLevel2 {
     }
 
     private void submitAddToCartForm() {
-        getAddToCartButton().submit();
+        getAddToCartButton().click();
         resetAllElements();
     }
 
     @Test
-    public void shouldSearchAtChoppingCartWorksCorrectly(){
-        shouldAddToCartSelectedRecord();
+    public void shouldSaveSearchFormStateWhenGoToCart() {
+        enterText("mouse");
+        enterPrice(LESS_THAN, 30);
+        submitSearchForm();
+
+        getSelectCheckboxes().get(0).click();
+        submitAddToCartForm();
+
+        assertFormContains("mouse", LESS_THAN, 30);
+    }
+
+    private void gotoCart() {
+        enterText("");
+        submitSearchForm();
+
+        getSelectCheckboxes().get(0).click();
+        submitAddToCartForm();
+    }
+
+    @Test
+    public void shouldSaveSearchFormStateWhenGoFromCart() {
+        gotoCart();
+
+        enterText("mouse");
+        enterPrice(LESS_THAN, 30);
+        submitSearchForm();
+
+        assertFormContains("mouse", LESS_THAN, 30);
+    }
+
+    @Test
+    public void shouldSearchAtShoppingCartWorksCorrectly(){
+        gotoCart();
 
         enterText("mo");
         enterPrice(MORE_THAN, 120);

@@ -193,7 +193,7 @@ public class SearchPageLevel2 extends SearchPageLevel1 {
         assertEquals(getAscDesc(isAsc), getSelectedPriceSortingOrderOption());
     }
 
-    private void assertFormContains(String text, int priceOptionNumber, int price) {
+    protected void assertFormContains(String text, int priceOptionNumber, int price) {
         assertEquals(text, getSearchText());
         assertEquals(String.valueOf(price), getPrice());
         assertEquals(getPriceOption(priceOptionNumber), getSelectedPriceOption());

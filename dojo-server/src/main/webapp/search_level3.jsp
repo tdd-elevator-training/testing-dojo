@@ -6,10 +6,16 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 		<title>Search form</title>
+	    <script type='text/javascript'>
+	        function setAction(name) {
+                var input = document.getElementById('action');
+                input.value = name;
+            }
+        </script>
 	</head>
-	<body>		
+	<body>
         <form name="search" method="post" action="search">
-            <input type="hidden" name="action" value="search">
+            <input type="hidden" name="action" id="action" value="search">
 			<table>
  				<tr>
   					<td>Please enter text to find</td>
@@ -26,7 +32,7 @@
                         </select>
                     </td>
                     <td><input type="text" name="price" id="price" value="<c:out value="${price}"/>"></td>
-                    <td><input type="submit" value="Search" id="search_button"></td>
+                    <td><input type="submit" value="Search" id="search_button" onClick="setAction('search');"></td>
  				</tr>
 			</table>
 
@@ -39,33 +45,31 @@
                         List:
                     </c:otherwise>
                 </c:choose>
-                <select name="price_sorting_order_option" id="price_sorting_order_option">
-                    <c:forEach items="${requestScope.asc_desc_options}" var="order_option" varStatus="status">
-                        <option value="<c:out value="${order_option}"/>"
-                            <c:if test="${order_option == price_sorting_order_option}">
-                                selected
-                            </c:if>
-                        ><c:out value="${order_option}"/></option>
-                    </c:forEach>
-                </select>
                 </br>
-            </c:if>
-        </form>
-        <c:if test="${requestScope.records != null}">
-            <form name="add_to_cart" method="post" action="cart">
-                <input type="hidden" name="action" value="cart">
+
                 <table>
                     <tr>
-                        <td></td>
                         <td>Code</td>
                         <td>Description</td>
-                        <td>Price</td>
+                        <td>Price
+                            <select name="price_sorting_order_option" id="price_sorting_order_option">
+                                <c:forEach items="${requestScope.asc_desc_options}" var="order_option" varStatus="status">
+                                    <option value="<c:out value="${order_option}"/>"
+                                        <c:if test="${order_option == price_sorting_order_option}">
+                                            selected
+                                        </c:if>
+                                    ><c:out value="${order_option}"/></option>
+                                </c:forEach>
+                            </select>
+                        </td>
                     </tr>
                     <c:forEach items="${requestScope.records}" var="record" varStatus="status">
                         <tr>
-                            <td><c:out value="${record.id}"/>&nbsp;</td>
-                            <td><input type="checkbox" value="<c:out value="${record.id}"/>"
-                                       name="record" id="record_${status.index+1}"></td>
+                            <td>
+                                <input type="checkbox" value="<c:out value="${record.id}"/>"
+                                       name="record" id="record_${status.index+1}">
+                                <c:out value="${record.id}"/>&nbsp;
+                            </td>
                             <td>'<c:out value="${record.description}"/>'</td>
                             <td><c:out value="${record.price}"/>$</td>
                         </tr>
@@ -73,7 +77,7 @@
                     <tr>
                         <td></td>
                         <td></td>
-                        <td><input type="submit" value="Add to Cart" id="add_to_cart_button"></td>
+                        <td><input type="submit" value="Add to Cart" id="add_to_cart_button" onClick="setAction('cart');"></td>
                     </tr>
                 </table>
             </form>

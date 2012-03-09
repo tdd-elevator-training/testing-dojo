@@ -30,7 +30,7 @@ public abstract class FunctionalTestCase {
         int port = ServerRunner.getInstance().start();
         baseUrl = "http://localhost:" + port + "/Shop";
 
-        tester = new HtmlUnitDriver();
+        tester = new HtmlUnitDriver(true);
 
         instance = ApplicationContextLocator.getInstance();
         instance.setApplicationContext(context);

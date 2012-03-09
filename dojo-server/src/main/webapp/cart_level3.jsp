@@ -25,35 +25,35 @@
                         </select>
                     </td>
                     <td><input type="text" name="price" id="price" value="<c:out value="${price}"/>"></td>
-                    <td><input type="submit" value="Search" id="search_button"></td>
  				</tr>
 			</table>
-	    </form>
 
-        <c:if test="${requestScope.records != null}">
-            <c:choose>
-                <c:when test="${requestScope.no_results}">
-                    Your cart is empty now!
-                </c:when>
-                <c:otherwise>
-                    Your cart list:
-                </c:otherwise>
-            </c:choose>
-            </br>
-            <table>
-                <tr>
-                    <td>Code</td>
-                    <td>Description</td>
-                    <td>Price</td>
-                </tr>
-                <c:forEach items="${requestScope.records}" var="record" varStatus="status">
+            <c:if test="${requestScope.records != null}">
+                <c:choose>
+                    <c:when test="${requestScope.no_results}">
+                        Your cart is empty now!
+                    </c:when>
+                    <c:otherwise>
+                        Your cart list:
+                    </c:otherwise>
+                </c:choose>
+                </br>
+                <table>
                     <tr>
-                        <td><c:out value="${record.id}"/></td>
-                        <td>'<c:out value="${record.description}"/>'</td>
-                        <td><c:out value="${record.price}"/>$</td>
+                        <td>Code</td>
+                        <td>Description</td>
+                        <td>Price</td>
                     </tr>
-                </c:forEach>
-            </table>
-        </c:if>
+                    <c:forEach items="${requestScope.records}" var="record" varStatus="status">
+                        <tr>
+                            <td><c:out value="${record.id}"/></td>
+                            <td>'<c:out value="${record.description}"/>'</td>
+                            <td><c:out value="${record.price}"/>$</td>
+                        </tr>
+                    </c:forEach>
+                </table>
+                <td><input type="submit" value="Back" id="search_button"></td>
+            </c:if>
+	    </form>
 	</body>
 </html>
