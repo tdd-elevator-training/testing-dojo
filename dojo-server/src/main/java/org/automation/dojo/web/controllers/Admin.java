@@ -70,4 +70,18 @@ public class Admin {
         releaseEngine.nextMinorRelease();
         return "redirect:/admin";
     }
+
+    @RequestMapping("/pause")
+    public String pause() {
+        configurationService.setPaused(true);
+        configurationService.adjustChanges();
+        return "redirect:/admin";
+    }
+
+    @RequestMapping("/resume")
+    public String resume() {
+        configurationService.setPaused(false);
+        configurationService.adjustChanges();
+        return "redirect:/admin";
+    }
 }

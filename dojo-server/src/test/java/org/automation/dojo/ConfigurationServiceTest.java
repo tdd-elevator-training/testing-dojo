@@ -152,6 +152,19 @@ public class ConfigurationServiceTest {
         assertEquals("01 min 45 sec", configurationService.getNextReleaseRemaining());
     }
 
+    @Test
+    public void shouldPauseWhenPauseSet(){
+        setupReleaseParams(100, false);
+        setupCurrentTime(currentTime() + 100);
+        configurationService.setPenaltyTimeOut(50);
+        configurationService.setPaused(true);
+
+        configurationService.adjustChanges();
+        configurationService.run();
+        
+        verify(scoreService, never()).tick(anyLong());
+        verify(engine, never()).nextMinorRelease();
+    } 
 
     private OngoingStubbing<Date> setupCurrentTime(long time) {
         return when(timeService.now()).thenReturn(new Date(time));
