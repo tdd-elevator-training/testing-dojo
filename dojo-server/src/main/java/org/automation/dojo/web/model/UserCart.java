@@ -1,20 +1,18 @@
 package org.automation.dojo.web.model;
 
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 public class UserCart {
 
-    private List<Record> сart = new LinkedList<Record>();
+    private List<Record> cart = new LinkedList<Record>();
 
     public void addAll(List<Record> records) {
-        сart.addAll(records);
+        cart.addAll(records);
     }
 
     public List<Record> getRecords() {
-        return copy(сart);
+        return copy(cart);
     }
 
     private List<Record> copy(List<Record> data) {
@@ -27,9 +25,15 @@ public class UserCart {
 
     public double getTotalPrice() {
         double result = 0;
-        for (Record record : сart) {
+        for (Record record : cart) {
             result += record.getPrice();
         }
         return result;
+    }
+
+    public void remove(int index) {
+        if (index < cart.size()) {
+            cart.remove(index);
+        }
     }
 }

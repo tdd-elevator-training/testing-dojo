@@ -26,6 +26,9 @@ public class BugsFactory {
 
         registerBug(BrokenSortingBug.class);
         registerBug(IgnorePriceSortingOrderBug.class);
+
+        registerBug(SomeRecordsWillNotAddToCart.class);
+        registerBug(BrokenChartSum.class);
     }
 
     private static <T extends Bug<?>> void registerBug(Class<T> bugClass) {

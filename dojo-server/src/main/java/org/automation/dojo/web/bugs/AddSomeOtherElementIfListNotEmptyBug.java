@@ -7,7 +7,6 @@ import org.automation.dojo.web.model.ShopService;
 import org.automation.dojo.web.servlet.RequestWorker;
 
 import java.util.List;
-import java.util.Random;
 
 /**
  * Добавлять существующий продукт НЕ с тем именем, по которому ищем И ТОЛЬКО если результат поиска не пуст

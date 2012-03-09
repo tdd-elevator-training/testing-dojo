@@ -4,6 +4,7 @@ import org.automation.dojo.ApplicationContextLocator;
 import org.automation.dojo.BugsQueue;
 import org.automation.dojo.web.bugs.Bug;
 import org.automation.dojo.web.bugs.BugsFactory;
+import org.automation.dojo.web.bugs.SomeRecordsWillNotAddToCart;
 import org.automation.dojo.web.model.Record;
 import org.automation.dojo.web.model.ShopService;
 import org.automation.dojo.web.model.UserCart;
@@ -35,7 +36,8 @@ public class AddToUserCartScenario extends BasicScenario<RequestWorker> {
     }
 
     public List<? extends Bug> getPossibleBugs() {
-        return Arrays.asList();
+        return BugsFactory.getBugs(SomeRecordsWillNotAddToCart.class);
     }
+
 
 }

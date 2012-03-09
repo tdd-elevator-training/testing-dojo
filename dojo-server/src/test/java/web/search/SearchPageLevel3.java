@@ -32,7 +32,7 @@ public class SearchPageLevel3 extends SearchPageLevel2 {
         super.resetAllElements();
     }
 
-    private WebElement getAddToCartButton() {
+    protected WebElement getAddToCartButton() {
         return tester.findElement(By.id("add_to_cart_button"));
     }
 
@@ -61,11 +61,11 @@ public class SearchPageLevel3 extends SearchPageLevel2 {
         assertAddToCartForm();
     }
 
-    private void assertAddToCartForm() {
+    protected void assertAddToCartForm() {
         assertNotNull(getAddToCartButton());
     }
 
-    private void assertAddToCartFormNotPresent() {
+    protected void assertAddToCartFormNotPresent() {
         try {
             getAddToCartButton();
             fail("Expected exception");
@@ -98,7 +98,7 @@ public class SearchPageLevel3 extends SearchPageLevel2 {
         assertPageContain("4 'Mouse 4 - the best mouse!' 66.0$");
     }
 
-    private void submitAddToCartForm() {
+    protected void submitAddToCartForm() {
         getAddToCartButton().click();
         resetAllElements();
     }
@@ -115,7 +115,7 @@ public class SearchPageLevel3 extends SearchPageLevel2 {
         assertFormContains("mouse", LESS_THAN, 30);
     }
 
-    private void gotoCart() {
+    protected void gotoCart() {
         enterText("");
         submitSearchForm();
 
@@ -217,11 +217,11 @@ public class SearchPageLevel3 extends SearchPageLevel2 {
         assertEquals("146.0$", getTotalPrice().getText());
     }
 
-    private void assertCartPage() {
+    protected void assertCartPage() {
         assertPageContain("Your cart list:");
     }
 
-    private void getListFor(String text) {
+    protected void getListFor(String text) {
         enterText("");
         enterText(text);
         submitSearchForm();

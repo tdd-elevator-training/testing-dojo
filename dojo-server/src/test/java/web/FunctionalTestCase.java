@@ -60,7 +60,7 @@ public abstract class FunctionalTestCase {
             releaseEngine.nextMinorRelease();
             countLoop++;
         } while (!minorRelease.equals(releaseEngine.getMinorInfo()) && countLoop < 1000);
-        if (countLoop == 1000) {
+        if (countLoop == 10000) {
             throw new IllegalArgumentException(minorRelease + " not found");
         }
     }
