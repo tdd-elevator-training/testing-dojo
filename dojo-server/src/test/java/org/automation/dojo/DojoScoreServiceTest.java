@@ -289,6 +289,20 @@ public class DojoScoreServiceTest extends DojoScoreBaseTest {
     }
 
     @Test
+    public void shouldDecreaseWhenTestException() {
+        configurationService.setExceptionWeight(11);
+        BasicScenario scenario = setupScenario(1, true);
+        setupGameLogs(scenario, gameLog(scenario));
+
+        reportScenario(1, TestResult.EXCEPTION);
+
+        PlayerRecord capturedRecord = captureLogRecord();
+
+        assertEquals(-11, capturedRecord.getScore());
+        assertEquals(PlayerRecord.Type.EXCEPTION, capturedRecord.getType());
+    }
+
+    @Test
     @Ignore //Liar, Valid bug and then Liar again - tester should be punished twice
     public void shouldDecreaseWhenLiarReportedAfterPassed() {
         configurationService.setLiarWeight(30);

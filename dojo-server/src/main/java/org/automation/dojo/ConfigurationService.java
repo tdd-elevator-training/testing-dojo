@@ -31,6 +31,7 @@ public class ConfigurationService implements Runnable {
     private Date nextPenaltyTickTime;
     private Date previousTick;
     private boolean paused = false;
+    private int exceptionWeight;
 
     public ConfigurationService() {
     }
@@ -170,5 +171,13 @@ public class ConfigurationService implements Runnable {
 
     public void setLiarWeight(int liarWeight) {
         this.liarWeight = liarWeight;
+    }
+
+    public void setExceptionWeight(int exceptionWeight) {
+        this.exceptionWeight = exceptionWeight;
+    }
+
+    public int getExceptionWeight() {
+        return exceptionWeight;
     }
 }

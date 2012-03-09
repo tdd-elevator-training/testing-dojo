@@ -35,6 +35,11 @@ public class DojoScoreService implements ScoreService {
     public boolean testResult(String clientName, int scenarioNumber, TestResult testResult) {
         BasicScenario scenario = releaseEngine.getScenario(scenarioNumber);
         List<GameLog> gameLogs = logService.getGameLogs(clientName, scenario);
+        if (testResult == TestResult.EXCEPTION) {
+            logService.playerLog(new PlayerRecord(clientName, scenario, false, -configurationService.getExceptionWeight(),
+                    "Exception in test case! Fix it!", PlayerRecord.Type.EXCEPTION));
+            return scenario.bugsFree();
+        }
 
         //last log will be a log for current release
         GameLog currentGame = lastGameLog(gameLogs);
@@ -63,7 +68,7 @@ public class DojoScoreService implements ScoreService {
 
         if (reportMismatchedWithScenarioState) {
             logService.playerLog(new PlayerRecord(clientName, scenario, testPassed,
-                    currentGame.liarReported()? 0 : -configurationService.getLiarWeight(),
+                    currentGame.liarReported() ? 0 : -configurationService.getLiarWeight(),
                     "Fix the test! It shows wrong result. Current scenario #" + scenario.getId() +
                             (scenario.bugsFree() ? " is bugs free." : " contains bug."), PlayerRecord.Type.LIAR));
             return scenario.bugsFree();
@@ -139,16 +144,17 @@ public class DojoScoreService implements ScoreService {
                 }
 
                 int penalty = (int) (currentScenarioDelay / configurationService.getPenaltyTimeOut());
-                        
-                logService.playerLog(new PlayerRecord(player, scenario, false, -penalty * configurationService.getPenaltyValue(),
-                        "Where are your test results? Waiting for " + (currentScenarioDelay / (1000 * 60)) + " minutes",
-                        PlayerRecord.Type.TIMEOUT));
+
+                logService.playerLog(
+                        new PlayerRecord(player, scenario, false, -penalty * configurationService.getPenaltyValue(),
+                                "Where are your test results? Waiting for " + (currentScenarioDelay / (1000 * 60)) + " minutes",
+                                PlayerRecord.Type.TIMEOUT));
             }
         }
     }
 
     private PlayerRecord findLastNonTimeoutRecord(List<PlayerRecord> playerRecords) {
-        for (int i = playerRecords.size() - 1; i >=0;  i--) {
+        for (int i = playerRecords.size() - 1; i >= 0; i--) {
             PlayerRecord record = playerRecords.get(i);
             if (record.getType() != PlayerRecord.Type.TIMEOUT) {
                 return record;
