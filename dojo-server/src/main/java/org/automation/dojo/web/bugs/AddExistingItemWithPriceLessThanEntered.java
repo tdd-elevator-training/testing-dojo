@@ -15,6 +15,10 @@ import java.util.List;
  */
 public class AddExistingItemWithPriceLessThanEntered extends Bug<RequestWorker> {
 
+    public AddExistingItemWithPriceLessThanEntered() {
+        super(4);
+    }
+
     @Override
     public RequestWorker apply(RequestWorker result) {
         List<Record> list = result.getRecords();

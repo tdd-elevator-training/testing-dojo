@@ -9,6 +9,10 @@ import org.automation.dojo.web.servlet.RequestWorker;
 // TODO написать юнит тест
 public class NoResultWhenExpectedBug extends Bug<RequestWorker> {
 
+    public NoResultWhenExpectedBug() {
+        super(1);
+    }
+
     @Override
     public RequestWorker apply(RequestWorker result) {
         if (StringUtils.isBlank(result.getSearchText())) {

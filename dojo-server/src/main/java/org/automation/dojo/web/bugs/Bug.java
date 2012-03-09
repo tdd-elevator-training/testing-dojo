@@ -18,9 +18,6 @@ public class Bug<T> implements Serializable {
         this.id = id;
     }
 
-    public Bug() {
-    }
-
     public int getId() {
         return id;
     }

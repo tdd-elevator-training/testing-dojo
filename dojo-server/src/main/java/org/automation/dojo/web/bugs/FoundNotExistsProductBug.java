@@ -11,6 +11,10 @@ import java.util.Arrays;
 // TODO написать юнит тест
 public class FoundNotExistsProductBug extends Bug<RequestWorker> {
 
+    public FoundNotExistsProductBug() {
+        super(3);
+    }
+
     @Override
     public RequestWorker apply(RequestWorker result) {
         if (result.isNoResultsFound()) {

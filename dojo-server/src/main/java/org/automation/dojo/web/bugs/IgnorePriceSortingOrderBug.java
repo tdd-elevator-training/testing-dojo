@@ -9,6 +9,10 @@ import org.automation.dojo.web.servlet.RequestWorker;
  */
 public class IgnorePriceSortingOrderBug extends Bug<RequestWorker> {
 
+    public IgnorePriceSortingOrderBug() {
+        super(7);
+    }
+
     @Override
     public RequestWorker apply(RequestWorker result) {
         result.setPriceSortingOrderOption(RequestWorker.ASC);

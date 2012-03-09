@@ -15,6 +15,10 @@ import java.util.Random;
  */
 public class AddSomeOtherElementIfListNotEmptyBug extends Bug<RequestWorker> {
 
+    public AddSomeOtherElementIfListNotEmptyBug() {
+        super(2);
+    }
+
     @Override
     public RequestWorker apply(RequestWorker result) {
         List<Record> list = result.getRecords();
