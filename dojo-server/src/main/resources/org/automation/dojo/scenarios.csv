@@ -1,13 +1,13 @@
 1,Level 1 - Simple search,1,org.automation.dojo.web.scenario.SearchByTextScenario
-2,Level 1 - Simple search,1,org.automation.dojo.web.scenario.Search1JspScenario
+1001,Level 1 - Simple search,1,org.automation.dojo.web.scenario.Search1JspScenario
 1,Level 2 - Search with price,2,org.automation.dojo.web.scenario.SearchByTextScenario
 2,Level 2 - Search with price,2,org.automation.dojo.web.scenario.SearchByPriceScenario
 3,Level 2 - Search with price,2,org.automation.dojo.web.scenario.PriceSortingAscDescScenario
-4,Level 2 - Search with price,2,org.automation.dojo.web.scenario.Search2JspScenario
+1002,Level 2 - Search with price,2,org.automation.dojo.web.scenario.Search2JspScenario
 1,Level 3 - Add to cart,3,org.automation.dojo.web.scenario.SearchByTextScenario
 2,Level 3 - Add to cart,3,org.automation.dojo.web.scenario.SearchByPriceScenario
 3,Level 3 - Add to cart,3,org.automation.dojo.web.scenario.PriceSortingAscDescScenario
-4,Level 3 - Add to cart,3,org.automation.dojo.web.scenario.Search3JspScenario
-5,Level 3 - Add to cart,3,org.automation.dojo.web.scenario.AddToUserCartScenario
-6,Level 3 - Add to cart,3,org.automation.dojo.web.scenario.ShowUserCartScenario
-7,Level 3 - Add to cart,3,org.automation.dojo.web.scenario.Cart3JspScenario
+1003,Level 3 - Add to cart,3,org.automation.dojo.web.scenario.Search3JspScenario
+4,Level 3 - Add to cart,3,org.automation.dojo.web.scenario.AddToUserCartScenario
+5,Level 3 - Add to cart,3,org.automation.dojo.web.scenario.ShowUserCartScenario
+1004,Level 3 - Add to cart,3,org.automation.dojo.web.scenario.Cart3JspScenario
