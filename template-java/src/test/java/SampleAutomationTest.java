@@ -7,14 +7,14 @@ import org.junit.runner.RunWith;
 import static org.junit.Assert.fail;
 
 @RunWith(DojoTestRunner.class)
-@ReportTo(server = "http://127.0.0.1:8080", userName = "JohnDoe")
+@ReportTo(server = "http://127.0.0.1:8080", userName = "Sergey")
 public class SampleAutomationTest {
 
     @Test
     @Scenario(1)
     public void searchForProduct() {
         //put test automation code here
-        fail();
+//        fail();
     }
 
     @Test

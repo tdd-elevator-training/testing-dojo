@@ -40,7 +40,7 @@
                     </c:otherwise>
                 </c:choose>
                 </br>
-                <table>
+                <table id="product_list">
                     <tr>
                         <td></td>
                         <td>Code</td>
@@ -58,10 +58,10 @@
                         </td>
                     </tr>
                     <c:forEach items="${requestScope.records}" var="record" varStatus="status">
-                        <tr>
-                            <td><c:out value="${record.id}"/>&nbsp;</td>
-                            <td>'<c:out value="${record.description}"/>'</td>
-                            <td><c:out value="${record.price}"/>$</td>
+                        <tr id="productId_${record.id}">
+                            <td id="id"><c:out value="${record.id}"/>&nbsp;</td>
+                            <td id="description">'<c:out value="${record.description}"/>'</td>
+                            <td id="price"><c:out value="${record.price}"/>$</td>
                         </tr>
                     </c:forEach>
                 </table>
