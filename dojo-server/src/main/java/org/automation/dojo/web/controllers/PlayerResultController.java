@@ -1,6 +1,7 @@
 package org.automation.dojo.web.controllers;
 
 import org.automation.dojo.ScoreService;
+import org.automation.dojo.TestResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -38,7 +39,8 @@ public class PlayerResultController {
             Matcher matcher = pattern.matcher(parameterName);
             if (matcher.find()) {
                 boolean result = scoreService.testResult(name, Integer.parseInt(matcher.group(1)),
-                        parseResult(request.getParameter(parameterName)));
+                        parseResult(request.getParameter(parameterName)),
+                        parseResult2(request.getParameter(parameterName)));
                 response.getWriter().println(parameterName + "=" + (result ? "passed" : "failed"));
             }
         }
@@ -47,6 +49,16 @@ public class PlayerResultController {
 
     private boolean parseResult(String value) {
         return value.equalsIgnoreCase("passed") || value.equalsIgnoreCase("true");
+    }
+    
+    private TestResult parseResult2(String value) {
+        if (value.equalsIgnoreCase("passed") || value.equalsIgnoreCase("true")) {
+            return TestResult.PASSED; 
+        }
+        if (value.equalsIgnoreCase("exception")) {
+            return TestResult.EXCEPTION;
+        }
+        return TestResult.FAILED;
     }
 
     public void setScoreService(ScoreService scoreService) {

@@ -3,6 +3,7 @@ package org.automation.dojo;
 import org.automation.dojo.web.bugs.Bug;
 import org.automation.dojo.web.scenario.BasicScenario;
 import org.automation.dojo.web.scenario.Release;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Matchers;
@@ -287,6 +288,22 @@ public class DojoScoreServiceTest extends DojoScoreBaseTest {
         assertEquals(100, capturedRecord.getScore());
     }
 
+    @Test
+    @Ignore //Liar, Valid bug and then Liar again - tester should be punished twice
+    public void shouldDecreaseWhenLiarReportedAfterPassed() {
+        configurationService.setLiarWeight(30);
+        BasicScenario scenario = setupScenario(1, 123);
+        setupGameLogs(scenario,
+                gameLog(scenario,
+                        record(scenario, true, -30, PlayerRecord.Type.LIAR),
+                        record(scenario, false, 100, PlayerRecord.Type.VALID_BUG)));
+
+        reportScenario(1, true);
+
+        PlayerRecord record = captureLogRecord();
+        assertEquals(-30 * 2, record.getScore());
+        assertEquals(PlayerRecord.Type.LIAR, record.getType());
+    }
 
     private void setupGameLogs(BasicScenario scenario, GameLog... gameLogs) {
         when(logService.getGameLogs(PLAYER_NAME, scenario))
@@ -316,7 +333,7 @@ public class DojoScoreServiceTest extends DojoScoreBaseTest {
     }
 
     private boolean reportScenario(int scenarioId, boolean testPassed) {
-        return scoreService.testResult(PLAYER_NAME, scenarioId, testPassed);
+        return scoreService.testResult(PLAYER_NAME, scenarioId, testPassed, testPassed ? TestResult.PASSED : TestResult.FAILED);
     }
 
 

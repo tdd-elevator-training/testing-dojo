@@ -3,12 +3,14 @@ package org.automation.dojo.web.controllers;
 import org.automation.dojo.MockHttpServletRequest;
 import org.automation.dojo.MockHttpServletResponse;
 import org.automation.dojo.ScoreService;
+import org.automation.dojo.TestResult;
 import org.fest.assertions.Index;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
+import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
@@ -17,9 +19,7 @@ import java.io.IOException;
 
 import static junit.framework.Assert.assertEquals;
 import static org.fest.assertions.Assertions.assertThat;
-import static org.mockito.Matchers.anyBoolean;
-import static org.mockito.Matchers.anyInt;
-import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -34,6 +34,7 @@ public class PlayerResultControllerTest {
     @Mock ScoreService service;
     @Captor ArgumentCaptor<Integer> scenarioCaptor;
     @Captor ArgumentCaptor<Boolean> successCaptor;
+    @Captor ArgumentCaptor<TestResult> testResultCaptor;
     @Captor ArgumentCaptor<String> nameCaptor;
 
     @Before
@@ -46,7 +47,7 @@ public class PlayerResultControllerTest {
 
     @Test
     public void shouldReturnSucceedWhenScenarioPassed() throws IOException, ServletException {
-        when(service.testResult(anyString(), anyInt(), anyBoolean())).thenReturn(true);
+        when(service.testResult(anyString(), anyInt(), anyBoolean(), Matchers.<TestResult>anyObject())).thenReturn(true);
         request.setupAddParameter("scenario1", "passed");
 
         controller.service(request, response);
@@ -61,7 +62,7 @@ public class PlayerResultControllerTest {
         controller.service(request, response);
 
         captureTestResultValues();
-        assertResultReported("vasya", 1, true);
+        assertResultReported("vasya", 1, true, TestResult.PASSED);
     }
 
     @Test
@@ -71,7 +72,7 @@ public class PlayerResultControllerTest {
         controller.service(request, response);
 
         captureTestResultValues();
-        assertResultReported("petya", 1, false);
+        assertResultReported("petya", 1, false, TestResult.FAILED);
     }
 
     @Test
@@ -81,13 +82,23 @@ public class PlayerResultControllerTest {
         controller.service(request, response);
 
         captureTestResultValues();
-        assertResultReported("petya", 1, true);
-        assertResultReported("petya", 2, false);
+        assertResultReported("petya", 1, true, TestResult.PASSED);
+        assertResultReported("petya", 2, false, TestResult.FAILED);
+    }
+
+    @Test
+    public void shouldReportExceptionFailure() throws IOException, ServletException {
+        setupRequest("petya", "exception");
+
+        controller.service(request, response);
+
+        captureTestResultValues();
+        assertResultReported("petya", 1, false, TestResult.EXCEPTION);
     }
 
     @Test
     public void shouldHaveServiceActualResultsWhenReported() throws IOException, ServletException {
-        when(service.testResult("masha", 1, true)).thenReturn(false);
+        when(service.testResult("masha", 1, true, TestResult.PASSED)).thenReturn(false);
         setupRequest("masha", "passed");
 
         controller.service(request, response);
@@ -104,20 +115,23 @@ public class PlayerResultControllerTest {
         controller.service(request, response);
 
         captureTestResultValues();
-        assertResultReported(null, 5, true);
-        assertResultReported(null, 11, false);
+        assertResultReported(null, 5, true, TestResult.PASSED);
+        assertResultReported(null, 11, false, TestResult.FAILED);
     }
     
-    private void assertResultReported(String expectedName, int scenarioNumber, boolean expectedResult) {
+    private void assertResultReported(String expectedName, int scenarioNumber, boolean expectedResult,
+            TestResult expectedTestResult) {
         int index = scenarioCaptor.getAllValues().indexOf(scenarioNumber);
         assertThat(scenarioCaptor.getAllValues()).contains(scenarioNumber, Index.atIndex(index));
         assertThat(successCaptor.getAllValues()).contains(expectedResult, Index.atIndex(index));
         assertThat(nameCaptor.getAllValues()).contains(expectedName, Index.atIndex(index));
+        assertThat(testResultCaptor.getAllValues()).contains(expectedTestResult, Index.atIndex(index));
     }
+
 
     private void captureTestResultValues() {
         verify(service, atLeastOnce()).testResult(
-                nameCaptor.capture(), scenarioCaptor.capture(), successCaptor.capture());
+                nameCaptor.capture(), scenarioCaptor.capture(), successCaptor.capture(), testResultCaptor.capture());
     }
 
     private void setupRequest(String name, String... scenarioResults) {

@@ -27,6 +27,7 @@ public class SampleAutomationTest {
     @Test
     @Scenario(1)
     public void searchProductScenario(){
+/*
         webDriver.get(baseUrl + "/search");
 
         WebElement search = webDriver.findElement(By.name("search"));
@@ -35,6 +36,7 @@ public class SampleAutomationTest {
 
         searchText.sendKeys("mouse");
         searchButton.submit();
-//        fail();
+*/
+        fail();
     }
 }
