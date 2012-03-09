@@ -40,13 +40,23 @@ public class RequestWorkerImpl implements RequestWorker {
     }
 
     @Override
-    public void saveFormState() {
+    public void saveSearchTextState() {
+        request.setAttribute("search_text", getSearchText());
+    }
+
+    @Override
+    public void saveSearchPriceState() {
         request.setAttribute("price_search_options", priceOptions);
-        request.setAttribute("asc_desc_options", sortingOptions);
 
         request.setAttribute("price_search_option", getPriceSearchOption());
         request.setAttribute("price", getStringPrice());
-        request.setAttribute("search_text", getSearchText());
+    }
+
+    @Override
+    public void saveSearchPriceSortingState() {
+        request.setAttribute("asc_desc_options", sortingOptions);
+
+        setPriceSortingOrderOption(isAsc());
     }
 
     @Override

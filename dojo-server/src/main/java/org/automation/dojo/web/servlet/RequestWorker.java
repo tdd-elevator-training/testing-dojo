@@ -17,9 +17,13 @@ public interface RequestWorker {
 
     void noResultsFound();
 
-    void saveFormState();
-
     String getSearchText();
+
+    void saveSearchTextState();
+
+    void saveSearchPriceState();
+
+    void saveSearchPriceSortingState();
 
     String getPriceSearchOption();
 

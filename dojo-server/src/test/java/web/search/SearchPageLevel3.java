@@ -13,6 +13,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import java.util.Arrays;
 import java.util.List;
 
+import static org.automation.dojo.web.model.ShopService.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
@@ -99,13 +100,33 @@ public class SearchPageLevel3 extends SearchPageLevel2 {
         checkboxes.get(2).click();
         checkboxes.get(3).click();
 
-        getAddToCartButton().submit();
+        submitAddToCartForm();
         assertCartPage();
         assertPageContain("1 'Mouse 1' 30.0$");
         assertPageNotContain("3 'Mouse 3' 40.0$");
         assertPageContain("2 'Mouse 2' 50.0$");
         assertPageContain("4 'Mouse 4 - the best mouse!' 66.0$");
     }
+
+    private void submitAddToCartForm() {
+        getAddToCartButton().submit();
+        resetAllElements();
+    }
+
+    @Test
+    public void shouldSearchAtChoppingCartWorksCorrectly(){
+        shouldAddToCartSelectedRecord();
+
+        enterText("mo");
+        enterPrice(MORE_THAN, 120);
+        submitSearchForm();
+
+        assertPageContain("List: Code Description Price " +
+            "6 'Monitor 2' 120.0$ " +
+            "5 'Monitor 1' 150.0$ " +
+            "7 'Monitor 3 - the best monitor!' 190.0$");
+    }
+
 
     private void assertCartPage() {
         assertPageContain("Your cart list:");

@@ -27,6 +27,9 @@ public class ShowUserCartScenario extends BasicScenario<RequestWorker> {
     public String process(RequestWorker request) {
         ShopService service = ApplicationContextLocator.getInstance().getBean("shopService");
 
+        request.saveSearchTextState();
+        request.saveSearchPriceState();
+
         List<Record> records = service.getUserCart("apofig");
         request.setRecords(records);
 

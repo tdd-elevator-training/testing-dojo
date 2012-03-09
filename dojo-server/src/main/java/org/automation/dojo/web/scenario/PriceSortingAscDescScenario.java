@@ -25,11 +25,12 @@ public class PriceSortingAscDescScenario extends BasicScenario<RequestWorker> {
     public String process(RequestWorker request) {
         ShopService service = ApplicationContextLocator.getInstance().getBean("shopService");
 
+        request.saveSearchPriceSortingState();
+
         List<Record> records = request.getRecords();
         if (records != null && !records.isEmpty()) {
             List<Record> result = service.sortByPrice(records,
                     request.isAsc());
-            request.setPriceSortingOrderOption(request.isAsc());
             request.setRecords(result);
         }
 

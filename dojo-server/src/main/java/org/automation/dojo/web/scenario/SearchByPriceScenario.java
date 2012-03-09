@@ -28,6 +28,8 @@ public class SearchByPriceScenario extends BasicScenario<RequestWorker> {
     public String process(RequestWorker request) {
         ShopService service = ApplicationContextLocator.getInstance().getBean("shopService");
 
+        request.saveSearchPriceState();
+
         List<Record> records = request.getRecords();
         if (records != null &&
             !request.isNoResultsFound()) {

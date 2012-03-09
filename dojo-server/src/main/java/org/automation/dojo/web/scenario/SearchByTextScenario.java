@@ -28,7 +28,7 @@ public class SearchByTextScenario extends BasicScenario<RequestWorker> {
     public String process(RequestWorker request) {
         ShopService service = ApplicationContextLocator.getInstance().getBean("shopService");
 
-        request.saveFormState();
+        request.saveSearchTextState();
 
         String foundString = request.getSearchText();
         if (foundString != null) {
