@@ -9,7 +9,7 @@ import java.util.Random;
 /**
  * @author serhiy.zelenin
  */
-public class ShopBugsQueue implements BugsQueue{
+public class ShopBugsQueue implements BugsQueue {
     public Bug nextBugFor(BasicScenario scenario) {    // TODO test this
         ArrayList<Bug> possibleBugs = new ArrayList<Bug>(scenario.getPossibleBugs());
         possibleBugs.add(Bug.NULL_BUG);

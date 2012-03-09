@@ -162,15 +162,62 @@ public class SearchPageLevel3 extends SearchPageLevel2 {
             "7 'Monitor 3 - the best monitor!' 190.0$");
     }
 
+    @Test
+    public void shouldSaveShoppingCart(){
+        getListFor("mouse");
+
+        assertPageContain("List: Code Description Price " +
+                "1 'Mouse 1' 30.0$ " +
+                "3 'Mouse 3' 40.0$ " +
+                "2 'Mouse 2' 50.0$ " +
+                "4 'Mouse 4 - the best mouse!' 66.0$ ");
+
+        List<WebElement> checkboxes = getSelectCheckboxes();
+        assertEquals(4, checkboxes.size());
+
+        checkboxes.get(0).click();
+        checkboxes.get(3).click();
+
+        submitAddToCartForm();
+        assertCartPage();
+
+        enterText("monitor");
+        submitSearchForm();
+
+        assertPageContain("List: Code Description Price " +
+                "6 'Monitor 2' 120.0$ " +
+                "5 'Monitor 1' 150.0$ " +
+                "7 'Monitor 3 - the best monitor!' 190.0$");
+        checkboxes = getSelectCheckboxes();
+        assertEquals(3, checkboxes.size());
+
+        checkboxes.get(0).click();
+        checkboxes.get(2).click();
+
+        submitAddToCartForm();
+        assertCartPage();
+
+        assertPageContain("1 'Mouse 1' 30.0$");
+        assertPageNotContain("3 'Mouse 3' 40.0$");
+        assertPageNotContain("2 'Mouse 2' 50.0$");
+        assertPageContain("4 'Mouse 4 - the best mouse!' 66.0$");
+        assertPageContain("6 'Monitor 2' 120.0$ ");
+        assertPageNotContain("5 'Monitor 1' 150.0$ ");
+        assertPageContain("7 'Monitor 3 - the best monitor!' 190.0$");
+
+    }
+
 
     private void assertCartPage() {
         assertPageContain("Your cart list:");
     }
 
     private void getListFor(String text) {
+        enterText("");
         enterText(text);
         submitSearchForm();
     }
+
 
     public List<WebElement> getSelectCheckboxes() {
         return tester.findElements(By.xpath("//input[contains(@id,'record')]"));
