@@ -11,7 +11,7 @@ public class AddSomeOtherElementIfListNotEmptyBugTest extends BugTest {
 
     @Before
     public void initBug() {
-        bug = new AddSomeOtherElementIfListNotEmptyBug();
+        bug = BugsFactory.getBug(AddSomeOtherElementIfListNotEmptyBug.class);
     }
 
     @Test

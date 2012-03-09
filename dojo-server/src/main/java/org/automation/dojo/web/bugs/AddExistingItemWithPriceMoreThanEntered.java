@@ -14,8 +14,8 @@ import java.util.List;
  */
 public class AddExistingItemWithPriceMoreThanEntered extends Bug<RequestWorker> {
 
-    public AddExistingItemWithPriceMoreThanEntered() {
-        super(5);
+    public AddExistingItemWithPriceMoreThanEntered(int id) {
+        super(id);
     }
 
     @Override

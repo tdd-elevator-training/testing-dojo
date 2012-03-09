@@ -9,8 +9,8 @@ import org.automation.dojo.web.servlet.RequestWorker;
  */
 public class IgnorePriceSortingOrderBug extends Bug<RequestWorker> {
 
-    public IgnorePriceSortingOrderBug() {
-        super(7);
+    public IgnorePriceSortingOrderBug(int id) {
+        super(id);
     }
 
     @Override

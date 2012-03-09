@@ -11,7 +11,7 @@ public class AddExistingItemWithPriceMoreThanEnteredBugTest extends BugTest {
 
     @Before
     public void initBug() {
-        bug = new AddExistingItemWithPriceMoreThanEntered();
+        bug = BugsFactory.getBug(AddExistingItemWithPriceMoreThanEntered.class);
     }
 
     @Test

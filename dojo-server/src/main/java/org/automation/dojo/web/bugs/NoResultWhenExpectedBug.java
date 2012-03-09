@@ -9,8 +9,8 @@ import org.automation.dojo.web.servlet.RequestWorker;
 // TODO написать юнит тест
 public class NoResultWhenExpectedBug extends Bug<RequestWorker> {
 
-    public NoResultWhenExpectedBug() {
-        super(1);
+    public NoResultWhenExpectedBug(int id) {
+        super(id);
     }
 
     @Override

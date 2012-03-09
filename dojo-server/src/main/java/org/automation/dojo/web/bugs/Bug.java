@@ -9,7 +9,7 @@ public class Bug<T> implements Serializable {
 
     private static final long serialVersionUID = -3599003903578159919L;
 
-    public static Bug NULL_BUG = new NullBug();
+    public static Bug NULL_BUG = BugsFactory.getBug(NullBug.class);
 
     private int id;
     private int weight = 100;

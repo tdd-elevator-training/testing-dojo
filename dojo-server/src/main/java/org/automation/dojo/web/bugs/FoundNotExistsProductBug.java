@@ -11,8 +11,8 @@ import java.util.Arrays;
 // TODO написать юнит тест
 public class FoundNotExistsProductBug extends Bug<RequestWorker> {
 
-    public FoundNotExistsProductBug() {
-        super(3);
+    public FoundNotExistsProductBug(int id) {
+        super(id);
     }
 
     @Override

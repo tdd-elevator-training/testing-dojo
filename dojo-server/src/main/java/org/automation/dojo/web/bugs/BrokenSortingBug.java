@@ -12,8 +12,8 @@ import java.util.Random;
 // TODO написать юнит тест
 public class BrokenSortingBug extends Bug<RequestWorker> {
 
-    public BrokenSortingBug() {
-        super(6);
+    public BrokenSortingBug(int id) {
+        super(id);
     }
 
     @Override

@@ -13,7 +13,7 @@ public class AddExistingItemWithPriceLessThanEnteredBugTest extends BugTest {
 
     @Before
     public void initBug() {
-        bug = new AddExistingItemWithPriceLessThanEntered();
+        bug = BugsFactory.getBug(AddExistingItemWithPriceLessThanEntered.class);
     }
 
     @Test

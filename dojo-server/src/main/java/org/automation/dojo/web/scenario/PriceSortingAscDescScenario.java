@@ -39,8 +39,8 @@ public class PriceSortingAscDescScenario extends BasicScenario<RequestWorker> {
     }
 
     public List<? extends Bug> getPossibleBugs() {
-        return Arrays.asList(new BrokenSortingBug(),
-                new IgnorePriceSortingOrderBug());
+        return BugsFactory.getBugs(BrokenSortingBug.class,
+                IgnorePriceSortingOrderBug.class);
     }
 
 }
