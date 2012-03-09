@@ -24,4 +24,12 @@ public class UserCart {
         }
         return result;
     }
+
+    public double getTotalPrice() {
+        double result = 0;
+        for (Record record : сart) {
+            result += record.getPrice();
+        }
+        return result;
+    }
 }

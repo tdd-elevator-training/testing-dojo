@@ -167,5 +167,10 @@ public class RequestWorkerImpl implements RequestWorker {
         return (UserCart) cart;
     }
 
+    @Override
+    public void setTotalSum(double price) {
+        request.setAttribute("total_price", String.valueOf(price));
+    }
+
 
 }

@@ -49,4 +49,6 @@ public interface RequestWorker {
     boolean isCartAction();
 
     UserCart getUserCart();
+
+    void setTotalSum(double price);
 }

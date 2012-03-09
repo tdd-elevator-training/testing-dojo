@@ -204,9 +204,18 @@ public class SearchPageLevel3 extends SearchPageLevel2 {
         assertPageContain("6 'Monitor 2' 120.0$ ");
         assertPageNotContain("5 'Monitor 1' 150.0$ ");
         assertPageContain("7 'Monitor 3 - the best monitor!' 190.0$");
-
     }
 
+    @Test
+    public void shouldCalculateTotalPriceCorrectly(){
+        shouldAddToCartSelectedRecord();
+
+        assertPageContain("1 'Mouse 1' 30.0$");
+        assertPageContain("2 'Mouse 2' 50.0$");
+        assertPageContain("4 'Mouse 4 - the best mouse!' 66.0$");
+
+        assertEquals("146.0$", getTotalPrice().getText());
+    }
 
     private void assertCartPage() {
         assertPageContain("Your cart list:");
@@ -221,5 +230,9 @@ public class SearchPageLevel3 extends SearchPageLevel2 {
 
     public List<WebElement> getSelectCheckboxes() {
         return tester.findElements(By.xpath("//input[contains(@id,'record')]"));
+    }
+
+    public WebElement getTotalPrice() {
+        return tester.findElement(By.id("total_price"));
     }
 }
