@@ -29,6 +29,7 @@ public class ShowUserCartScenario extends BasicScenario<RequestWorker> {
 
         request.saveSearchTextState();
         request.saveSearchPriceState();
+        request.saveSearchPriceSortingState();
 
         List<Record> records = service.getUserCart("apofig");
         request.setRecords(records);

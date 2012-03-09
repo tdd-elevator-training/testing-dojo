@@ -131,7 +131,21 @@ public class SearchPageLevel3 extends SearchPageLevel2 {
         enterPrice(LESS_THAN, 30);
         submitSearchForm();
 
+        assertSortingOrder(ASC);
         assertFormContains("mouse", LESS_THAN, 30);
+    }
+
+    @Test
+    public void shouldSaveSearchFormPriceSortingOrder() {
+        getListFor("mouse");
+        selectSortingOrder(DESC);
+        submitSearchForm();
+
+        getSelectCheckboxes().get(0).click();
+        submitAddToCartForm();
+
+        submitSearchForm();
+        assertSortingOrder(DESC);
     }
 
     @Test

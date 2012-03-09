@@ -9,6 +9,7 @@
 	</head>
 	<body>		
         <form name="search" method="post" action="search">
+            <input name="price_sorting_order_option" type="hidden" value="<c:out value="${price_sorting_order_option}"/>">
 			<table>   <!-- TODO extract to xml -->
  				<tr>
   					<td>Please enter text to find</td>
@@ -25,6 +26,7 @@
                         </select>
                     </td>
                     <td><input type="text" name="price" id="price" value="<c:out value="${price}"/>"></td>
+                    <td><input type="submit" value="Search" id="search_button"></td>
  				</tr>
 			</table>
 
