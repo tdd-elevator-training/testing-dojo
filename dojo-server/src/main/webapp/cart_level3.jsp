@@ -53,6 +53,11 @@
                             <td><c:out value="${record.price}"/>$</td>
                         </tr>
                     </c:forEach>
+                    <tr>
+                        <td>Total:</td>
+                        <td></td>
+                        <td><span id="total_price"><c:out value="${requestScope.total_price}"/>$</span></td>
+                    </tr>
                 </table>
                 <td><input type="submit" value="Back" id="search_button"></td>
             </c:if>

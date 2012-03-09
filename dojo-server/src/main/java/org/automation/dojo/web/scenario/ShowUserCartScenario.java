@@ -7,6 +7,7 @@ import org.automation.dojo.web.bugs.Bug;
 import org.automation.dojo.web.bugs.IgnorePriceSortingOrderBug;
 import org.automation.dojo.web.model.Record;
 import org.automation.dojo.web.model.ShopService;
+import org.automation.dojo.web.model.UserCart;
 import org.automation.dojo.web.servlet.RequestWorker;
 
 import java.util.Arrays;
@@ -25,14 +26,13 @@ public class ShowUserCartScenario extends BasicScenario<RequestWorker> {
 
     @Override
     public String process(RequestWorker request) {
-        ShopService service = ApplicationContextLocator.getInstance().getBean("shopService");
-
         request.saveSearchTextState();
         request.saveSearchPriceState();
         request.saveSearchPriceSortingState();
 
-        List<Record> records = request.getUserCart().getRecords();
-        request.setRecords(records);
+        UserCart cart = request.getUserCart();
+        request.setRecords(cart.getRecords());
+        request.setTotalSum(cart.getTotalPrice());
 
         bug.apply(request);
         return null;
