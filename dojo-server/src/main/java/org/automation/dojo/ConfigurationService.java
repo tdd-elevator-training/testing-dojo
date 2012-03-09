@@ -43,7 +43,7 @@ public class ConfigurationService implements Runnable {
 
     public void init() {
         executor = new ScheduledThreadPoolExecutor(1);
-        executor.scheduleAtFixedRate(this, 60, 60, TimeUnit.SECONDS);
+        future = executor.scheduleAtFixedRate(this, 60, 60, TimeUnit.SECONDS);
         calculateNextTickTime();
     }
 
@@ -118,6 +118,8 @@ public class ConfigurationService implements Runnable {
 
 
     public void adjustChanges() {
+        future.cancel(false);
+        executor.scheduleAtFixedRate(this, penaltyTimeOut, penaltyTimeOut, TimeUnit.MILLISECONDS);
         calculateNextTickTime();
 
         if (manualReleaseTriggering) {
