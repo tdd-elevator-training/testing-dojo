@@ -3,13 +3,15 @@ package org.automation.dojo.web.model;
 import java.io.Serializable;
 import java.util.*;
 
-public class ShopServiceInMemory implements ShopService, Serializable {
+public class ShopServiceInMemory implements ShopService {
 
-    private List<Record> data;
-    private Map<String, List<Record>> userCard;
+    @Override
+    public List<Record> selectByText(String foundString) {
+        return foundTextAtDescription(copy(getData()), foundString);     // TODO testing copying
+    }
 
-    public ShopServiceInMemory() {
-        data = new LinkedList<Record>();
+    private List<Record> getData() {
+        List<Record> data = new LinkedList<Record>();
         data.add(new Record(1, "Mouse 1", 30));
         data.add(new Record(2, "Mouse 2", 50));
         data.add(new Record(3, "Mouse 3", 40));
@@ -17,13 +19,7 @@ public class ShopServiceInMemory implements ShopService, Serializable {
         data.add(new Record(5, "Monitor 1", 150));
         data.add(new Record(6, "Monitor 2", 120));
         data.add(new Record(7, "Monitor 3 - the best monitor!", 190));
-
-        userCard = new HashMap<String, List<Record>>();
-    }
-
-    @Override
-    public List<Record> selectByText(String foundString) {
-        return foundTextAtDescription(copy(data), foundString);     // TODO testing copying
+        return data;
     }
 
     private List<Record> copy(List<Record> data) {
@@ -72,25 +68,9 @@ public class ShopServiceInMemory implements ShopService, Serializable {
     }
 
     @Override
-    public List<Record> getUserCart(String userName) {   // TODO test me
-        initUserCart(userName);
-
-        return copy(userCard.get(userName)); // TODO test copying
-    }
-
-    private void initUserCart(String userName) {
-        if (userCard.get(userName) == null) {
-            userCard.put(userName, new LinkedList<Record>());
-        }
-    }
-
-    @Override
-    public void addToUserCart(String userName, List<Integer> recordIds) { // TODO test me
-        initUserCart(userName);
-
+    public void addToUserCart(UserCart userCart, List<Integer> recordIds) { // TODO test me
         List<Record> records = getRecordsByIds(recordIds);
-
-        userCard.get(userName).addAll(records);
+        userCart.addAll(records);
     }
 
     private List<Record> getRecordsByIds(List<Integer> recordIds) {
@@ -103,9 +83,9 @@ public class ShopServiceInMemory implements ShopService, Serializable {
     }
 
     private Record findRecord(Integer id) {
-        for (Record record : data) {
+        for (Record record : getData()) {
             if (record.itsMe(id)) {
-                return record;
+                return record.clone(); // TODO test copy
             }
         }
         return new RecordNotFound(); // TODO test me

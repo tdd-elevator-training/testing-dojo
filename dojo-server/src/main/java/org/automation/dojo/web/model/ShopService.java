@@ -14,7 +14,5 @@ public interface ShopService {
 
     List<Record> sortByPrice(List<Record> records, boolean isAsc);
 
-    List<Record> getUserCart(String userName);
-
-    void addToUserCart(String apofig, List<Integer> recordIds);
+    void addToUserCart(UserCart cart, List<Integer> recordIds);
 }

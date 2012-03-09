@@ -1,8 +1,10 @@
 package org.automation.dojo.web.servlet;
 
 import org.automation.dojo.web.model.Record;
+import org.automation.dojo.web.model.UserCart;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -153,4 +155,17 @@ public class RequestWorkerImpl implements RequestWorker {
     public boolean isCartAction() {
         return "cart".equals(getAction());
     }
+
+    @Override
+    public UserCart getUserCart() {
+        HttpSession session = request.getSession();
+        Object cart = session.getAttribute("cart");
+        if (cart == null) {
+            cart = new UserCart();
+            session.setAttribute("cart", cart);
+        }
+        return (UserCart) cart;
+    }
+
+
 }

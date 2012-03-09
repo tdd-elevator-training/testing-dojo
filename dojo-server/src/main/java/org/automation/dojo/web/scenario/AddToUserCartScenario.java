@@ -6,6 +6,7 @@ import org.automation.dojo.web.bugs.Bug;
 import org.automation.dojo.web.bugs.BugsFactory;
 import org.automation.dojo.web.model.Record;
 import org.automation.dojo.web.model.ShopService;
+import org.automation.dojo.web.model.UserCart;
 import org.automation.dojo.web.servlet.RequestWorker;
 
 import java.util.Arrays;
@@ -26,7 +27,8 @@ public class AddToUserCartScenario extends BasicScenario<RequestWorker> {
     public String process(RequestWorker request) {
         ShopService service = ApplicationContextLocator.getInstance().getBean("shopService");
 
-        service.addToUserCart("apofig", request.getRecordIds());
+        UserCart cart = request.getUserCart();
+        service.addToUserCart(cart, request.getRecordIds());
 
         bug.apply(request);
         return null;

@@ -1,6 +1,7 @@
 package org.automation.dojo.web.servlet;
 
 import org.automation.dojo.web.model.Record;
+import org.automation.dojo.web.model.UserCart;
 
 import java.util.List;
 
@@ -46,4 +47,6 @@ public interface RequestWorker {
     boolean isSearchAction();
 
     boolean isCartAction();
+
+    UserCart getUserCart();
 }

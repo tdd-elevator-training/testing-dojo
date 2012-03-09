@@ -129,6 +129,7 @@ public class SearchPageLevel1 extends FunctionalTestCase {
     }
 
     protected void enterText(String string) {
+        searchText.clear();
         searchText.sendKeys(string);
     }
 
