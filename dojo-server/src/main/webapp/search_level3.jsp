@@ -8,8 +8,8 @@
 		<title>Search form</title>
 	</head>
 	<body>		
-        <form name="cart" method="post" action="cart">
-            <input type="hidden" name="action" value="cart">
+        <form name="search" method="post" action="search">
+            <input type="hidden" name="action" value="search">
 			<table>
  				<tr>
   					<td>Please enter text to find</td>
@@ -57,6 +57,12 @@
                             </select>
                         </td>
                     </tr>
+            </c:if>
+        </form>
+        <c:if test="${requestScope.records != null}">
+            <form name="add_to_cart" method="post" action="cart">
+                <input type="hidden" name="action" value="cart">
+                <table>
                     <c:forEach items="${requestScope.records}" var="record" varStatus="status">
                         <tr>
                             <td><c:out value="${record.id}"/>&nbsp;</td>
@@ -65,8 +71,13 @@
                             <td><c:out value="${record.price}"/>$</td>
                         </tr>
                     </c:forEach>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td><input type="submit" value="Add to Cart" id="add_to_cart_button"></td>
+                    </tr>
                 </table>
-            </c:if>
-        </form>
+            </form>
+        </c:if>
 	</body>
 </html>

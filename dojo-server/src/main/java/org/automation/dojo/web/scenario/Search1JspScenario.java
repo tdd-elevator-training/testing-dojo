@@ -7,9 +7,9 @@ import org.automation.dojo.web.servlet.RequestWorker;
 import java.util.Arrays;
 import java.util.List;
 
-public class Level3TerminatorScenario extends TerminatorScenario {
+public class Search1JspScenario extends TerminatorScenario {
 
-    public Level3TerminatorScenario(int id, String description, BugsQueue bugsQueue) {
+    public Search1JspScenario(int id, String description, BugsQueue bugsQueue) {
         super(id, description, bugsQueue);
     }
 
@@ -20,7 +20,7 @@ public class Level3TerminatorScenario extends TerminatorScenario {
 
     @Override
     protected String getUrl() {
-        return "cart_level3.jsp";
+        return "search_level1.jsp";
     }
 
 }
