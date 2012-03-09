@@ -8,10 +8,6 @@ import org.automation.dojo.web.servlet.RequestWorker;
 
 import java.util.List;
 
-/**
- * Добавлять существующий продукт НЕ с тем именем, по которому ищем И ТОЛЬКО если результат поиска не пуст
- * Мы искали по мышке, но добавить монитор, к примеру
- */
 public class AddSomeOtherElementIfListNotEmptyBug extends Bug<RequestWorker> {
 
     public AddSomeOtherElementIfListNotEmptyBug(int id) {
@@ -46,9 +42,6 @@ public class AddSomeOtherElementIfListNotEmptyBug extends Bug<RequestWorker> {
         list.add(index, otherRecord);
     }
 
-    /**
-     * Ищем такой элемент, которого еще нет в исходном списке
-     */
     private Record findNew(List<Record> list) {
         ShopService shop = ApplicationContextLocator.getInstance().getBean("shopService");
         List<Record> all = shop.selectByText("");
