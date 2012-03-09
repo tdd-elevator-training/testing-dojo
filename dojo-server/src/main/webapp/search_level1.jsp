@@ -13,7 +13,7 @@
 			<table>
  				<tr>
   					<td>Please enter text to find</td>
-  					<td><input type="text" name="search_text" id="search_text" value="<c:out value="${search_text}"/>"></td>
+  					<td><input type="text" name="search_text" id="search_text" value="${search_text}"/>"></td>
                     <td><input type="submit" value="Search" id="search_button"></td>
  				</tr>
 			</table>
@@ -29,12 +29,20 @@
                 </c:otherwise>
             </c:choose>
             </br>
-            <c:forEach items="${requestScope.records}" var="record" varStatus="status">
-                <c:out value="${record.id}"/>&nbsp;
-                <input type="checkbox" value="<c:out value="${status.index+1}"/>" name="record">
-                '<c:out value="${record.description}"/>'
-                </br>
-            </c:forEach>
+            <table id="product_list">
+                <tr>
+                    <td>Code</td>
+                    <td>Description</td>
+                    <td>Price
+                </tr>
+                <c:forEach items="${requestScope.records}" var="record" varStatus="status">
+                    <tr id="productId_${record.id}">
+                        <td id="id">${record.id}&nbsp;</td>
+                        <td id="description"><input type="checkbox" value="${status.index+1}" name="record"></td>
+                        <td id="price">'${record.description}'</td>
+                    </br>
+                </c:forEach>
+            </table>
         </c:if>
 	</body>
 </html>
