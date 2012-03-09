@@ -151,14 +151,14 @@ public class DojoScoreServiceTest extends DojoScoreBaseTest {
     public void shouldDecreaseScoreWhenLiar() {
         BasicScenario scenario = setupScenario(1, 0);
         setupGameLogs(scenario,
-                gameLog(scenario, record(scenario(1, 120), false, 120)),
+                gameLog(scenario, record(scenario(1, 123), false, 123)),
                 gameLog(scenario));
 
         reportScenario(1, false);
 
         //we report a bug for a bug free scenario
         PlayerRecord record = captureLogRecord();
-        assertEquals(-100, record.getScore());
+        assertEquals(-20, record.getScore());
         assertFalse(record.isPassed());
     }
 
@@ -208,14 +208,14 @@ public class DojoScoreServiceTest extends DojoScoreBaseTest {
 
     @Test
     public void shouldDecreaseScoreWhenResultMismatch() {
-        BasicScenario scenario = setupScenario(1, 100);
+        BasicScenario scenario = setupScenario(1, 123);
         setupGameLogs(scenario,
                 gameLog(scenario));
 
         reportScenario(1, true);
 
         PlayerRecord record = captureLogRecord();
-        assertEquals(-100, record.getScore());
+        assertEquals(-20, record.getScore());
         assertEquals(PlayerRecord.Type.LIAR, record.getType());
     }
 
@@ -241,7 +241,7 @@ public class DojoScoreServiceTest extends DojoScoreBaseTest {
         reportScenario(1, false);
 
         PlayerRecord record = captureLogRecord();
-        assertEquals(-100, record.getScore());
+        assertEquals(-20, record.getScore());
         assertEquals(PlayerRecord.Type.LIAR, record.getType());
     }
 
