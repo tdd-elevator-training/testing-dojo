@@ -2,7 +2,9 @@ package org.automation.dojo.web.scenario;
 
 import org.automation.dojo.ApplicationContextLocator;
 import org.automation.dojo.BugsQueue;
-import org.automation.dojo.web.bugs.*;
+import org.automation.dojo.web.bugs.BrokenSortingBug;
+import org.automation.dojo.web.bugs.Bug;
+import org.automation.dojo.web.bugs.IgnorePriceSortingOrderBug;
 import org.automation.dojo.web.model.Record;
 import org.automation.dojo.web.model.ShopService;
 import org.automation.dojo.web.servlet.RequestWorker;
@@ -10,36 +12,30 @@ import org.automation.dojo.web.servlet.RequestWorker;
 import java.util.Arrays;
 import java.util.List;
 
-public class PriceSortingAscDescScenario extends BasicScenario<RequestWorker> {
+public class ShowUserCartScenario extends BasicScenario<RequestWorker> {
 
-    public PriceSortingAscDescScenario(int id, String description, BugsQueue bugsQueue) {
+    public ShowUserCartScenario(int id, String description, BugsQueue bugsQueue) {
         super(id, description, bugsQueue);
     }
 
     @Override
     public boolean activate(RequestWorker request) {
-        return request.isSearchAction();
+        return request.isCartAction();
     }
 
     @Override
     public String process(RequestWorker request) {
         ShopService service = ApplicationContextLocator.getInstance().getBean("shopService");
 
-        List<Record> records = request.getRecords();
-        if (records != null && !records.isEmpty()) {
-            List<Record> result = service.sortByPrice(records,
-                    request.isAsc());
-            request.setPriceSortingOrderOption(request.isAsc());
-            request.setRecords(result);
-        }
+        List<Record> records = service.getUserCart("apofig");
+        request.setRecords(records);
 
         bug.apply(request);
         return null;
     }
 
     public List<? extends Bug> getPossibleBugs() {
-        return Arrays.asList(new BrokenSortingBug(),
-                new IgnorePriceSortingOrderBug());
+        return Arrays.asList();
     }
 
 }

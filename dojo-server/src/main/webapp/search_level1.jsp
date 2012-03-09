@@ -9,6 +9,7 @@
 	</head>
 	<body>		
         <form name="search" method="post" action="search">
+            <input type="hidden" name="action" value="search">
 			<table>
  				<tr>
   					<td>Please enter text to find</td>
@@ -29,6 +30,7 @@
             </c:choose>
             </br>
             <c:forEach items="${requestScope.records}" var="record" varStatus="status">
+                <c:out value="${record.id}"/>&nbsp;
                 <input type="checkbox" value="<c:out value="${status.index+1}"/>" name="record">
                 '<c:out value="${record.description}"/>'
                 </br>

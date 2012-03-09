@@ -13,4 +13,8 @@ public interface ShopService {
     List<Record> priceFilter(List<Record> records, int priceOptionIndex, Double price);
 
     List<Record> sortByPrice(List<Record> records, boolean isAsc);
+
+    List<Record> getUserCart(String userName);
+
+    void addToUserCart(String apofig, List<Integer> recordIds);
 }

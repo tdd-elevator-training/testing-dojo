@@ -89,7 +89,8 @@ public class ReleasesPage extends FunctionalTestCase {
 
         assertMach("Now we have major 1 and minor " +
                 "\\[Scenario SearchByTextScenario with bug .*" +
-                "Scenario SearchByPriceScenario with bug .*\\]",
+                "Scenario SearchByPriceScenario with bug .*, " +
+                "Scenario PriceSortingAscDescScenario with bug .*\\]",
                 indicator.getText());
     }
 
@@ -108,13 +109,24 @@ public class ReleasesPage extends FunctionalTestCase {
                 indicator.getText());
 
         goTo(nextMajor.getAttribute("href"));
+
+        assertMach("Now we have major 2 and minor " +
+                "\\[Scenario SearchByTextScenario with bug NullBug, " +
+                "Scenario SearchByPriceScenario with bug NullBug, " +
+                "Scenario PriceSortingAscDescScenario with bug NullBug, " +
+                "Scenario AddToUserCartScenario with bug NullBug, " +
+                "Scenario ShowUserCartScenario with bug NullBug\\]",
+                indicator.getText());
+
         goTo(nextMajor.getAttribute("href"));
         goTo(nextMajor.getAttribute("href"));
 
-        assertMach("Now we have major 1 and minor " +
+        assertMach("Now we have major 2 and minor " +
                 "\\[Scenario SearchByTextScenario with bug NullBug, " +
                 "Scenario SearchByPriceScenario with bug NullBug, " +
-                "Scenario PriceSortingAscDescScenario with bug NullBug\\]",
+                "Scenario PriceSortingAscDescScenario with bug NullBug, " +
+                "Scenario AddToUserCartScenario with bug NullBug, " +
+                "Scenario ShowUserCartScenario with bug NullBug\\]",
                 indicator.getText());
     }
 

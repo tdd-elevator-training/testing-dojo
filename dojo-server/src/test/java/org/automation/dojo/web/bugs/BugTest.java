@@ -28,10 +28,10 @@ public class BugTest {
 
     @Before
     public void setup() {
-        record1 = new Record("record 1", 10);
-        record2 = new Record("record 2", 20);
-        record3 = new Record("record 3", 30);
-        record4 = new Record("record 4", 40);
+        record1 = new Record(1, "record 1", 10);
+        record2 = new Record(2, "record 2", 20);
+        record3 = new Record(3, "record 3", 30);
+        record4 = new Record(4, "record 4", 40);
 
         shop = mock(ShopService.class);
         when(shop.selectByText(anyString())).thenReturn(Arrays.asList(record1, record2, record3, record4));

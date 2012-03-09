@@ -16,6 +16,11 @@ public class MockScenario extends BasicScenario {
     }
 
     @Override
+    public boolean activate(Object request) {
+        return false;
+    }
+
+    @Override
     public List<? extends Bug> getPossibleBugs() {
         return null;
     }

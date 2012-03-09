@@ -4,3 +4,10 @@
 2,Level 2 - Search with price,2,org.automation.dojo.web.scenario.SearchByPriceScenario
 3,Level 2 - Search with price,2,org.automation.dojo.web.scenario.PriceSortingAscDescScenario
 4,Level 2 - Search with price,2,org.automation.dojo.web.scenario.Level2TerminatorScenario
+1,Level 3 - Add to cart,3,org.automation.dojo.web.scenario.SearchByTextScenario
+2,Level 3 - Add to cart,3,org.automation.dojo.web.scenario.SearchByPriceScenario
+3,Level 3 - Add to cart,3,org.automation.dojo.web.scenario.PriceSortingAscDescScenario
+4,Level 3 - Add to cart,3,org.automation.dojo.web.scenario.Level2TerminatorScenario
+5,Level 3 - Add to cart,3,org.automation.dojo.web.scenario.AddToUserCartScenario
+6,Level 3 - Add to cart,3,org.automation.dojo.web.scenario.ShowUserCartScenario
+7,Level 3 - Add to cart,3,org.automation.dojo.web.scenario.Level3TerminatorScenario

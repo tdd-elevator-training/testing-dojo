@@ -109,4 +109,24 @@ public class RequestWorkerImpl implements RequestWorker {
         String option = sortingOptions.get((isAsc) ? 0 : 1);
         request.setAttribute("price_sorting_order_option", option);
     }
+
+    @Override
+    public List<Integer> getRecordIds() {
+        return null;
+    }
+
+    @Override
+    public boolean isSearchAction() {
+        String action = getAction();
+        return (action == null) || "search".equals(action);
+    }
+
+    private String getAction() {
+        return request.getParameter("action");
+    }
+
+    @Override
+    public boolean isCartAction() {
+        return "cart".equals(getAction());
+    }
 }

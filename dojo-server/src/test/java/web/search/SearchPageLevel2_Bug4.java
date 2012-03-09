@@ -52,8 +52,8 @@ public class SearchPageLevel2_Bug4 extends SearchPageLevel2 {
         selectSortingOrder(DESC);
         submitSearchForm();
 
-        assertPageContain("List: Description Price " +   // это баг длает
-                "'Mouse 4 - the best mouse!' 66.0$ " +
-                "'Monitor 3 - the best monitor!' 190.0$");
+        assertPageContain("List: Code Description Price " +   // это баг длает
+                "4 'Mouse 4 - the best mouse!' 66.0$ " +
+                "7 'Monitor 3 - the best monitor!' 190.0$");
     }
 }

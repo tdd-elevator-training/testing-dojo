@@ -5,14 +5,16 @@ import org.apache.commons.lang.builder.EqualsBuilder;
 public class Record implements Cloneable {
     private String description;
     private double price;
+    private int id;
 
-    public Record(String description, double price) {
+    public Record(int id, String description, double price) {
+        this.id = id;
         this.description = description;
         this.price = price;
     }
 
     public Record(Record record) {
-        this(record.getDescription(), record.getPrice());
+        this(record.id, record.getDescription(), record.getPrice());
     }
 
     public String getDescription() {
@@ -21,6 +23,14 @@ public class Record implements Cloneable {
 
     public double getPrice() {
         return price;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public void setPrice(int price) {
@@ -42,4 +52,7 @@ public class Record implements Cloneable {
         return EqualsBuilder.reflectionEquals(this, obj);
     }
 
+    public boolean itsMe(Integer id) {
+        return this.id == id;
+    }
 }

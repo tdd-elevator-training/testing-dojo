@@ -14,7 +14,7 @@ public class FoundNotExistsProductBug extends Bug<RequestWorker> {
     @Override
     public RequestWorker apply(RequestWorker result) {
         if (result.isNoResultsFound()) {
-            result.setRecords(Arrays.asList(new Record(result.getSearchText(), 100500)));
+            result.setRecords(Arrays.asList(new Record(100500, result.getSearchText(), 100500)));
             result.clearNoResultsFound();
         }
         return result;

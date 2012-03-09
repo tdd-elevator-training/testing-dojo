@@ -20,6 +20,11 @@ public class SearchByTextScenario extends BasicScenario<RequestWorker> {
     }
 
     @Override
+    public boolean activate(RequestWorker request) {
+        return request.isSearchAction();
+    }
+
+    @Override
     public String process(RequestWorker request) {
         ShopService service = ApplicationContextLocator.getInstance().getBean("shopService");
 

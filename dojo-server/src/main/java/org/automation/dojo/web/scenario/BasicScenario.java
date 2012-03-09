@@ -2,6 +2,7 @@ package org.automation.dojo.web.scenario;
 
 import org.automation.dojo.BugsQueue;
 import org.automation.dojo.web.bugs.Bug;
+import org.automation.dojo.web.servlet.RequestWorker;
 
 import java.io.Serializable;
 import java.util.List;
@@ -86,4 +87,7 @@ public abstract class BasicScenario<T> implements Scenario<T>, Serializable {
         return true;
     }
 
+    public boolean isTerminator() {
+        return this instanceof TerminatorScenario;
+    }
 }

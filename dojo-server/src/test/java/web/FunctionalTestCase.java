@@ -108,9 +108,11 @@ public abstract class FunctionalTestCase {
     private String getPageText() {
         return tester.getPageSource()
                 .replaceAll("\\n", "").replaceAll("\\r", "")
+                .replaceAll(String.valueOf((char)160), " ")  // это так &nbsp; заменяется
                 .replaceAll("(  )+", " ")
                 .replaceAll("<option.*?</option>", "")
                 .replaceAll("<.*?>", "")
+                .replaceAll("(  )+", " ")
                 .replaceAll("(  )+", " ")
                 .replaceAll("(  )+", " ");
     }

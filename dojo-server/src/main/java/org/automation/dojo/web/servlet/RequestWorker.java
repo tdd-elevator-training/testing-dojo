@@ -36,4 +36,10 @@ public interface RequestWorker {
     String getPriceSortingOrderOption();
 
     void setPriceSortingOrderOption(boolean isAsc);
+
+    List<Integer> getRecordIds();
+
+    boolean isSearchAction();
+
+    boolean isCartAction();
 }

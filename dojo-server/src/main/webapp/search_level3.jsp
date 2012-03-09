@@ -8,8 +8,8 @@
 		<title>Search form</title>
 	</head>
 	<body>		
-        <form name="search" method="post" action="search">
-            <input type="hidden" name="action" value="search">
+        <form name="cart" method="post" action="cart">
+            <input type="hidden" name="action" value="cart">
 			<table>
  				<tr>
   					<td>Please enter text to find</td>
@@ -60,6 +60,7 @@
                     <c:forEach items="${requestScope.records}" var="record" varStatus="status">
                         <tr>
                             <td><c:out value="${record.id}"/>&nbsp;</td>
+                            <td><input type="checkbox" value="<c:out value="${status.index+1}"/>" name="record"></td>
                             <td>'<c:out value="${record.description}"/>'</td>
                             <td><c:out value="${record.price}"/>$</td>
                         </tr>

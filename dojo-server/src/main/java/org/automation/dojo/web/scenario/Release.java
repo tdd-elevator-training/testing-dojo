@@ -1,6 +1,7 @@
 package org.automation.dojo.web.scenario;
 
 import org.automation.dojo.web.scenario.Scenario;
+import org.automation.dojo.web.servlet.RequestWorker;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -16,6 +17,11 @@ public class Release<T> implements Scenario<T>, Serializable {
     private static final long serialVersionUID = -2300292798842489992L;
 
     private List<BasicScenario> scenarios = new ArrayList<BasicScenario>();
+
+    @Override
+    public boolean activate(T request) {
+        return true;
+    }
 
     public Release(BasicScenario ... scenario) {
         scenarios.addAll(Arrays.asList(scenario));
@@ -39,7 +45,9 @@ public class Release<T> implements Scenario<T>, Serializable {
     public String process(T request) {
         String result = null;
         for (Scenario scenario : scenarios) {
-            result = scenario.process(request);
+            if (scenario.activate(request)) {
+                result = scenario.process(request);
+            }
         }
         return result;
     }
@@ -53,10 +61,13 @@ public class Release<T> implements Scenario<T>, Serializable {
 
     @Override
     public String toString() {
-        // терминаторы мы не учитываем, они тупо вконце цепочки и указывают на jsp
-        LinkedList<BasicScenario> copy = new LinkedList<BasicScenario>(getScenarios());
-        copy.removeLast();
-        return copy.toString();
+        List<BasicScenario> result = new LinkedList<BasicScenario>();
+        for (BasicScenario scenario : getScenarios()) {
+            if (!scenario.isTerminator()) {
+                result.add(scenario);
+            }
+        }
+        return result.toString();
     }
 
     public BasicScenario getScenario(int scenarioId) {

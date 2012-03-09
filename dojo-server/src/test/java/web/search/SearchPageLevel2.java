@@ -59,14 +59,14 @@ public class SearchPageLevel2 extends SearchPageLevel1 {
         enterText("");
         submitSearchForm();
 
-        assertPageContain("List: Description Price " +
-                "'Mouse 1' 30.0$ " +
-                "'Mouse 3' 40.0$ " +
-                "'Mouse 2' 50.0$ " +
-                "'Mouse 4 - the best mouse!' 66.0$ " +
-                "'Monitor 2' 120.0$ " +
-                "'Monitor 1' 150.0$ " +
-                "'Monitor 3 - the best monitor!' 190.0$");
+        assertPageContain("List: Code Description Price " +
+                "1 'Mouse 1' 30.0$ " +
+                "3 'Mouse 3' 40.0$ " +
+                "2 'Mouse 2' 50.0$ " +
+                "4 'Mouse 4 - the best mouse!' 66.0$ " +
+                "6 'Monitor 2' 120.0$ " +
+                "5 'Monitor 1' 150.0$ " +
+                "7 'Monitor 3 - the best monitor!' 190.0$");
     }
 
     @Test
@@ -74,9 +74,9 @@ public class SearchPageLevel2 extends SearchPageLevel1 {
         enterText("the best");
         submitSearchForm();
 
-        assertPageContain("List: Description Price " +
-                "'Mouse 4 - the best mouse!' 66.0$ " +
-                "'Monitor 3 - the best monitor!' 190.0$");
+        assertPageContain("List: Code Description Price " +
+                "4 'Mouse 4 - the best mouse!' 66.0$ " +
+                "7 'Monitor 3 - the best monitor!' 190.0$");
     }
 
     @Test
@@ -86,9 +86,9 @@ public class SearchPageLevel2 extends SearchPageLevel1 {
         selectSortingOrder(DESC);
         submitSearchForm();
 
-        assertPageContain("List: Description Price " +
-                "'Monitor 3 - the best monitor!' 190.0$ " +
-                "'Mouse 4 - the best mouse!' 66.0$");
+        assertPageContain("List: Code Description Price " +
+                "7 'Monitor 3 - the best monitor!' 190.0$ " +
+                "4 'Mouse 4 - the best mouse!' 66.0$");
     }
 
     @Test
