@@ -33,7 +33,6 @@ public class PlayerResultControllerTest {
 
     @Mock ScoreService service;
     @Captor ArgumentCaptor<Integer> scenarioCaptor;
-    @Captor ArgumentCaptor<Boolean> successCaptor;
     @Captor ArgumentCaptor<TestResult> testResultCaptor;
     @Captor ArgumentCaptor<String> nameCaptor;
 
@@ -47,7 +46,7 @@ public class PlayerResultControllerTest {
 
     @Test
     public void shouldReturnSucceedWhenScenarioPassed() throws IOException, ServletException {
-        when(service.testResult(anyString(), anyInt(), anyBoolean(), Matchers.<TestResult>anyObject())).thenReturn(true);
+        when(service.testResult(anyString(), anyInt(), Matchers.<TestResult>anyObject())).thenReturn(true);
         request.setupAddParameter("scenario1", "passed");
 
         controller.service(request, response);
@@ -98,7 +97,7 @@ public class PlayerResultControllerTest {
 
     @Test
     public void shouldHaveServiceActualResultsWhenReported() throws IOException, ServletException {
-        when(service.testResult("masha", 1, true, TestResult.PASSED)).thenReturn(false);
+        when(service.testResult("masha", 1, TestResult.PASSED)).thenReturn(false);
         setupRequest("masha", "passed");
 
         controller.service(request, response);
@@ -123,7 +122,6 @@ public class PlayerResultControllerTest {
             TestResult expectedTestResult) {
         int index = scenarioCaptor.getAllValues().indexOf(scenarioNumber);
         assertThat(scenarioCaptor.getAllValues()).contains(scenarioNumber, Index.atIndex(index));
-        assertThat(successCaptor.getAllValues()).contains(expectedResult, Index.atIndex(index));
         assertThat(nameCaptor.getAllValues()).contains(expectedName, Index.atIndex(index));
         assertThat(testResultCaptor.getAllValues()).contains(expectedTestResult, Index.atIndex(index));
     }
@@ -131,7 +129,7 @@ public class PlayerResultControllerTest {
 
     private void captureTestResultValues() {
         verify(service, atLeastOnce()).testResult(
-                nameCaptor.capture(), scenarioCaptor.capture(), successCaptor.capture(), testResultCaptor.capture());
+                nameCaptor.capture(), scenarioCaptor.capture(), testResultCaptor.capture());
     }
 
     private void setupRequest(String name, String... scenarioResults) {

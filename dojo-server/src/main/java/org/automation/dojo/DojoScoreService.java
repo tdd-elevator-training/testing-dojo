@@ -32,13 +32,14 @@ public class DojoScoreService implements ScoreService {
         this.configurationService = configurationService;
     }
 
-    public boolean testResult(String clientName, int scenarioNumber, boolean testPassed, TestResult testResult) {
+    public boolean testResult(String clientName, int scenarioNumber, TestResult testResult) {
         BasicScenario scenario = releaseEngine.getScenario(scenarioNumber);
         List<GameLog> gameLogs = logService.getGameLogs(clientName, scenario);
 
         //last log will be a log for current release
         GameLog currentGame = lastGameLog(gameLogs);
         Bug currentBug = scenario.getBug();
+        boolean testPassed = testResult == TestResult.PASSED;
         if (!testPassed && currentGame.bugReported(currentBug)) {
             logService.playerLog(new PlayerRecord(clientName, scenario, testPassed, 0,
                     "Bug already reported for this Minor Release. " +
