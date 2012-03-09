@@ -1,6 +1,7 @@
 package org.automation.dojo;
 
 import com.google.common.collect.Iterables;
+import org.automation.dojo.web.bugs.Bug;
 import org.automation.dojo.web.scenario.BasicScenario;
 
 import java.util.ArrayList;
@@ -41,14 +42,15 @@ public class GameLog {
         return playerRecords.isEmpty();
     }
 
-    public boolean bugReported() {
-        return findReportedBugs() != null;
+    public boolean bugReported(Bug bug) {
+        return findReportedBugs(bug) != null;
     }
 
-    public PlayerRecord findReportedBugs() {
+    public PlayerRecord findReportedBugs(Bug bug) {
         List<PlayerRecord> playerRecords = getPlayerRecords();
         for (PlayerRecord record : playerRecords) {
-            if (!record.isPassed() && record.getType() == PlayerRecord.Type.VALID_BUG) {
+            if (!record.isPassed() && record.getType() == PlayerRecord.Type.VALID_BUG
+                    && bug.equals(record.getScenario().getBug())) {
                 return record;
             }
         }

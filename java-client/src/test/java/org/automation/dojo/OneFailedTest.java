@@ -5,7 +5,7 @@ import org.junit.Test;
 
 import static junit.framework.Assert.fail;
 
-@ReportTo(server = "http://localhost:8888", userName = "petya")
+@ReportTo(server = "http://localhost:1111", userName = "petya")
 public class OneFailedTest {
 
     @Test

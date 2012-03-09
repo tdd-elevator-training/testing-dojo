@@ -3,7 +3,6 @@ package org.automation.dojo;
 import org.automation.dojo.web.bugs.Bug;
 import org.automation.dojo.web.scenario.BasicScenario;
 import org.automation.dojo.web.scenario.Release;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Matchers;
@@ -128,7 +127,7 @@ public class DojoScoreServiceTest extends DojoScoreBaseTest {
 
     @Test
     public void shouldNotDecreaseScoreWhenNoBugsInPreviousRelease() {
-        BasicScenario scenario = createScneario(1, 0);
+        BasicScenario scenario = scenario(1, 0);
         setupGameLogs(scenario, gameLog(scenario));
         setupRegisteredPlayers();
 
@@ -139,7 +138,7 @@ public class DojoScoreServiceTest extends DojoScoreBaseTest {
 
     @Test
     public void shouldNotDecreaseScoreWhenBugReportedOnPreviousMinorRelease() {
-        BasicScenario scenario = createScneario(1, 100);
+        BasicScenario scenario = scenario(1, 100);
         setupGameLogs(scenario, gameLog(scenario, record(scenario, false, 100)));
         setupRegisteredPlayers();
 
@@ -152,26 +151,28 @@ public class DojoScoreServiceTest extends DojoScoreBaseTest {
     public void shouldDecreaseScoreWhenLiar() {
         BasicScenario scenario = setupScenario(1, 0);
         setupGameLogs(scenario,
-                gameLog(scenario, record(createScneario(1, 120), false, 120)),
+                gameLog(scenario, record(scenario(1, 120), false, 120)),
                 gameLog(scenario));
 
         reportScenario(1, false);
 
+        //we report a bug for a bug free scenario
         PlayerRecord record = captureLogRecord();
-        assertEquals(-120*2, record.getScore());
+        assertEquals(-100, record.getScore());
         assertFalse(record.isPassed());
     }
 
     @Test
     public void shouldDecreaseScoreWhenInvertedLiar() {
-        BasicScenario scenario = setupScenario(1, 100);
+        BasicScenario scenario = setupScenario(1, 110);
         setupGameLogs(scenario,
-                gameLog(scenario, record(scenario, false, 100)));
+                gameLog(scenario, record(scenario, false, 110)));
 
         reportScenario(1, true);
 
+        //we report test passed for bugged scenario which failed in the same release
         PlayerRecord record = captureLogRecord();
-        assertEquals(-100*2, record.getScore());
+        assertEquals(-110*2, record.getScore());
         assertTrue(record.isPassed());
         assertEquals(PlayerRecord.Type.LIAR, record.getType());
     }
@@ -206,10 +207,23 @@ public class DojoScoreServiceTest extends DojoScoreBaseTest {
     }
 
     @Test
-    public void shouldNotDecreaseScoreWhenResultMismatch() {
+    public void shouldDecreaseScoreWhenResultMismatch() {
         BasicScenario scenario = setupScenario(1, 100);
         setupGameLogs(scenario,
                 gameLog(scenario));
+
+        reportScenario(1, true);
+
+        PlayerRecord record = captureLogRecord();
+        assertEquals(-100, record.getScore());
+        assertEquals(PlayerRecord.Type.LIAR, record.getType());
+    }
+
+    @Test
+    public void shouldNotDecreaseScoreWhenResultMismatch2() {
+        BasicScenario scenario = setupScenario(1, 100);
+        setupGameLogs(scenario,
+                gameLog(scenario, record(scenario, true, -100, PlayerRecord.Type.LIAR)));
 
         reportScenario(1, true);
 
@@ -219,10 +233,23 @@ public class DojoScoreServiceTest extends DojoScoreBaseTest {
     }
 
     @Test
-    public void shouldNotDecreaseScoreWhenResultMismatch_Inverted() {
+    public void shouldDecreaseScoreWhenResultMismatch_Inverted() {
         BasicScenario scenario = setupScenario(1, 0);
         setupGameLogs(scenario,
                 gameLog(scenario));
+
+        reportScenario(1, false);
+
+        PlayerRecord record = captureLogRecord();
+        assertEquals(-100, record.getScore());
+        assertEquals(PlayerRecord.Type.LIAR, record.getType());
+    }
+
+    @Test
+    public void shouldNotDecreaseScoreWhenResultMismatch_Inverted() {
+        BasicScenario scenario = setupScenario(1, 0);
+        setupGameLogs(scenario,
+                gameLog(scenario, record(scenario, false, -100, PlayerRecord.Type.LIAR)));
 
         reportScenario(1, false);
 
@@ -245,34 +272,17 @@ public class DojoScoreServiceTest extends DojoScoreBaseTest {
     }
 
     @Test
-    @Ignore
-    public void shouldReportLiarWhen() {
-/*
-        Release 1
-        1	100	true	Scores for bug #0 scenario #1	VALID_BUG
-        1	0	false	Fix the test! It shows wrong result. Current scenario #1 is bugs free.	LIAR
-        1	0	false	Fix the test! It shows wrong result. Current scenario #1 is bugs free.	LIAR
-        1	100	true	Scores for bug #0 scenario #1	VALID_BUG
-        Release 2
-        1	0	true	Fix the test! It shows wrong result. Current scenario #1 contains bug.	LIAR
-        1	100	false	Scores for bug #0 scenario #1	VALID_BUG
-?       1	0	false	Bug already reported for this Minor Release. Bug #0	DUPLICATE
--->     1	0	true	Liar! Current scenario #1 contains bug.Previously reported bug #0	LIAR
-*/
-    }
-    @Test
-    @Ignore
-    public void shouldReportLiarWhen2() {
-/*
-    Scenario Score Test result Description Log type
-    Release 1
-    1 0 true Good! No bugs reported for bugs free scenario #1 PASSED
-    Release 2
-    1 0 true Fix the test! It shows wrong result. Current scenario #1 contains bug. LIAR
-    1 100 false Scores for bug #0 scenario #1 VALID_BUG
-    1 0 false Bug already reported for this Minor Release. Bug #0 DUPLICATE
-  ->1 0 true Liar! Current scenario #1 contains bug.Previously reported bug #0 LIAR
-*/
+    public void shouldAddCompleteScoreWhenFoundNewBugAfterPassed(){
+        BasicScenario scenario = setupScenario(1, 100, 2);
+        setupGameLogs(scenario,
+                gameLog(scenario, record(scenario(1, 100, 1), false, 100)),
+                gameLog(scenario)); //new minor release record, no reports yet
+
+        reportScenario(1, false);
+
+        PlayerRecord capturedRecord = captureLogRecord();
+
+        assertEquals(100, capturedRecord.getScore());
     }
 
 
@@ -290,7 +300,11 @@ public class DojoScoreServiceTest extends DojoScoreBaseTest {
     }
 
     private BasicScenario setupScenario(int scenarioId, int bugWeight) {
-        BasicScenario scenario = createScneario(1, bugWeight);
+        return setupScenario(scenarioId, bugWeight, 1);
+    }
+
+    private BasicScenario setupScenario(int scenarioId, int bugWeight, int bugId) {
+        BasicScenario scenario = scenario(1, bugWeight, bugId);
         when(releaseEngine.getScenario(scenarioId)).thenReturn(scenario);
         return scenario;
     }
@@ -304,10 +318,14 @@ public class DojoScoreServiceTest extends DojoScoreBaseTest {
     }
 
 
-    private BasicScenario createScneario(int scenarioId, int bugWeight) {
+    private BasicScenario scenario(int scenarioId, int bugWeight) {
+        return scenario(scenarioId, bugWeight, 1);
+    }
+
+    private BasicScenario scenario(int scenarioId, int bugWeight, int bugId) {
         BasicScenario scenario = new MockScenario(scenarioId, "", null);
         if (bugWeight > 0) {
-            Bug bug = new Bug(1);
+            Bug bug = new Bug(bugId);
             bug.setWeight(bugWeight);
             scenario.setBug(bug);
         }else{

@@ -27,7 +27,7 @@ public class DojoTestRunnerTest {
 
     @Before
     public void setUp() throws Exception {
-        server = new FakeHttpServer(8888);
+        server = new FakeHttpServer(1111);
         server.start();
         failures = new ArrayList<Failure>();
     }
