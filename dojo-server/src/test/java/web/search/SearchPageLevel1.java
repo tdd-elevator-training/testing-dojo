@@ -12,6 +12,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -49,21 +50,44 @@ public class SearchPageLevel1 extends FunctionalTestCase {
 
     @Test
     public void shouldSearchPageAsWelcomePage() {
-        assertSearchForm();
+        isSearchForm();
     }
 
     @Test
     public void shouldFoundSomeRecordsWhenSearchItByPartOfDescription() {
         enterText("mouse");
-        submitSearchForm();
+        search();
 
-        assertSearchForm();
+        isSearchForm();
+        isInformation("List:");
+        isElements("'Mouse 1'",
+                "'Mouse 2'",
+                "'Mouse 3'",
+                "'Mouse 4 - the best mouse!'");
+    }
 
-        assertPageContain("List:");
-        assertPageContain("Mouse 1");
-        assertPageContain("Mouse 2");
-        assertPageContain("Mouse 3");
-        assertPageContain("Mouse 4 - the best mouse!");
+    protected void isInformation(String expected) {
+        WebElement element = tester.findElement(By.xpath("//*[@id='search_info']"));
+        assertEquals(expected, element.getText());
+    }
+
+    protected void isElements(String... expected) {
+        List<WebElement> elements = getListOfProduct("description");
+        List<String> expectedList = Arrays.asList(expected);
+        List<String> actual = getStrings(elements);
+        assertEquals(expectedList.toString(), actual.toString());
+    }
+
+    protected List<String> getStrings(List<WebElement> elements) {
+        List<String> result = new LinkedList<String>();
+        for (WebElement element : elements) {
+            result.add(element.getText());
+        }
+        return result;
+    }
+
+    protected List<WebElement> getListOfProduct(String name) {
+        return tester.findElements(By.xpath("//tr[contains(@id,'productId')]/td[@id='" + name + "']"));
     }
 
     @Test
@@ -74,30 +98,28 @@ public class SearchPageLevel1 extends FunctionalTestCase {
     @Test
     public void shouldFoundSomeAnotherRecordsWhenSearchItByPartOfDescription() {
         enterText("monitor");
-        submitSearchForm();
+        search();
 
-        assertSearchForm();
-
-        assertPageContain("List:");
-        assertPageContain("Monitor 1");
-        assertPageContain("Monitor 2");
-        assertPageContain("Monitor 3 - the best monitor!");
-        assertPageNotContain("Mouse");
+        isSearchForm();
+        isInformation("List:");
+        isElements("'Monitor 1'",
+                "'Monitor 2'",
+                "'Monitor 3 - the best monitor!'");
     }
 
     @Test
     public void shouldAllListWhenNotFound() {
         enterText("keyboard");
-        submitSearchForm();
+        search();
 
-        assertNotFound();
-        allElementsPresent();
+        isNoResultsFound();
+        isAllInList();
     }
 
     @Test
     public void shouldSavePreviousSelection() {
         enterText("some device");
-        submitSearchForm();
+        search();
 
         assertEquals("some device", getSearchText());
     }
@@ -106,21 +128,21 @@ public class SearchPageLevel1 extends FunctionalTestCase {
         return searchText.getAttribute("value");
     }
 
-    protected void assertNotFound() {
-        assertPageContain("Sorry no results for your request, but we have another devices:");
+    protected void isNoResultsFound() {
+        isInformation("Sorry no results for your request, but we have another devices:");
     }
 
-    protected void allElementsPresent() {
-        assertPageContain("'Mouse 1'");
-        assertPageContain("'Mouse 3'");
-        assertPageContain("'Mouse 2'");
-        assertPageContain("'Mouse 4 - the best mouse!'");
-        assertPageContain("'Monitor 2'");
-        assertPageContain("'Monitor 1'");
-        assertPageContain("'Monitor 3 - the best monitor!'");
+    protected void isAllInList() {
+        isElements("'Mouse 1'",
+                "'Mouse 2'",
+                "'Mouse 3'",
+                "'Mouse 4 - the best mouse!'",
+                "'Monitor 1'",
+                "'Monitor 2'",
+                "'Monitor 3 - the best monitor!'");
     }
 
-    protected void assertSearchForm() {
+    protected void isSearchForm() {
         assertPageContain("Please enter text to find");
 
         assertNotNull(search);
@@ -133,7 +155,7 @@ public class SearchPageLevel1 extends FunctionalTestCase {
         searchText.sendKeys(string);
     }
 
-    protected void submitSearchForm() {
+    protected void search() {
         searchButton.submit();
         resetAllElements();
     }
@@ -141,10 +163,10 @@ public class SearchPageLevel1 extends FunctionalTestCase {
     @Test
     public void shouldAllListWhenFindEmptyString() {
         enterText("");
-        submitSearchForm();
+        search();
 
-        assertPageContain("List:");
-        allElementsPresent();
+        isInformation("List:");
+        isAllInList();
     }
 
 }

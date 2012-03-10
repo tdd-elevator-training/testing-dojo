@@ -10,37 +10,32 @@
 	<body>		
         <form name="search" method="post" action="search">
             <input type="hidden" name="action" value="search">
-			<table>
+			<table id="search_box">
  				<tr>
   					<td>Please enter text to find</td>
-  					<td><input type="text" name="search_text" id="search_text" value="${search_text}"/>"></td>
+  					<td><input type="text" name="search_text" id="search_text" value="${search_text}"></td>
                     <td><input type="submit" value="Search" id="search_button"></td>
  				</tr>
 			</table>
  		</form>
 
         <c:if test="${requestScope.records != null}">
-            <c:choose>
-                <c:when test="${requestScope.no_results}">
-                    Sorry no results for your request, but we have another devices:
-                </c:when>
-                <c:otherwise>
-                    List:
-                </c:otherwise>
-            </c:choose>
+            <span id="search_info">
+                <c:choose>
+                    <c:when test="${requestScope.no_results}">
+                        Sorry no results for your request, but we have another devices:
+                    </c:when>
+                    <c:otherwise>
+                        List:
+                    </c:otherwise>
+                </c:choose>
+            </span>
             </br>
             <table id="product_list">
-                <tr>
-                    <td>Code</td>
-                    <td>Description</td>
-                    <td>Price
-                </tr>
                 <c:forEach items="${requestScope.records}" var="record" varStatus="status">
                     <tr id="productId_${record.id}">
-                        <td id="id">${record.id}&nbsp;</td>
-                        <td id="description"><input type="checkbox" value="${status.index+1}" name="record"></td>
-                        <td id="price">'${record.description}'</td>
-                    </br>
+                        <td id="description">'${record.description}'</td>
+                    </tr>
                 </c:forEach>
             </table>
         </c:if>

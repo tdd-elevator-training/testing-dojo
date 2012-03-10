@@ -14,6 +14,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 
 import static org.automation.dojo.web.model.ShopService.*;
@@ -29,6 +30,7 @@ public class SearchPageLevel2 extends SearchPageLevel1 {
 
     protected static final boolean DESC = RequestWorker.DESC;
     protected static final boolean ASC = RequestWorker.ASC;
+    private List<WebElement> prices;
 
     @Override
     protected int getMajorRelease() {
@@ -57,124 +59,146 @@ public class SearchPageLevel2 extends SearchPageLevel1 {
     @Test
     public void shouldAllElementsSortedByPrice() {
         enterText("");
-        submitSearchForm();
+        search();
 
-        assertPageContain("List: Code Description Price " +
-                "1 'Mouse 1' 30.0$ " +
-                "3 'Mouse 3' 40.0$ " +
-                "2 'Mouse 2' 50.0$ " +
-                "4 'Mouse 4 - the best mouse!' 66.0$ " +
-                "6 'Monitor 2' 120.0$ " +
-                "5 'Monitor 1' 150.0$ " +
-                "7 'Monitor 3 - the best monitor!' 190.0$");
+        isInformation("List:");
+        isElements(
+                "'Mouse 1' 30.0$",
+                "'Mouse 3' 40.0$",
+                "'Mouse 2' 50.0$",
+                "'Mouse 4 - the best mouse!' 66.0$",
+                "'Monitor 2' 120.0$",
+                "'Monitor 1' 150.0$",
+                "'Monitor 3 - the best monitor!' 190.0$");
+    }
+
+    @Override
+    protected void isElements(String... expected) {
+        List<String> actualList = getElementsSorted();
+
+        List<String> expectedList = Arrays.asList(expected);
+        assertEquals(expectedList.toString(), actualList.toString());
+    }
+
+    protected List<String> getElementsSorted() {
+        List<String> descriptions = getStrings(getListOfProduct("description"));
+        List<String> prices = getStrings(getListOfProduct("price"));
+        assertEquals("списки описаний и прайсов товаров",
+                descriptions.size(), prices.size());
+
+        List<String> actualList = new LinkedList<String>();
+        for (int index = 0; index < descriptions.size(); index++) {
+            String description = descriptions.get(index);
+            String price = prices.get(index);
+            actualList.add(String.format("%s %s", description, price));
+        }
+        return actualList;
     }
 
     @Test
     public void shouldFoundElementsSortedByPrice() {
         enterText("the best");
-        submitSearchForm();
+        search();
 
-        assertPageContain("List: Code Description Price " +
-                "4 'Mouse 4 - the best mouse!' 66.0$ " +
-                "7 'Monitor 3 - the best monitor!' 190.0$");
+        isInformation("List:");
+        isElements(
+                "'Mouse 4 - the best mouse!' 66.0$",
+                "'Monitor 3 - the best monitor!' 190.0$");
     }
 
     @Test
     public void shouldFoundElementsSortedByPriceIfDesc() {
         enterText("the best");
-        submitSearchForm();
+        search();
         selectSortingOrder(DESC);
-        submitSearchForm();
+        search();
 
-        assertPageContain("List: Code Description Price " +
-                "7 'Monitor 3 - the best monitor!' 190.0$ " +
-                "4 'Mouse 4 - the best mouse!' 66.0$");
+        isInformation("List:");
+        isElements(
+                "'Monitor 3 - the best monitor!' 190.0$",
+                "'Mouse 4 - the best mouse!' 66.0$");
     }
 
     @Test
     public void shouldOnlyElementsMoreThanSomePrice() {
         enterText("");
         enterPrice(MORE_THAN, 120);
-        submitSearchForm();
+        search();
 
-        assertPageNotContain("'Mouse 1' 30.0$");
-        assertPageNotContain("'Mouse 3' 40.0$");
-        assertPageNotContain("'Mouse 2' 50.0$");
-        assertPageNotContain("'Mouse 4 - the best mouse!' 66.0$");
-        assertPageContain("'Monitor 2' 120.0$");
-        assertPageContain("'Monitor 1' 150.0$");
-        assertPageContain("'Monitor 3 - the best monitor!' 190.0$");
+        isElements(
+                "'Monitor 2' 120.0$",
+                "'Monitor 1' 150.0$",
+                "'Monitor 3 - the best monitor!' 190.0$");
     }
 
     @Test
     public void shouldOnlyElementsLessThanSomePrice() {
         enterText("");
         enterPrice(LESS_THAN, 120);
-        submitSearchForm();
+        search();
 
-        assertPageContain("'Mouse 1' 30.0$");
-        assertPageContain("'Mouse 3' 40.0$");
-        assertPageContain("'Mouse 2' 50.0$");
-        assertPageContain("'Mouse 4 - the best mouse!' 66.0$");
-        assertPageContain("'Monitor 2' 120.0$");
-        assertPageNotContain("'Monitor 1' 150.0$");
-        assertPageNotContain("'Monitor 3 - the best monitor!' 190.0$");
+        isElements(
+                "'Mouse 1' 30.0$",
+                "'Mouse 3' 40.0$",
+                "'Mouse 2' 50.0$",
+                "'Mouse 4 - the best mouse!' 66.0$",
+                "'Monitor 2' 120.0$");
     }
 
     @Test
     public void shouldIgnorePriceIfNoSelectedPriceOption() {
         enterText("");
         enterPrice(IGNORE, 120);
-        submitSearchForm();
+        search();
 
-        allElementsPresent();
+        isAllInList();
     }
 
     @Test
     public void shouldAllListIfNotFoundByPrice() {
         enterText("1");
         enterPrice(LESS_THAN, 1);
-        submitSearchForm();
+        search();
 
-        assertNotFound();
-        allElementsPresent();
+        isNoResultsFound();
+        isAllInList();
     }
 
     @Test
     public void shouldIgnorePriceOptionWhenNotFoundByString() {
         enterText("blablablabl");
         enterPrice(LESS_THAN, 120);
-        submitSearchForm();
+        search();
 
-        assertNotFound();
-        allElementsPresent();
+        isNoResultsFound();
+        isAllInList();
     }
 
     @Test
     public void shouldSavePreviousSelection() {
         enterText("some device");
         enterPrice(MORE_THAN, 111);
-        submitSearchForm();
+        search();
 
-        assertFormContains("some device", MORE_THAN, 111);
+        isSearchBy("some device", MORE_THAN, 111);
     }
 
     @Test
     public void shouldSavePreviousSortingOrderWhen() {
         enterText("some device");
         enterPrice(MORE_THAN, 111);
-        submitSearchForm();
-        assertSortingOrder(ASC);
+        search();
+        isSortingOrder(ASC);
 
         selectSortingOrder(DESC);
-        submitSearchForm();
+        search();
 
-        assertSortingOrder(DESC);
+        isSortingOrder(DESC);
 
         selectSortingOrder(ASC);
-        submitSearchForm();
+        search();
 
-        assertSortingOrder(ASC);
+        isSortingOrder(ASC);
     }
 
     protected void selectSortingOrder(boolean isAsc) {
@@ -189,11 +213,11 @@ public class SearchPageLevel2 extends SearchPageLevel1 {
         }
     }
 
-    protected void assertSortingOrder(boolean isAsc) {
+    protected void isSortingOrder(boolean isAsc) {
         assertEquals(getAscDesc(isAsc), getSelectedPriceSortingOrderOption());
     }
 
-    protected void assertFormContains(String text, int priceOptionNumber, int price) {
+    protected void isSearchBy(String text, int priceOptionNumber, int price) {
         assertEquals(text, getSearchText());
         assertEquals(String.valueOf(price), getPrice());
         assertEquals(getPriceOption(priceOptionNumber), getSelectedPriceOption());
@@ -246,17 +270,44 @@ public class SearchPageLevel2 extends SearchPageLevel1 {
         }
     }
 
-    protected void allElementsPresent() {
-        assertPageContain("'Mouse 1' 30.0$");
-        assertPageContain("'Mouse 3' 40.0$");
-        assertPageContain("'Mouse 2' 50.0$");
-        assertPageContain("'Mouse 4 - the best mouse!' 66.0$");
-        assertPageContain("'Monitor 2' 120.0$");
-        assertPageContain("'Monitor 1' 150.0$");
-        assertPageContain("'Monitor 3 - the best monitor!' 190.0$");
+    protected void isAllInList() {
+        isElements("'Mouse 1' 30.0$",
+                "'Mouse 3' 40.0$",
+                "'Mouse 2' 50.0$",
+                "'Mouse 4 - the best mouse!' 66.0$",
+                "'Monitor 2' 120.0$",
+                "'Monitor 1' 150.0$",
+                "'Monitor 3 - the best monitor!' 190.0$");
     }
 
     public WebElement getPriceSortingOrderOption() {
         return tester.findElement(By.id("price_sorting_order_option"));
+    }
+
+    @Override
+    @Test
+    public void shouldFoundSomeRecordsWhenSearchItByPartOfDescription() {
+        enterText("mouse");
+        search();
+
+        isSearchForm();
+        isInformation("List:");
+        isElements("'Mouse 1' 30.0$",
+                "'Mouse 3' 40.0$",
+                "'Mouse 2' 50.0$",
+                "'Mouse 4 - the best mouse!' 66.0$");
+    }
+
+    @Override
+    @Test
+    public void shouldFoundSomeAnotherRecordsWhenSearchItByPartOfDescription() {
+        enterText("monitor");
+        search();
+
+        isSearchForm();
+        isInformation("List:");
+        isElements("'Monitor 2' 120.0$",
+                "'Monitor 1' 150.0$",
+                "'Monitor 3 - the best monitor!' 190.0$");
     }
 }

@@ -6,6 +6,7 @@ import org.automation.dojo.web.bugs.NullBug;
 import org.automation.dojo.web.scenario.PriceSortingAscDescScenario;
 import org.automation.dojo.web.scenario.SearchByPriceScenario;
 import org.automation.dojo.web.scenario.SearchByTextScenario;
+import org.junit.ComparisonFailure;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
@@ -17,6 +18,7 @@ import java.util.List;
 import static org.automation.dojo.web.model.ShopService.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
 
 @ContextConfiguration(locations = {"classpath:/org/automation/dojo/applicationContext.xml"})
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -31,16 +33,20 @@ public class SearchPageLevel2_Bug1 extends SearchPageLevel2 {
 
     @Test
     public void shouldOnlyElementsMoreThanSomePrice() {
-        enterText("");
-        enterPrice(MORE_THAN, 120);
-        submitSearchForm();
+        try  {
+            super.shouldOnlyElementsMoreThanSomePrice();
+            fail();
+        } catch (ComparisonFailure error) {
+            assertEquals("['Mouse 1' 30.0$, " + // это баг длает
+                    "'Monitor 2' 120.0$, " +
+                    "'Monitor 1' 150.0$, " +
+                    "'Monitor 3 - the best monitor!' 190.0$]",
+                    error.getActual());
 
-        assertPageContain("'Mouse 1' 30.0$"); // это баг делает
-        assertPageNotContain("'Mouse 3' 40.0$");
-        assertPageNotContain("'Mouse 2' 50.0$");
-        assertPageNotContain("'Mouse 4 - the best mouse!' 66.0$");
-        assertPageContain("'Monitor 2' 120.0$");
-        assertPageContain("'Monitor 1' 150.0$");
-        assertPageContain("'Monitor 3 - the best monitor!' 190.0$");
+            assertEquals("['Monitor 2' 120.0$, " +
+                    "'Monitor 1' 150.0$, " +
+                    "'Monitor 3 - the best monitor!' 190.0$]",
+                    error.getExpected());
+        }
     }
 }

@@ -26,15 +26,15 @@ public class SearchPageLevel1_Bug2 extends SearchPageLevel1 {
     @Test
     public void shouldAllListWhenNotFound() {
         enterText("keyboard");
-        submitSearchForm();
+        search();
 
         try { // это баг делает
-            assertNotFound();
+            isNoResultsFound();
             throw new RuntimeException("Expected exception");
         } catch (AssertionError e) {
         }
         try { // это баг делает
-            allElementsPresent();
+            isAllInList();
             throw new RuntimeException("Expected exception");
         } catch (AssertionError e) {
         }

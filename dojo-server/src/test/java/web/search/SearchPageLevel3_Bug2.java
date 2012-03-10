@@ -5,6 +5,7 @@ import org.automation.dojo.web.bugs.BrokenChartSum;
 import org.automation.dojo.web.bugs.NullBug;
 import org.automation.dojo.web.bugs.SomeRecordsWillNotAddToCart;
 import org.automation.dojo.web.scenario.*;
+import org.junit.ComparisonFailure;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.openqa.selenium.WebElement;
@@ -15,6 +16,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 @ContextConfiguration(locations = {"classpath:/org/automation/dojo/applicationContext.xml"})
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -36,12 +38,12 @@ public class SearchPageLevel3_Bug2 extends SearchPageLevel3 {
 
     @Test
     public void shouldCalculateTotalPriceCorrectly(){
-        shouldAddToCartSelectedRecord();
-
-        assertPageContain("1 'Mouse 1' 30.0$");
-        assertPageContain("2 'Mouse 2' 50.0$");
-        assertPageContain("4 'Mouse 4 - the best mouse!' 66.0$");
-
-        assertEquals("100646.0$", getTotalPrice().getText()); // это баг длает
+        try  {
+            super.shouldCalculateTotalPriceCorrectly();
+            fail();
+        } catch (ComparisonFailure error) {
+            assertEquals("100646.0$", error.getActual());// это баг длает
+            assertEquals("146.0$", error.getExpected());
+        }
     }
 }

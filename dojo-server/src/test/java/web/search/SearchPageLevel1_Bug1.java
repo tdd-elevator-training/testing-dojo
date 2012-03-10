@@ -27,7 +27,7 @@ public class SearchPageLevel1_Bug1 extends SearchPageLevel1 {
     @Test
     public void shouldAllListWhenFindEmptyString() {
         enterText("");
-        submitSearchForm();
+        search();
 
         try { // это баг делает
             assertPageContain("List:");
@@ -35,7 +35,7 @@ public class SearchPageLevel1_Bug1 extends SearchPageLevel1 {
         } catch (AssertionError e) {
         }
         try { // это баг делает
-            allElementsPresent();
+            isAllInList();
             throw new RuntimeException("Expected exception");
         } catch (AssertionError e) {
         }

@@ -6,6 +6,7 @@ import org.automation.dojo.web.bugs.NullBug;
 import org.automation.dojo.web.scenario.PriceSortingAscDescScenario;
 import org.automation.dojo.web.scenario.SearchByPriceScenario;
 import org.automation.dojo.web.scenario.SearchByTextScenario;
+import org.junit.ComparisonFailure;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
@@ -15,6 +16,8 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.automation.dojo.web.model.ShopService.MORE_THAN;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 @ContextConfiguration(locations = {"classpath:/org/automation/dojo/applicationContext.xml"})
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -27,33 +30,39 @@ public class SearchPageLevel2_Bug4 extends SearchPageLevel2 {
                 PriceSortingAscDescScenario.class, IgnorePriceSortingOrderBug.class);
     }
 
+    @Override
     @Test
     public void shouldSavePreviousSortingOrderWhen() {
         enterText("some device");
         enterPrice(MORE_THAN, 111);
-        submitSearchForm();
-        assertSortingOrder(ASC);
+        search();
+        isSortingOrder(ASC);
 
         selectSortingOrder(DESC);
-        submitSearchForm();
+        search();
 
-        assertSortingOrder(ASC); // это баг делает
+        isSortingOrder(ASC); // это баг делает
 
         selectSortingOrder(ASC);
-        submitSearchForm();
+        search();
 
-        assertSortingOrder(ASC);
+        isSortingOrder(ASC);
     }
 
+    @Override
     @Test
     public void shouldFoundElementsSortedByPriceIfDesc() {
-        enterText("the best");
-        submitSearchForm();
-        selectSortingOrder(DESC);
-        submitSearchForm();
+        try  {
+            super.shouldFoundElementsSortedByPriceIfDesc();
+            fail();
+        } catch (ComparisonFailure error) {
+            assertEquals("['Mouse 4 - the best mouse!' 66.0$, " +
+                    "'Monitor 3 - the best monitor!' 190.0$]", // это баг делает
+                    error.getActual());
 
-        assertPageContain("List: Code Description Price " +   // это баг длает
-                "4 'Mouse 4 - the best mouse!' 66.0$ " +
-                "7 'Monitor 3 - the best monitor!' 190.0$");
+            assertEquals("['Monitor 3 - the best monitor!' 190.0$, " +
+                    "'Mouse 4 - the best mouse!' 66.0$]",
+                    error.getExpected());
+        }
     }
 }
