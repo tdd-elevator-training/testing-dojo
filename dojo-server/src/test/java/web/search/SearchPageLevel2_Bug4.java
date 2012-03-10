@@ -39,12 +39,10 @@ public class SearchPageLevel2_Bug4 extends SearchPageLevel2 {
         isSortingOrder(ASC);
 
         selectSortingOrder(DESC);
-        search();
 
         isSortingOrder(ASC); // это баг делает
 
         selectSortingOrder(ASC);
-        search();
 
         isSortingOrder(ASC);
     }

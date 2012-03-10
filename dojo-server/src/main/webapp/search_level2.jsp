@@ -28,15 +28,7 @@
                     <tr>
                         <td>Description</td>
                         <td>Price
-                            <select name="price_sorting_order_option" id="price_sorting_order_option">
-                                <c:forEach items="${requestScope.asc_desc_options}" var="order_option" varStatus="status">
-                                    <option value="${order_option}"
-                                        <c:if test="${order_option == price_sorting_order_option}">
-                                            selected
-                                        </c:if>
-                                    >${order_option}</option>
-                                </c:forEach>
-                            </select>
+                            <jsp:include page="sorting_order.jsp"/>
                         </td>
                     </tr>
                     <c:forEach items="${requestScope.records}" var="record" varStatus="status">

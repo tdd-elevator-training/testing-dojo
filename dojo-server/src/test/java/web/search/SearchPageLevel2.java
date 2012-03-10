@@ -111,7 +111,6 @@ public class SearchPageLevel2 extends SearchPageLevel1 {
         enterText("the best");
         search();
         selectSortingOrder(DESC);
-        search();
 
         isInformation("List:");
         isElements(
@@ -191,18 +190,17 @@ public class SearchPageLevel2 extends SearchPageLevel1 {
         isSortingOrder(ASC);
 
         selectSortingOrder(DESC);
-        search();
 
         isSortingOrder(DESC);
 
         selectSortingOrder(ASC);
-        search();
 
         isSortingOrder(ASC);
     }
 
     protected void selectSortingOrder(boolean isAsc) {
         findOption(getPriceSortingOrderOption(), getAscDesc(isAsc)).click();
+        resetAllElements();
     }
 
     private String getAscDesc(boolean isAsc) {
