@@ -7,7 +7,6 @@ import org.automation.dojo.web.scenario.*;
 import org.junit.ComparisonFailure;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.openqa.selenium.WebElement;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -31,7 +30,7 @@ public class SearchPageLevel3_Bug1 extends SearchPageLevel3 {
                 SearchByPriceScenario.class, NullBug.class,
                 PriceSortingAscDescScenario.class, NullBug.class,
                 AddToUserCartScenario.class, SomeRecordsWillNotAddToCart.class,
-                ShowUserCartScenario.class, NullBug.class);
+                CalculateCartSumScenario.class, NullBug.class);
     }
 
     @Test

@@ -26,10 +26,15 @@ public class AddToUserCartScenario extends BasicScenario<RequestWorker> {
 
     @Override
     public String process(RequestWorker request) {
+        request.saveSearchTextState();
+        request.saveSearchPriceState();
+        request.saveSearchPriceSortingState();
+
         ShopService service = ApplicationContextLocator.getInstance().getBean("shopService");
 
         UserCart cart = request.getUserCart();
         service.addToUserCart(cart, request.getRecordIds());
+        request.setRecords(cart.getRecords());
 
         bug.apply(request);
         return null;

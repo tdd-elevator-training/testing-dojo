@@ -3,12 +3,10 @@ package web.search;
 
 import org.automation.dojo.web.bugs.BrokenChartSum;
 import org.automation.dojo.web.bugs.NullBug;
-import org.automation.dojo.web.bugs.SomeRecordsWillNotAddToCart;
 import org.automation.dojo.web.scenario.*;
 import org.junit.ComparisonFailure;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.openqa.selenium.WebElement;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -33,7 +31,7 @@ public class SearchPageLevel3_Bug2 extends SearchPageLevel3 {
                 SearchByPriceScenario.class, NullBug.class,
                 PriceSortingAscDescScenario.class, NullBug.class,
                 AddToUserCartScenario.class, NullBug.class,
-                ShowUserCartScenario.class, BrokenChartSum.class);
+                CalculateCartSumScenario.class, BrokenChartSum.class);
     }
 
     @Test

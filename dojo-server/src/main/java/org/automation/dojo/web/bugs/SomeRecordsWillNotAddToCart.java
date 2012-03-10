@@ -19,6 +19,7 @@ public class SomeRecordsWillNotAddToCart extends Bug<RequestWorker>{
             UserCart cart = request.getUserCart();
             List<Record> records = cart.getRecords();
             cart.remove(records.size() - 1);
+            request.setRecords(cart.getRecords());
         }
         return request;
     }

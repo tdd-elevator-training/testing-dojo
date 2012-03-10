@@ -115,7 +115,7 @@ public class ReleasesPage extends FunctionalTestCase {
                 "Scenario SearchByPriceScenario with bug NullBug, " +
                 "Scenario PriceSortingAscDescScenario with bug NullBug, " +
                 "Scenario AddToUserCartScenario with bug NullBug, " +
-                "Scenario ShowUserCartScenario with bug NullBug\\]",
+                "Scenario CalculateCartSumScenario with bug NullBug\\]",
                 indicator.getText());
 
         goTo(nextMajor.getAttribute("href"));
@@ -126,7 +126,7 @@ public class ReleasesPage extends FunctionalTestCase {
                 "Scenario SearchByPriceScenario with bug NullBug, " +
                 "Scenario PriceSortingAscDescScenario with bug NullBug, " +
                 "Scenario AddToUserCartScenario with bug NullBug, " +
-                "Scenario ShowUserCartScenario with bug NullBug\\]",
+                "Scenario CalculateCartSumScenario with bug NullBug\\]",
                 indicator.getText());
     }
 

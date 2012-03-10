@@ -42,7 +42,7 @@ public class SearchPageLevel3 extends SearchPageLevel2 {
                 SearchByPriceScenario.class, NullBug.class,
                 PriceSortingAscDescScenario.class, NullBug.class,
                 AddToUserCartScenario.class, NullBug.class,
-                ShowUserCartScenario.class, NullBug.class);
+                CalculateCartSumScenario.class, NullBug.class);
     }
 
     @Override

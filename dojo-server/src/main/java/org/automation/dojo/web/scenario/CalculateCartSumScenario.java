@@ -11,9 +11,9 @@ import org.automation.dojo.web.servlet.RequestWorker;
 import java.util.Arrays;
 import java.util.List;
 
-public class ShowUserCartScenario extends BasicScenario<RequestWorker> {
+public class CalculateCartSumScenario extends BasicScenario<RequestWorker> {
 
-    public ShowUserCartScenario(int id, String description, BugsQueue bugsQueue) {
+    public CalculateCartSumScenario(int id, String description, BugsQueue bugsQueue) {
         super(id, description, bugsQueue);
     }
 
@@ -24,12 +24,7 @@ public class ShowUserCartScenario extends BasicScenario<RequestWorker> {
 
     @Override
     public String process(RequestWorker request) {
-        request.saveSearchTextState();
-        request.saveSearchPriceState();
-        request.saveSearchPriceSortingState();
-
         UserCart cart = request.getUserCart();
-        request.setRecords(cart.getRecords());
         request.setTotalSum(cart.getTotalPrice());
 
         bug.apply(request);
