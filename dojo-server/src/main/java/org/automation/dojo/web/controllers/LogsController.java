@@ -75,6 +75,7 @@ public class LogsController {
 
     @RequestMapping(value = "/scenario/{id}", method = RequestMethod.GET)
     public String scenarios(ModelMap model, @PathVariable int id) {
+        releaseEngine.getScenario(id);//to make sure nobody sees non-implemented scenarios ;)
         model.addAttribute("scenarios",
                 Collections.singletonList(getDescription(id)));
         return "scenarios";
