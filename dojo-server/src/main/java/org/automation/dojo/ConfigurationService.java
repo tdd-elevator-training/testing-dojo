@@ -13,9 +13,10 @@ import java.util.concurrent.TimeUnit;
  */
 public class ConfigurationService implements Runnable {
     private long minorReleaseFrequency = 10 * 60 * 1000;
-    private long penaltyTimeOut = 60 * 1000;
+    private long penaltyTimeOut = 2 * 60 * 1000;
     private int penaltyValue = 2;
     private boolean manualReleaseTriggering = true;
+    private int liarWeight = 20;
     
     @Autowired
     private ScoreService scoreService;
@@ -30,6 +31,7 @@ public class ConfigurationService implements Runnable {
     private Date nextPenaltyTickTime;
     private Date previousTick;
     private boolean paused = false;
+    private int exceptionWeight = 10;
 
     public ConfigurationService() {
     }
@@ -161,5 +163,21 @@ public class ConfigurationService implements Runnable {
 
     public boolean isPaused() {
         return paused;
+    }
+
+    public int getLiarWeight() {
+        return liarWeight;
+    }
+
+    public void setLiarWeight(int liarWeight) {
+        this.liarWeight = liarWeight;
+    }
+
+    public void setExceptionWeight(int exceptionWeight) {
+        this.exceptionWeight = exceptionWeight;
+    }
+
+    public int getExceptionWeight() {
+        return exceptionWeight;
     }
 }

@@ -95,6 +95,13 @@ public class DojoTestRunnerTest {
         assertFailuresHasException(NotAnnotatedTestException.class);
     }
 
+    @Test
+    public void shouldReportExceptionWhenNonAssertion() throws InitializationError {
+        runTests(ExceptionTest.class);
+
+        assertRequestContains("scenario1=exception");
+    }
+
     private ListAssert assertFailuresHasException(Class<NotAnnotatedTestException> exception) {
         return assertThat(failures).onProperty("exception").onProperty("class")
                 .isEqualTo(Arrays.asList(exception));

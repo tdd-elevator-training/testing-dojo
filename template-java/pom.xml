@@ -30,5 +30,10 @@
             <artifactId>fest-assert</artifactId>
             <version>1.4</version>
         </dependency>
+        <dependency>
+            <groupId>org.seleniumhq.selenium</groupId>
+            <artifactId>selenium-java</artifactId>
+            <version>2.20.0</version>
+        </dependency>
     </dependencies>
 </project>

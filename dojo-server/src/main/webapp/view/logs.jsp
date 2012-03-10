@@ -10,6 +10,7 @@
 	</head>
 	<body>
     Next Release in: ${configuration.nextReleaseRemaining} <br>
+    <a href="/scenarios">Scenarios implemented in current release</a> <br/>
 	Logs for ${playerName}:<br>
 	    <table>
 	        <tr>
@@ -22,7 +23,7 @@
 
                 <c:forEach items="${releaseLog}" var="playerRecord" varStatus="statusRecord">
                 <tr>
-                    <td>${playerRecord.scenario.id}</td><td>${playerRecord.score}</td><td>${playerRecord.passed}</td><td>${playerRecord.description}</td><td>${playerRecord.type}</td>
+                    <td><a href="/scenario/${playerRecord.scenario.id}">${playerRecord.scenario.id}</a></td><td>${playerRecord.score}</td><td>${playerRecord.passed}</td><td>${playerRecord.description}</td><td>${playerRecord.type}</td>
                 </tr>
                 </c:forEach>
             </c:forEach>

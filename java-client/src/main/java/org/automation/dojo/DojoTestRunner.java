@@ -93,8 +93,12 @@ public class DojoTestRunner extends Runner implements Filterable {
         public void testFinished(Description description) throws Exception {
             Scenario scenario = description.getAnnotation(Scenario.class);
             List<NameValuePair> formparams = new ArrayList<NameValuePair>();
-            formparams.add(new BasicNameValuePair("scenario" + scenario.value(),
-                    testFailures.containsKey(description) ? "failed" : "passed"));
+            String result = "passed";
+            Failure failure = testFailures.get(description);
+            if (failure!=null) {
+                result = (failure.getException() instanceof AssertionError) ? "failed" : "exception";
+            }
+            formparams.add(new BasicNameValuePair("scenario" + scenario.value(), result));
             formparams.add(new BasicNameValuePair("name", userName));
             UrlEncodedFormEntity entity = new UrlEncodedFormEntity(formparams, "UTF-8");
             HttpPost post = new HttpPost(server + "/result");

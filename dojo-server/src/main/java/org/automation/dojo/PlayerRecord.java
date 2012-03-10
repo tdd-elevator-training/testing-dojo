@@ -8,7 +8,7 @@ import java.util.Date;
  * @author serhiy.zelenin
  */
 public class PlayerRecord {
-    public enum Type{DUPLICATE, VALID_BUG, MISSED, LIAR, TIMEOUT, PASSED}
+    public enum Type{DUPLICATE, VALID_BUG, MISSED, LIAR, TIMEOUT, PASSED, EXCEPTION}
 
     private int score;
     private String description;

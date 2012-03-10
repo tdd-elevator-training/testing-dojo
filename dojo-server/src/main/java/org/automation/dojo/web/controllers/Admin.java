@@ -55,6 +55,8 @@ public class Admin {
         configurationService.setPenaltyValue(configuration.getPenaltyValue());
         configurationService.setPenaltyTimeOut(configuration.getPenaltyTimeOut());
         configurationService.setManualReleaseTriggering(configuration.isManualReleaseTriggering());
+        configurationService.setLiarWeight(configuration.getLiarWeight());
+        configurationService.setExceptionWeight(configuration.getExceptionWeight());
         configurationService.adjustChanges();
         return "redirect:/admin";
     }
