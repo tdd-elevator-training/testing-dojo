@@ -6,6 +6,7 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 		<title>Search form</title>
+
 	</head>
 	<body>		
         <form name="search" method="post" action="search">
@@ -40,8 +41,8 @@
                     </tr>
                     <c:forEach items="${requestScope.records}" var="record" varStatus="status">
                         <tr id="productId_${record.id}">
-                            <td id="description">'${record.description}'</td>
-                            <td id="price">${record.price}$</td>
+                            <td id="element_description">'${record.description}'</td>
+                            <td id="element_price">${record.price}$</td>
                         </tr>
                     </c:forEach>
                 </table>

@@ -13,9 +13,9 @@ import java.util.List;
  * Если выбран режим поиска по прайсу (опция "больше чем"), тогда добавлять в
  * начало списка один элемент с ценой меньше, если он не был пуст.
  */
-public class AddExistingItemWithPriceLessThanEntered extends Bug<RequestWorker> {
+public class AddExistingItemWithPriceLessThanEnteredBug extends Bug<RequestWorker> {
 
-    public AddExistingItemWithPriceLessThanEntered(int id) {
+    public AddExistingItemWithPriceLessThanEnteredBug(int id) {
         super(id);
     }
 

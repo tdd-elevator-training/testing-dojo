@@ -51,9 +51,9 @@ public class SearchPageLevel2 extends SearchPageLevel1 {
 
     @Override
     protected void resetAllElements() {
-        super.resetAllElements();
         price = tester.findElement(By.id("price"));
         priceSearchOption = tester.findElement(By.id("price_search_option"));
+        super.resetAllElements(); // должно быть тут, потому что последней строкой должен быть поиск формы search
     }
 
     @Test
@@ -81,8 +81,8 @@ public class SearchPageLevel2 extends SearchPageLevel1 {
     }
 
     protected List<String> getElementsSorted() {
-        List<String> descriptions = getStrings(getListOfProduct("description"));
-        List<String> prices = getStrings(getListOfProduct("price"));
+        List<String> descriptions = getStrings(getListOfProduct("element_description"));
+        List<String> prices = getStrings(getListOfProduct("element_price"));
         assertEquals("списки описаний и прайсов товаров",
                 descriptions.size(), prices.size());
 
@@ -241,15 +241,20 @@ public class SearchPageLevel2 extends SearchPageLevel1 {
     }
 
     protected void enterPrice(int priceOptionNumber, int price) {
-        setMoreThan(priceOptionNumber);
-        setPrice(price);
+        selectPriceOption(priceOptionNumber);
+        enterPrice(price);
     }
 
-    private void setPrice(int price) {
-        this.price.sendKeys(String.valueOf(price));
+    protected void enterPrice(int price) {
+        String string = String.valueOf(price);
+        enterPrice(string);
     }
 
-    private void setMoreThan(int priceOptionNumber) {
+    protected void enterPrice(String string) {
+        this.price.sendKeys(string);
+    }
+
+    protected void selectPriceOption(int priceOptionNumber) {
         findOption(priceSearchOption, getPriceOption(priceOptionNumber)).click();
     }
 
@@ -309,5 +314,32 @@ public class SearchPageLevel2 extends SearchPageLevel1 {
         isElements("'Monitor 2' 120.0$",
                 "'Monitor 1' 150.0$",
                 "'Monitor 3 - the best monitor!' 190.0$");
+    }
+
+    @Test
+    public void mustBeAPriceValidation() {
+        enterText("mouse");
+        selectPriceOption(MORE_THAN);
+        enterPrice("qwe");
+        isValidationInfo("");
+        search();
+
+        isValidationInfo("price must be an positive integer");
+    }
+
+    @Test
+    public void mustBeAPriceValidationWhenBlur() {
+        isValidationInfo("");
+        enterPrice("qwe");
+        searchText.click();
+        isValidationInfo("price must be an positive integer");
+    }
+
+    protected void isValidationInfo(String expected) {
+        assertEquals(expected, tester.findElement(By.id("validation_info")).getText());
+    }
+
+    protected void isError(String expected) {
+        assertEquals(expected, tester.findElement(By.id("error_info")).getText());
     }
 }

@@ -1,14 +1,10 @@
 package org.automation.dojo.web.scenario;
 
-import org.automation.dojo.ApplicationContextLocator;
 import org.automation.dojo.BugsQueue;
 import org.automation.dojo.web.bugs.*;
-import org.automation.dojo.web.model.Record;
-import org.automation.dojo.web.model.ShopService;
 import org.automation.dojo.web.model.UserCart;
 import org.automation.dojo.web.servlet.RequestWorker;
 
-import java.util.Arrays;
 import java.util.List;
 
 public class CalculateCartSumScenario extends BasicScenario<RequestWorker> {
@@ -32,7 +28,7 @@ public class CalculateCartSumScenario extends BasicScenario<RequestWorker> {
     }
 
     public List<? extends Bug> getPossibleBugs() {
-        return BugsFactory.getBugs(BrokenChartSum.class);
+        return BugsFactory.getBugs(BrokenChartSumBug.class);
     }
 
 }

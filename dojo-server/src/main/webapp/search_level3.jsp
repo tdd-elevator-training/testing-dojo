@@ -51,8 +51,8 @@
                                 <input type="checkbox" value="${record.id}"
                                        name="record" id="record_${status.index+1}">
                             </td>
-                            <td id="description">'${record.description}'</td>
-                            <td id="price">${record.price}$</td>
+                            <td id="element_description">'${record.description}'</td>
+                            <td id="element_price">${record.price}$</td>
                         </tr>
                     </c:forEach>
                     <tr>

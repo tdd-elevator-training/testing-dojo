@@ -172,5 +172,10 @@ public class RequestWorkerImpl implements RequestWorker {
         request.setAttribute("total_price", String.valueOf(price));
     }
 
+    @Override
+    public void setValidatePriceNumber(boolean isEnabled) {
+        request.setAttribute("validate_price_number", isEnabled);
+    }
+
 
 }

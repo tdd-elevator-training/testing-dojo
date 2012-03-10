@@ -1,7 +1,5 @@
 package org.automation.dojo.web.bugs;
 
-import org.automation.dojo.BugsQueue;
-
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -21,14 +19,15 @@ public class BugsFactory {
         registerBug(AddSomeOtherElementIfListNotEmptyBug.class);
         registerBug(FoundNotExistsProductBug.class);
 
-        registerBug(AddExistingItemWithPriceLessThanEntered.class);
-        registerBug(AddExistingItemWithPriceMoreThanEntered.class);
+        registerBug(AddExistingItemWithPriceLessThanEnteredBug.class);
+        registerBug(AddExistingItemWithPriceMoreThanEnteredBug.class);
+        registerBug(DisabledPriceValidationBug.class);
 
         registerBug(BrokenSortingBug.class);
         registerBug(IgnorePriceSortingOrderBug.class);
 
         registerBug(SomeRecordsWillNotAddToCart.class);
-        registerBug(BrokenChartSum.class);
+        registerBug(BrokenChartSumBug.class);
     }
 
     private static <T extends Bug<?>> void registerBug(Class<T> bugClass) {

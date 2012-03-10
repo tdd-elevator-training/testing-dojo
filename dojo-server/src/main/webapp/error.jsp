@@ -9,7 +9,7 @@
 	</head>
 	<body>
 		<h2>Error</h2>
-		<span id="error_info"><b><c:out value="${requestScope.error_message}"/></b></br></span>
+		<b><span id="error_info"><c:out value="${requestScope.error_message}"/></span></b></br>
 		<span id="link_home">Please <a href="/Shop/index.jsp">go home</a> and try again.</span>
 	</body>
 </html>

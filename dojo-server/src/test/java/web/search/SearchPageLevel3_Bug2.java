@@ -1,7 +1,7 @@
 package web.search;
 
 
-import org.automation.dojo.web.bugs.BrokenChartSum;
+import org.automation.dojo.web.bugs.BrokenChartSumBug;
 import org.automation.dojo.web.bugs.NullBug;
 import org.automation.dojo.web.scenario.*;
 import org.junit.ComparisonFailure;
@@ -31,7 +31,7 @@ public class SearchPageLevel3_Bug2 extends SearchPageLevel3 {
                 SearchByPriceScenario.class, NullBug.class,
                 PriceSortingAscDescScenario.class, NullBug.class,
                 AddToUserCartScenario.class, NullBug.class,
-                CalculateCartSumScenario.class, BrokenChartSum.class);
+                CalculateCartSumScenario.class, BrokenChartSumBug.class);
     }
 
     @Test

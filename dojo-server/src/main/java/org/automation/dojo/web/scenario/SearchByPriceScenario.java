@@ -7,7 +7,6 @@ import org.automation.dojo.web.model.Record;
 import org.automation.dojo.web.model.ShopService;
 import org.automation.dojo.web.servlet.RequestWorker;
 
-import java.util.Arrays;
 import java.util.List;
 
 public class SearchByPriceScenario extends BasicScenario<RequestWorker> {
@@ -26,6 +25,7 @@ public class SearchByPriceScenario extends BasicScenario<RequestWorker> {
         ShopService service = ApplicationContextLocator.getInstance().getBean("shopService");
 
         request.saveSearchPriceState();
+        request.setValidatePriceNumber(true);
 
         List<Record> records = request.getRecords();
         if (records != null &&
@@ -46,8 +46,9 @@ public class SearchByPriceScenario extends BasicScenario<RequestWorker> {
     }
 
     public List<? extends Bug> getPossibleBugs() {
-        return BugsFactory.getBugs(AddExistingItemWithPriceLessThanEntered.class,
-                AddExistingItemWithPriceMoreThanEntered.class);
+        return BugsFactory.getBugs(AddExistingItemWithPriceLessThanEnteredBug.class,
+                AddExistingItemWithPriceMoreThanEnteredBug.class,
+                DisabledPriceValidationBug.class);
     }
 
 }

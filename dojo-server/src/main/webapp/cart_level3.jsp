@@ -31,8 +31,8 @@
                     </tr>
                     <c:forEach items="${requestScope.records}" var="record" varStatus="status">
                         <tr id="productId_${record.id}">
-                            <td id="description">'${record.description}'</td>
-                            <td id="price">${record.price}$</td>
+                            <td id="element_description">'${record.description}'</td>
+                            <td id="element_price">${record.price}$</td>
                         </tr>
                     </c:forEach>
                     <tr>

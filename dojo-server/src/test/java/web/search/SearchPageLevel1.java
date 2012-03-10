@@ -43,9 +43,9 @@ public class SearchPageLevel1 extends FunctionalTestCase {
 
     @Override
     protected void resetAllElements() {
-        search = tester.findElement(By.name("search"));
         searchButton = tester.findElement(By.id("search_button"));
         searchText = tester.findElement(By.id("search_text"));
+        search = tester.findElement(By.name("search"));
     }
 
     @Test
@@ -72,7 +72,7 @@ public class SearchPageLevel1 extends FunctionalTestCase {
     }
 
     protected void isElements(String... expected) {
-        List<WebElement> elements = getListOfProduct("description");
+        List<WebElement> elements = getListOfProduct("element_description");
         List<String> expectedList = Arrays.asList(expected);
         List<String> actual = getStrings(elements);
         assertEquals(expectedList.toString(), actual.toString());

@@ -6,9 +6,9 @@ import org.automation.dojo.web.servlet.RequestWorker;
 
 import java.util.List;
 
-public class BrokenChartSum extends Bug<RequestWorker>{
+public class BrokenChartSumBug extends Bug<RequestWorker>{
 
-    public BrokenChartSum(int id) {
+    public BrokenChartSumBug(int id) {
         super(id);
     }
 

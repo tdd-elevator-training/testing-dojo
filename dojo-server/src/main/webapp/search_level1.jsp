@@ -34,7 +34,7 @@
             <table id="product_list">
                 <c:forEach items="${requestScope.records}" var="record" varStatus="status">
                     <tr id="productId_${record.id}">
-                        <td id="description">'${record.description}'</td>
+                        <td id="element_description">'${record.description}'</td>
                     </tr>
                 </c:forEach>
             </table>

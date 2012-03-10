@@ -51,4 +51,6 @@ public interface RequestWorker {
     UserCart getUserCart();
 
     void setTotalSum(double price);
+
+    void setValidatePriceNumber(boolean isEnabled);
 }

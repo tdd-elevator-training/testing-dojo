@@ -7,11 +7,11 @@ import static org.mockito.Mockito.when;
 
 public class AddExistingItemWithPriceMoreThanEnteredBugTest extends BugTest {
 
-    private AddExistingItemWithPriceMoreThanEntered bug;
+    private AddExistingItemWithPriceMoreThanEnteredBug bug;
 
     @Before
     public void initBug() {
-        bug = BugsFactory.getBug(AddExistingItemWithPriceMoreThanEntered.class);
+        bug = BugsFactory.getBug(AddExistingItemWithPriceMoreThanEnteredBug.class);
     }
 
     @Test

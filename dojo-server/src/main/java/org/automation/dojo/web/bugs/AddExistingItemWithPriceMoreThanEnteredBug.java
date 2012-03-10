@@ -12,9 +12,9 @@ import java.util.List;
  * Если выбран режим поиска по прайсу (опция "меньше чем"), тогда добавлять в
  * конец списка один элемент с ценой больше, если он не был пуст.
  */
-public class AddExistingItemWithPriceMoreThanEntered extends Bug<RequestWorker> {
+public class AddExistingItemWithPriceMoreThanEnteredBug extends Bug<RequestWorker> {
 
-    public AddExistingItemWithPriceMoreThanEntered(int id) {
+    public AddExistingItemWithPriceMoreThanEnteredBug(int id) {
         super(id);
     }
 

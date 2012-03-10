@@ -1,7 +1,7 @@
 package web.search;
 
 
-import org.automation.dojo.web.bugs.AddExistingItemWithPriceMoreThanEntered;
+import org.automation.dojo.web.bugs.AddExistingItemWithPriceMoreThanEnteredBug;
 import org.automation.dojo.web.bugs.NullBug;
 import org.automation.dojo.web.scenario.PriceSortingAscDescScenario;
 import org.automation.dojo.web.scenario.SearchByPriceScenario;
@@ -15,7 +15,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.automation.dojo.web.model.ShopService.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
@@ -27,7 +26,7 @@ public class SearchPageLevel2_Bug3 extends SearchPageLevel2 {
     @Override
     protected List<?> getMinorRelease() {
         return Arrays.asList(SearchByTextScenario.class, NullBug.class,
-                SearchByPriceScenario.class, AddExistingItemWithPriceMoreThanEntered.class,
+                SearchByPriceScenario.class, AddExistingItemWithPriceMoreThanEnteredBug.class,
                 PriceSortingAscDescScenario.class, NullBug.class);
     }
 

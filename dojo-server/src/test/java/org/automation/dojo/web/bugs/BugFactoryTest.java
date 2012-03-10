@@ -14,10 +14,11 @@ public class BugFactoryTest {
         assertEquals(3, BugsFactory.getBug(AddSomeOtherElementIfListNotEmptyBug.class).getId());
         assertEquals(4, BugsFactory.getBug(FoundNotExistsProductBug.class).getId());
 
-        assertEquals(5, BugsFactory.getBug(AddExistingItemWithPriceLessThanEntered.class).getId());
-        assertEquals(6, BugsFactory.getBug(AddExistingItemWithPriceMoreThanEntered.class).getId());
+        assertEquals(5, BugsFactory.getBug(AddExistingItemWithPriceLessThanEnteredBug.class).getId());
+        assertEquals(6, BugsFactory.getBug(AddExistingItemWithPriceMoreThanEnteredBug.class).getId());
+        assertEquals(7, BugsFactory.getBug(DisabledPriceValidationBug.class).getId());
 
-        assertEquals(7, BugsFactory.getBug(BrokenSortingBug.class).getId());
-        assertEquals(8, BugsFactory.getBug(IgnorePriceSortingOrderBug.class).getId());
+        assertEquals(8, BugsFactory.getBug(BrokenSortingBug.class).getId());
+        assertEquals(9, BugsFactory.getBug(IgnorePriceSortingOrderBug.class).getId());
     }
 }
