@@ -1,7 +1,5 @@
 package org.automation.dojo.web.controllers;
 
-import org.automation.dojo.MockHttpServletRequest;
-import org.automation.dojo.MockHttpServletResponse;
 import org.automation.dojo.ScoreService;
 import org.automation.dojo.TestResult;
 import org.fest.assertions.Index;
@@ -13,6 +11,8 @@ import org.mockito.Captor;
 import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.mock.web.MockHttpServletResponse;
 
 import javax.servlet.ServletException;
 import java.io.IOException;
@@ -47,11 +47,11 @@ public class PlayerResultControllerTest {
     @Test
     public void shouldReturnSucceedWhenScenarioPassed() throws IOException, ServletException {
         when(service.testResult(anyString(), anyInt(), Matchers.<TestResult>anyObject())).thenReturn(true);
-        request.setupAddParameter("scenario1", "passed");
+        request.addParameter("scenario1", "passed");
 
         controller.service(request, response);
 
-        assertEquals("scenario1=passed", response.getOutputStreamContent().trim());
+        assertEquals("scenario1=passed", response.getContentAsString().trim());
     }
 
     @Test
@@ -103,13 +103,13 @@ public class PlayerResultControllerTest {
         controller.service(request, response);
 
         captureTestResultValues();
-        assertEquals("scenario1=failed", response.getOutputStreamContent().trim());
+        assertEquals("scenario1=failed", response.getContentAsString().trim());
     }
 
     @Test
     public void shouldReportProperlyWhenNotStandardRequestParamsReceived() throws IOException, ServletException {
-        request.setupAddParameter("scenario5", "true");
-        request.setupAddParameter("scenario11", "false");
+        request.addParameter("scenario5", "true");
+        request.addParameter("scenario11", "false");
 
         controller.service(request, response);
 
@@ -117,7 +117,30 @@ public class PlayerResultControllerTest {
         assertResultReported(null, 5, true, TestResult.PASSED);
         assertResultReported(null, 11, false, TestResult.FAILED);
     }
-    
+
+    @Test
+    public void shouldReportFailureWhenOneOfScenarioResultsFailed() throws IOException, ServletException {
+        request.addParameter("scenario1", "passed");
+        request.addParameter("scenario1", "failed");
+
+        controller.service(request, response);
+
+        captureTestResultValues();
+        assertResultReported(null, 1, false, TestResult.FAILED);
+    }
+
+    @Test
+    public void shouldReportExceptionWhenOneOfScenarioResultsException() throws IOException, ServletException {
+        request.addParameter("scenario1", "passed");
+        request.addParameter("scenario1", "failed");
+        request.addParameter("scenario1", "exception");
+
+        controller.service(request, response);
+
+        captureTestResultValues();
+        assertResultReported(null, 1, false, TestResult.EXCEPTION);
+    }
+
     private void assertResultReported(String expectedName, int scenarioNumber, boolean expectedResult,
             TestResult expectedTestResult) {
         int index = scenarioCaptor.getAllValues().indexOf(scenarioNumber);
@@ -133,10 +156,10 @@ public class PlayerResultControllerTest {
     }
 
     private void setupRequest(String name, String... scenarioResults) {
-        request.setupAddParameter("name", name);
+        request.addParameter("name", name);
 
         for (int i = 0; i < scenarioResults.length; i++) {
-            request.setupAddParameter("scenario"+(i+1), scenarioResults[i]);
+            request.addParameter("scenario" + (i + 1), scenarioResults[i]);
         }
     }
 }

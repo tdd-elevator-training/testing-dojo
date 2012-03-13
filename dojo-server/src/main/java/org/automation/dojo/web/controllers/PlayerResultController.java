@@ -38,25 +38,24 @@ public class PlayerResultController {
             String parameterName = parameterNames.nextElement();
             Matcher matcher = pattern.matcher(parameterName);
             if (matcher.find()) {
-                boolean result = scoreService.testResult(name, Integer.parseInt(matcher.group(1)), parseResult2(request.getParameter(parameterName)));
+                boolean result = scoreService.testResult(name, Integer.parseInt(matcher.group(1)), parseResult(
+                        request.getParameterValues(parameterName)));
                 response.getWriter().println(parameterName + "=" + (result ? "passed" : "failed"));
             }
         }
         response.flushBuffer();
     }
 
-    private boolean parseResult(String value) {
-        return value.equalsIgnoreCase("passed") || value.equalsIgnoreCase("true");
-    }
-    
-    private TestResult parseResult2(String value) {
-        if (value.equalsIgnoreCase("passed") || value.equalsIgnoreCase("true")) {
-            return TestResult.PASSED; 
+    private TestResult parseResult(String ... values) {
+        boolean failed = false;
+        for (String value : values) {
+            if (value.equalsIgnoreCase("exception")) {
+                return TestResult.EXCEPTION;
+            }
+            failed |= value.equalsIgnoreCase("failed") || value.equalsIgnoreCase("false");
+
         }
-        if (value.equalsIgnoreCase("exception")) {
-            return TestResult.EXCEPTION;
-        }
-        return TestResult.FAILED;
+        return failed ? TestResult.FAILED : TestResult.PASSED;
     }
 
     public void setScoreService(ScoreService scoreService) {
