@@ -20,6 +20,8 @@ import org.junit.runners.BlockJUnit4ClassRunner;
 import org.junit.runners.model.FrameworkMethod;
 import org.junit.runners.model.InitializationError;
 
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -29,10 +31,11 @@ public class DojoTestRunner extends Runner implements Filterable {
     private BlockJUnit4ClassRunner runner;
     private final String server;
     private final String userName;
-
+    private List<NameValuePair> scenariosResults = new ArrayList<NameValuePair>();
+    private DefaultHttpClient httpClient;
 
     public DojoTestRunner(Class<?> klass) throws InitializationError {
-        runner = new BlockJUnit4ClassRunner(klass){
+        runner = new BlockJUnit4ClassRunner(klass) {
             @Override
             protected void runChild(FrameworkMethod method, RunNotifier notifier) {
                 if (method.getAnnotation(Scenario.class) == null) {
@@ -57,8 +60,39 @@ public class DojoTestRunner extends Runner implements Filterable {
 
     @Override
     public void run(RunNotifier notifier) {
-        notifier.addListener(new TestListener(server, userName));
+        httpClient = new DefaultHttpClient();
+        TestListener listener = new TestListener();
+        notifier.addListener(listener);
+
         runner.run(notifier);
+
+        try {
+            sendResultsToServer();
+        } catch (IOException e) {
+            reportSendFailure(listener, e);
+        }
+    }
+
+    private void reportSendFailure(TestListener listener, IOException e) {
+        try {
+            listener.testFailure(new Failure(getDescription(), e));
+        } catch (Exception e1) {
+            e1.printStackTrace();
+        }
+    }
+
+    private void sendResultsToServer() throws IOException {
+        UrlEncodedFormEntity entity = null;
+        scenariosResults.add(new BasicNameValuePair("name", userName));
+        try {
+            entity = new UrlEncodedFormEntity(scenariosResults, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException("Unable to report results to server", e);
+        }
+        HttpPost post = new HttpPost(server + "/result");
+        post.setEntity(entity);
+        BasicResponseHandler responseHandler = new BasicResponseHandler();
+        httpClient.execute(post, responseHandler);
     }
 
     @Override
@@ -70,19 +104,9 @@ public class DojoTestRunner extends Runner implements Filterable {
         runner.filter(filter);
     }
 
-    private static class TestListener extends RunListener {
-
-        private String server;
-        private String userName;
-        private DefaultHttpClient httpClient;
+    private class TestListener extends RunListener {
         private Map<Description, Failure> testFailures = new HashMap<Description, Failure>();
 
-
-        public TestListener(String server, String userName) {
-            this.server = server;
-            this.userName = userName;
-            httpClient = new DefaultHttpClient();
-        }
 
         @Override
         public void testFailure(Failure failure) throws Exception {
@@ -92,21 +116,12 @@ public class DojoTestRunner extends Runner implements Filterable {
         @Override
         public void testFinished(Description description) throws Exception {
             Scenario scenario = description.getAnnotation(Scenario.class);
-            List<NameValuePair> formparams = new ArrayList<NameValuePair>();
             String result = "passed";
             Failure failure = testFailures.get(description);
-            if (failure!=null) {
+            if (failure != null) {
                 result = (failure.getException() instanceof AssertionError) ? "failed" : "exception";
             }
-            formparams.add(new BasicNameValuePair("scenario" + scenario.value(), result));
-            formparams.add(new BasicNameValuePair("name", userName));
-            UrlEncodedFormEntity entity = new UrlEncodedFormEntity(formparams, "UTF-8");
-            HttpPost post = new HttpPost(server + "/result");
-            post.setEntity(entity);
-            BasicResponseHandler responseHandler = new BasicResponseHandler();
-
-            httpClient.execute(post, responseHandler);
+            scenariosResults.add(new BasicNameValuePair("scenario" + scenario.value(), result));
         }
-
     }
 }

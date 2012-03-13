@@ -97,9 +97,19 @@ public class DojoTestRunnerTest {
 
     @Test
     public void shouldReportExceptionWhenNonAssertion() throws InitializationError {
+        server.setResponse("scenario1=failed");
         runTests(ExceptionTest.class);
 
         assertRequestContains("scenario1=exception");
+    }
+
+    @Test
+    public void shouldReportSeveralResultsWhenSeveralCasesForScenario() throws InitializationError {
+        server.setResponse("scenario1=passed");
+        runTests(SeveralTestsForOneScenarioTest.class);
+
+        assertRequestContains("scenario1=passed");
+        assertRequestContains("scenario1=failed");
     }
 
     private ListAssert assertFailuresHasException(Class<NotAnnotatedTestException> exception) {

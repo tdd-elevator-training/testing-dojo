@@ -26,7 +26,39 @@ public class SampleAutomationTest {
 
     @Test
     @Scenario(1)
-    public void searchProductScenario(){
+    public void searchProductScenario() {
+/*
+        webDriver.get(baseUrl + "/search");
+
+        WebElement search = webDriver.findElement(By.name("search"));
+        WebElement searchButton = webDriver.findElement(By.id("search_button"));
+        WebElement searchText = webDriver.findElement(By.id("search_text"));
+
+        searchText.sendKeys("mouse");
+        searchButton.submit();
+*/
+        fail();
+    }
+
+    @Test
+    @Scenario(2)
+    public void searchProductScenario2() {
+/*
+        webDriver.get(baseUrl + "/search");
+
+        WebElement search = webDriver.findElement(By.name("search"));
+        WebElement searchButton = webDriver.findElement(By.id("search_button"));
+        WebElement searchText = webDriver.findElement(By.id("search_text"));
+
+        searchText.sendKeys("mouse");
+        searchButton.submit();
+*/
+        fail();
+    }
+
+    @Test
+    @Scenario(3)
+    public void searchProductScenario3() {
 /*
         webDriver.get(baseUrl + "/search");
 
