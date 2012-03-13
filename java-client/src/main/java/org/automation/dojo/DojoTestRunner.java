@@ -35,15 +35,7 @@ public class DojoTestRunner extends Runner implements Filterable {
     private DefaultHttpClient httpClient;
 
     public DojoTestRunner(Class<?> klass) throws InitializationError {
-        runner = new BlockJUnit4ClassRunner(klass) {
-            @Override
-            protected void runChild(FrameworkMethod method, RunNotifier notifier) {
-                if (method.getAnnotation(Scenario.class) == null) {
-                    throw new NotAnnotatedTestException(method.getName());
-                }
-                super.runChild(method, notifier);
-            }
-        };
+        runner = new BlockJUnit4ClassRunner(klass);
         ReportTo annotation = klass.getAnnotation(ReportTo.class);
         if (annotation == null) {
             throw new InitializationError("Annotation @" + ReportTo.class.getSimpleName() +
@@ -82,13 +74,12 @@ public class DojoTestRunner extends Runner implements Filterable {
     }
 
     private void sendResultsToServer() throws IOException {
+        if (scenariosResults.isEmpty()) {
+            return;
+        }
         UrlEncodedFormEntity entity = null;
         scenariosResults.add(new BasicNameValuePair("name", userName));
-        try {
-            entity = new UrlEncodedFormEntity(scenariosResults, "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            throw new RuntimeException("Unable to report results to server", e);
-        }
+        entity = new UrlEncodedFormEntity(scenariosResults, "UTF-8");
         HttpPost post = new HttpPost(server + "/result");
         post.setEntity(entity);
         BasicResponseHandler responseHandler = new BasicResponseHandler();
@@ -116,6 +107,9 @@ public class DojoTestRunner extends Runner implements Filterable {
         @Override
         public void testFinished(Description description) throws Exception {
             Scenario scenario = description.getAnnotation(Scenario.class);
+            if (scenario == null) {
+                return;
+            }
             String result = "passed";
             Failure failure = testFailures.get(description);
             if (failure != null) {

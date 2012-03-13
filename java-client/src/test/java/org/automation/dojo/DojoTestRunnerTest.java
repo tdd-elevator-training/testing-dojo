@@ -92,7 +92,7 @@ public class DojoTestRunnerTest {
     public void shouldReportFailureWhenNoScenarioAnnotationGiven() throws InitializationError {
         runTests(NoScenarioAnnotation.class);
 
-        assertFailuresHasException(NotAnnotatedTestException.class);
+        assertThat(server.getRequest()).isEmpty();
     }
 
     @Test
