@@ -33,12 +33,10 @@ public class SampleAutomationTest {
         openGooglePage();
 
         // When I search by "automated testing dojo"
-        searchBy("automated testing dojo");
+        searchBy("automated testing dojo idea");
 
         //Then I see a link to Sergey's blog
         assertContainsLink("szelenin.blogspot.com");
-        //And I see a link to Alexander's blog
-        assertContainsLink("apofig.blogspot.com");
     }
 
     @Test
@@ -46,7 +44,7 @@ public class SampleAutomationTest {
     public void shouldBeAbleToClick() {
         //Given google.com page with search results by "automated testing dojo"
         openGooglePage();
-        searchBy("automated testing dojo");
+        searchBy("automated testing dojo idea");
 
         // When I click on link for Sergey's blog
         clickOn("szelenin.blogspot.com");
