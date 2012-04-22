@@ -38,9 +38,13 @@ public class PlayerResultController {
             String parameterName = parameterNames.nextElement();
             Matcher matcher = pattern.matcher(parameterName);
             if (matcher.find()) {
-                boolean result = scoreService.testResult(name, Integer.parseInt(matcher.group(1)), parseResult(
-                        request.getParameterValues(parameterName)));
-                response.getWriter().println(parameterName + "=" + (result ? "passed" : "failed"));
+                try {
+                    boolean result = scoreService.testResult(name, Integer.parseInt(matcher.group(1)), parseResult(
+                            request.getParameterValues(parameterName)));
+                    response.getWriter().println(parameterName + "=" + (result ? "passed" : "failed"));
+                } catch (IllegalArgumentException e) {
+                    //Scenario not found so skip it
+                }
             }
         }
         response.flushBuffer();

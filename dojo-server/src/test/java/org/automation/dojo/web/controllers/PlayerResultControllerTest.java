@@ -151,6 +151,18 @@ public class PlayerResultControllerTest {
         assertResultReported(null, 1, true, TestResult.FAILED);
     }
 
+    @Test
+    public void shouldReportForExistingScenariosWhenNonExistenceScenarioInList() throws IOException, ServletException {
+        request.addParameter("scenario123", "FAIL");
+        request.addParameter("scenario1", "PASS");
+        when(service.testResult(Matchers.<String>any(), eq(123), Matchers.<TestResult>any())).thenThrow(new IllegalArgumentException());
+
+        controller.service(request, response);
+
+        captureTestResultValues();
+        assertResultReported(null, 1, true, TestResult.PASSED);
+    }
+
     private void assertResultReported(String expectedName, int scenarioNumber, boolean expectedResult,
             TestResult expectedTestResult) {
         int index = scenarioCaptor.getAllValues().indexOf(scenarioNumber);
