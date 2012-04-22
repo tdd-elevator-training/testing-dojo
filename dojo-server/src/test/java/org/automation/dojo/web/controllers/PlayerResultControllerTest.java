@@ -141,6 +141,16 @@ public class PlayerResultControllerTest {
         assertResultReported(null, 1, false, TestResult.EXCEPTION);
     }
 
+    @Test
+    public void shouldReportFromRobotFramework() throws IOException, ServletException {
+        request.addParameter("scenario1", "FAIL");
+
+        controller.service(request, response);
+
+        captureTestResultValues();
+        assertResultReported(null, 1, true, TestResult.FAILED);
+    }
+
     private void assertResultReported(String expectedName, int scenarioNumber, boolean expectedResult,
             TestResult expectedTestResult) {
         int index = scenarioCaptor.getAllValues().indexOf(scenarioNumber);

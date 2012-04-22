@@ -52,7 +52,7 @@ public class PlayerResultController {
             if (value.equalsIgnoreCase("exception")) {
                 return TestResult.EXCEPTION;
             }
-            failed |= value.equalsIgnoreCase("failed") || value.equalsIgnoreCase("false");
+            failed |= value.equalsIgnoreCase("failed") || value.equalsIgnoreCase("false") || value.equalsIgnoreCase("FAIL");
 
         }
         return failed ? TestResult.FAILED : TestResult.PASSED;
