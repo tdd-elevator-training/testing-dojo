@@ -1,25 +1,18 @@
 *** Settings ***
-Suite Teardown    Close Browser
 Metadata          server    http://127.0.0.1:8080    # Automation Testing Dojo server address (change to real IP before starting)
 Metadata          userName    JohnDoe    # It should be registered name in the Automation Testing Dojo server. Please change to the name which you have registered with on AT game
 Library           Selenium2Library
 
 *** Variables ***
-${SERVER}         localhost:8080
 ${BROWSER}        firefox
+${SERVER}         http://localhost:8080
 
 *** Test Cases ***
-Find Products
+FindProductList
     [Tags]    Scenario 1
     Open Browser    ${SERVER}
     Input Text    search_text    mouse
     Submit Form
     Xpath Should Match X Times    //table[@id="product_list"]    1
-
-FindProducts2
-    [Tags]    Scenario 1
-    Open Browser    ${SERVER}/FAIL
-    Input Text    search_text    mouse
-    Submit Form
-    Xpath Should Match X Times    //table[@id="product_list"]    1
+    [Teardown]    Close Browser
 
