@@ -14,6 +14,10 @@ public class ShopBugsQueue implements BugsQueue {
         ArrayList<Bug> possibleBugs = new ArrayList<Bug>(scenario.getPossibleBugs());
         possibleBugs.add(Bug.NULL_BUG);
         int bugIndex = new Random().nextInt(possibleBugs.size());
-        return possibleBugs.get(bugIndex);
+        Bug bug = possibleBugs.get(bugIndex);
+        if (bug.equals(scenario.getBug())) {
+            return nextBugFor(scenario);
+        }
+        return bug;
     }
 }
