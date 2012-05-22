@@ -1,5 +1,6 @@
 package org.automation.dojo;
 
+import org.automation.dojo.web.controllers.ReleaseLogView;
 import org.automation.dojo.web.scenario.BasicScenario;
 import org.automation.dojo.web.scenario.Release;
 
@@ -25,4 +26,6 @@ public interface LogService {
     List<BoardRecord> getBoardRecords();
 
     ReleaseLog getCurrentReleaseLog();
+
+    List<ReleaseLogView> getLastReleaseLogsForPlayer(String playerName, int maxLogRecordsAmount);
 }

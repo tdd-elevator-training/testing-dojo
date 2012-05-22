@@ -36,6 +36,6 @@ public class RegistrationController {
             return "register";
         }
         logService.registerPlayer(player.getName());
-        return "redirect:/logs/" + player.getName();
+        return "redirect:/logs/" + player.getName()+"/30";
     }
 }

@@ -1,5 +1,6 @@
 package org.automation.dojo;
 
+import org.automation.dojo.web.controllers.ReleaseLogView;
 import org.automation.dojo.web.scenario.BasicScenario;
 import org.automation.dojo.web.scenario.Release;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,7 +69,7 @@ public class GameLogService implements LogService {
         try {
             currentRelease = new ReleaseLog(release, timeService.now());
             releases.add(currentRelease);
-        }finally{
+        } finally {
             lock.writeLock().unlock();
         }
     }
@@ -138,5 +139,23 @@ public class GameLogService implements LogService {
             total += board.get(playerName);
         }
         return total;
+    }
+
+    @Override
+    public List<ReleaseLogView> getLastReleaseLogsForPlayer(String playerName, int maxLogRecordsAmount) {
+        lock.readLock().lock();
+        try {
+            LinkedList<ReleaseLogView> playerLogs = new LinkedList<ReleaseLogView>();
+            int recordsToShow = maxLogRecordsAmount >= 0 ? maxLogRecordsAmount : Integer.MAX_VALUE;
+            for (int i = releases.size() - 1; i >= 0 && recordsToShow > 0; i--) {
+                List<PlayerRecord> releaseLogs = releases.get(i)
+                        .getLastRecordsForPlayer(playerName, recordsToShow);
+                playerLogs.add(0, new ReleaseLogView(releaseLogs));
+                recordsToShow -= releaseLogs.size();
+            }
+            return playerLogs;
+        } finally {
+            lock.readLock().unlock();
+        }
     }
 }

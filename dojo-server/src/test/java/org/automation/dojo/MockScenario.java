@@ -25,4 +25,8 @@ public class MockScenario extends BasicScenario {
         return null;
     }
 
+    @Override
+    public String toString() {
+        return "Mock Scenario id: " + getId();
+    }
 }

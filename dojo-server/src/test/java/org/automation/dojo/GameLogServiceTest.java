@@ -2,6 +2,7 @@ package org.automation.dojo;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
+import org.automation.dojo.web.controllers.ReleaseLogView;
 import org.automation.dojo.web.scenario.BasicScenario;
 import org.automation.dojo.web.scenario.Release;
 import org.fest.assertions.ListAssert;
@@ -55,7 +56,7 @@ public class GameLogServiceTest {
     public void shouldStoreGameLogsWhenSeveralScenario() {
         MockScenario scenario1 = scenario(1);
 
-        gameLogService.createGameLog(new Release(scenario1, new MockScenario(2, "scenario2", null)));
+        gameLogService.createGameLog(new Release(scenario1, new MockScenario(2, "scenarios", null)));
 
         List<GameLog> gameLogs = gameLogService.getGameLogs("127.0.0.1", scenario1);
 
@@ -105,13 +106,73 @@ public class GameLogServiceTest {
         createGameLog(new Release(scenario(1), scenario(2)))
                 .playerLog(scenario(1)).playerLog(scenario(2));
 
-        List<ReleaseLog> releaseLogs = gameLogService.getReleaseLogs();
-        ReleaseLog releaseLog = releaseLogs.get(0);
+        List<ReleaseLogView> releaseLogs = gameLogService.getLastReleaseLogsForPlayer(CLIENT_NAME, -1);
+        ReleaseLogView releaseLog = releaseLogs.get(0);
 
-        List<PlayerRecord> records = releaseLog.getRecordsForPlayer(CLIENT_NAME);
+        List<PlayerRecord> records = releaseLog.getRecords();
 
         assertTrue(Iterables.all(records, new RecordsForPlayer(CLIENT_NAME)));
-        
+    }
+
+    @Test
+    public void shouldReturnPredefinedLogSize() {
+        MockScenario scenario = scenario(2);
+        createGameLog(new Release(scenario(1), scenario))
+                .playerLog(scenario(1)).playerLog(scenario);
+
+        List<ReleaseLogView> releaseLogs = gameLogService.getLastReleaseLogsForPlayer(CLIENT_NAME, 1);
+
+        assertEquals(1, releaseLogs.size());
+        assertReleaseViewLogForScenarios(releaseLogs.get(0), scenario);
+    }
+
+    @Test
+    public void shouldReturnPredefinedLogSizeWithPreviousRelease() {
+        MockScenario scenario1 = scenario(1);
+        createGameLog(scenario1).playerLog(scenario1);
+
+        MockScenario scenario2 = scenario(2);
+        createGameLog(scenario2).playerLog(scenario2);
+
+        List<ReleaseLogView> releaseLogs = gameLogService.getLastReleaseLogsForPlayer(CLIENT_NAME, 2);
+
+        assertEquals(2, releaseLogs.size());
+        assertReleaseViewLogForScenarios(releaseLogs.get(0), scenario1);
+        assertReleaseViewLogForScenarios(releaseLogs.get(1), scenario2);
+    }
+
+    @Test
+    public void shouldIgnoreNonRequestedRecords() {
+        MockScenario scenario1 = scenario(1);
+        createGameLog(scenario1).playerLog(scenario1);
+
+        MockScenario scenario2 = scenario(2);
+        MockScenario scenario3 = scenario(3);
+        createGameLog(new Release(scenario1, scenario2, scenario3))
+                .playerLog(scenario1).playerLog(scenario2).playerLog(scenario3);
+
+        List<ReleaseLogView> releaseLogs = gameLogService.getLastReleaseLogsForPlayer(CLIENT_NAME, 2);
+
+        assertEquals(1, releaseLogs.size());
+        assertReleaseViewLogForScenarios(releaseLogs.get(0), scenario2, scenario3);
+    }
+
+    @Test
+    public void shouldReturnAllRequestedReleaseViewRecords() {
+        MockScenario scenario1 = scenario(1);
+        createGameLog(scenario1).playerLog(scenario1);
+
+        List<ReleaseLogView> releaseLogs = gameLogService.getLastReleaseLogsForPlayer(CLIENT_NAME, -1);
+
+        assertEquals(1, releaseLogs.size());
+        assertReleaseViewLogForScenarios(releaseLogs.get(0), scenario1);
+    }
+
+    private void assertReleaseViewLogForScenarios(ReleaseLogView releaseLog, MockScenario ... scenarios) {
+        assertEquals("Release log should contain expected amount of records", scenarios.length, releaseLog.getRecords().size());
+        for (int i = 0; i < scenarios.length; i++) {
+            assertEquals(scenarios[i], releaseLog.getRecords().get(i).getScenario());
+        }
     }
 
     private GameLogHelper createGameLog(Release release) {

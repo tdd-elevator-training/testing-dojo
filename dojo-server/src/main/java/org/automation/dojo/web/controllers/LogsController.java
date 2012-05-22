@@ -29,13 +29,9 @@ public class LogsController {
     @Autowired
     private ConfigurationService configurationService;
     
-    @RequestMapping(value = "/logs/{playerName}", method = RequestMethod.GET)
-    public String playerRecords(ModelMap model, @PathVariable String playerName) {
-        List<ReleaseLog> logsForHost = logService.getReleaseLogs();
-        List<List<PlayerRecord>> releaseLogs = new ArrayList<List<PlayerRecord>>();
-        for (ReleaseLog releaseLog : logsForHost) {
-            releaseLogs.add(releaseLog.getRecordsForPlayer(playerName));
-        }
+    @RequestMapping(value = "/logs/{playerName}/{lastN}", method = RequestMethod.GET)
+    public String playerRecords(ModelMap model, @PathVariable String playerName, @PathVariable int lastN) {
+        List<ReleaseLogView> releaseLogs = logService.getLastReleaseLogsForPlayer(playerName, lastN);
         model.addAttribute("releaseLogs", releaseLogs);
         model.addAttribute("playerName", playerName);
         model.addAttribute("configuration", configurationService);

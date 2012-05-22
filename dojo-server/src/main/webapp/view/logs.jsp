@@ -21,7 +21,7 @@
                     <td colspan=4>Release ${statusRelease.index + 1}</td>
                 </tr>
 
-                <c:forEach items="${releaseLog}" var="playerRecord" varStatus="statusRecord">
+                <c:forEach items="${releaseLog.records}" var="playerRecord" varStatus="statusRecord">
                 <tr>
                     <td><a href="/scenario/${playerRecord.scenario.id}">${playerRecord.scenario.id}</a></td><td>${playerRecord.score}</td><td>${playerRecord.passed}</td><td>${playerRecord.description}</td><td>${playerRecord.type}</td>
                 </tr>
