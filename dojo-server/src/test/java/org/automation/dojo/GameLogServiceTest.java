@@ -170,6 +170,16 @@ public class GameLogServiceTest {
         assertReleaseViewLogForScenarios(releaseLogs.get(0), scenario1);
     }
 
+    @Test
+    public void shouldReturnBoardLogsWhenGameIsNotStarted(){
+        gameLogService.registerPlayer("petya");
+        gameLogService.registerPlayer("vasya");
+
+        List<BoardRecord> boardRecords = gameLogService.getBoardRecords();
+
+        assertThat(boardRecords).onProperty("player").contains("petya", "petya", CLIENT_NAME);
+    }
+
     private void assertReleaseViewLogForScenarios(ReleaseLogView releaseLog, MockScenario ... scenarios) {
         assertEquals("Release log should contain expected amount of records", scenarios.length, releaseLog.getRecords().size());
         for (int i = 0; i < scenarios.length; i++) {

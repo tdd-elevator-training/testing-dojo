@@ -100,6 +100,9 @@ public class GameLogService implements LogService {
     public List<BoardRecord> getBoardRecords() {
         lock.readLock().lock();
         try {
+            if (releases.isEmpty()) {
+                return createBoardRecordsWithZeroScores();
+            }
             Map<String, Integer> gameScores = new HashMap<String, Integer>();
             for (ReleaseLog release : releases) {
                 addReleaseScoresToGameScores(release, gameScores);
@@ -110,6 +113,14 @@ public class GameLogService implements LogService {
         } finally {
             lock.readLock().unlock();
         }
+    }
+
+    private List<BoardRecord> createBoardRecordsWithZeroScores() {
+        LinkedList<BoardRecord> boardRecords = new LinkedList<BoardRecord>();
+        for (String player : registeredPlayers) {
+            boardRecords.add(new BoardRecord(player, 0));
+        }
+        return boardRecords;
     }
 
     public ReleaseLog getCurrentReleaseLog() {

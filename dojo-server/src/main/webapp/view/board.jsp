@@ -7,19 +7,22 @@
         <meta http-equiv="refresh" content="5">
 		<meta http-equiv="Content-Type" content="text/html;">
 		<title>Leader Board</title>
+        <link rel="stylesheet" type="text/css" href="/resources/style/dojo.css">
 	</head>
 	<body>
 	Leader Board<br>
     Next Release in: ${configuration.nextReleaseRemaining} <br>
-	    <table>
-	        <tr>
-	            <td>#</td><td>Player</td><td>Total Score</td>
-	        </tr>
+	    <table id="table-logs">
+            <thead>
+                <th>#</th><th>Player</th><th>Total Score</th>
+            </thead>
+            <tbody>
             <c:forEach items="${records}" var="record" varStatus="status">
                 <tr>
                     <td>${status.index + 1}</td><td>${record.player}</td><td>${record.total}</td>
                 </tr>
             </c:forEach>
+            </tbody>
 	    </table>
 	</body>
 </html>
