@@ -31,6 +31,15 @@ public class LogsController {
     
     @RequestMapping(value = "/logs/{playerName}/{lastN}", method = RequestMethod.GET)
     public String playerRecords(ModelMap model, @PathVariable String playerName, @PathVariable int lastN) {
+        return addPageParams(model, playerName, lastN);
+    }
+
+    @RequestMapping(value = "/logs/{playerName}", method = RequestMethod.GET)
+    public String playerRecords(ModelMap model, @PathVariable String playerName) {
+        return addPageParams(model, playerName, -1);
+    }
+
+    private String addPageParams(ModelMap model, String playerName, int lastN) {
         List<ReleaseLogView> releaseLogs = logService.getLastReleaseLogsForPlayer(playerName, lastN);
         model.addAttribute("releaseLogs", releaseLogs);
         model.addAttribute("playerName", playerName);
