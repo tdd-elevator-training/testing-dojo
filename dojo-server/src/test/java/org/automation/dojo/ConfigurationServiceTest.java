@@ -68,6 +68,7 @@ public class ConfigurationServiceTest {
     public void shouldTriggerMinorRelease() {
         setupCurrentTime(123);
         setupReleaseParams(100, false);
+        configurationService.setPaused(false);
         configurationService.adjustChanges();
 
         setupCurrentTime(123 + 100 + 1);
@@ -92,6 +93,7 @@ public class ConfigurationServiceTest {
     @Test
     public void shouldTriggerPenaltyCalculationInitially() {
         configurationService.setPenaltyTimeOut(50);
+        configurationService.setPaused(false);
         configurationService.adjustChanges();
 
         setupCurrentTime(currentTime() + 50  + 1);
