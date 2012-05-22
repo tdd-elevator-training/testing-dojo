@@ -18,7 +18,7 @@
 	        </tr>
             <c:forEach items="${releaseLogs}" var="releaseLog" varStatus="statusRelease">
                 <tr>
-                    <td colspan=4>Release ${statusRelease.index + 1}</td>
+                    <td colspan=4>Release ${releaseLog.releaseNumber}</td>
                 </tr>
 
                 <c:forEach items="${releaseLog.records}" var="playerRecord" varStatus="statusRecord">

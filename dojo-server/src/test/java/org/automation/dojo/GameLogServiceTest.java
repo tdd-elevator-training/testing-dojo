@@ -154,7 +154,9 @@ public class GameLogServiceTest {
         List<ReleaseLogView> releaseLogs = gameLogService.getLastReleaseLogsForPlayer(CLIENT_NAME, 2);
 
         assertEquals(1, releaseLogs.size());
-        assertReleaseViewLogForScenarios(releaseLogs.get(0), scenario2, scenario3);
+        ReleaseLogView releaseLog = releaseLogs.get(0);
+        assertEquals(2, releaseLog.getReleaseNumber());
+        assertReleaseViewLogForScenarios(releaseLog, scenario2, scenario3);
     }
 
     @Test

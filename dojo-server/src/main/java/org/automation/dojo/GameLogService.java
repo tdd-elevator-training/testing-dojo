@@ -150,7 +150,7 @@ public class GameLogService implements LogService {
             for (int i = releases.size() - 1; i >= 0 && recordsToShow > 0; i--) {
                 List<PlayerRecord> releaseLogs = releases.get(i)
                         .getLastRecordsForPlayer(playerName, recordsToShow);
-                playerLogs.add(0, new ReleaseLogView(releaseLogs));
+                playerLogs.add(0, new ReleaseLogView(releaseLogs, i + 1));
                 recordsToShow -= releaseLogs.size();
             }
             return playerLogs;
