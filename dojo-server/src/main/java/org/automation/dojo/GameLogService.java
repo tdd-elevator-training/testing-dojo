@@ -100,12 +100,12 @@ public class GameLogService implements LogService {
     public List<BoardRecord> getBoardRecords() {
         lock.readLock().lock();
         try {
-            if (releases.isEmpty()) {
-                return createBoardRecordsWithZeroScores();
-            }
             Map<String, Integer> gameScores = new HashMap<String, Integer>();
             for (ReleaseLog release : releases) {
                 addReleaseScoresToGameScores(release, gameScores);
+            }
+            if (gameScores.isEmpty()) {
+               return createBoardRecordsWithZeroScores();
             }
             ArrayList<BoardRecord> result = convertGameScores(gameScores);
             Collections.sort(result);
