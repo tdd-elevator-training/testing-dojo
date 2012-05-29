@@ -19,7 +19,7 @@
             <tbody>
             <c:forEach items="${records}" var="record" varStatus="status">
                 <tr>
-                    <td>${status.index + 1}</td><td>${record.player}</td><td>${record.total}</td>
+                    <td>${status.index + 1}</td><td><a href="/logs/${record.player}">${record.player}</a></td><td>${record.total}</td>
                 </tr>
             </c:forEach>
             </tbody>

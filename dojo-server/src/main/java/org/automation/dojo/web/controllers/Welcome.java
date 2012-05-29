@@ -12,6 +12,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 public class Welcome {
     @RequestMapping(method = {RequestMethod.POST, RequestMethod.GET})
     public String homePage() {
-        return "redirect:/search";
+        return "welcome";
     }
 }
