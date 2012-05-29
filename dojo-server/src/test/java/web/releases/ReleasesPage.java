@@ -1,6 +1,7 @@
 package web.releases;
 
 
+import org.automation.dojo.web.controllers.Admin;
 import web.FunctionalTestCase;
 import org.automation.dojo.web.bugs.NullBug;
 import org.automation.dojo.web.scenario.SearchByTextScenario;
@@ -46,7 +47,7 @@ public class ReleasesPage extends FunctionalTestCase {
 
     @Override
     protected String getPageUrl() {
-        return "/admin";
+        return "/" + Admin.ADMIN_PAGE;
     }
 
     @Test
