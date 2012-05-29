@@ -13,7 +13,7 @@
 			<table id="search_box">
  				<tr>
   					<td>Please enter text to find</td>
-  					<td><input type="text" name="search_text" id="search_text" value="${search_text}"></td>
+  					<td><input type="text" name="search_text" id="search_text" value="${search_text}" maxLength="${search_text_max_length}"></td>
                     <td><input type="submit" value="Search" id="search_button"></td>
  				</tr>
 			</table>

@@ -1,6 +1,7 @@
 package web.search;
 
 
+import org.openqa.selenium.htmlunit.HtmlUnitWebElement;
 import web.FunctionalTestCase;
 import org.automation.dojo.web.bugs.NullBug;
 import org.automation.dojo.web.scenario.SearchByTextScenario;
@@ -17,6 +18,7 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 @ContextConfiguration(locations = {"classpath:/org/automation/dojo/applicationContext.xml"})
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -52,6 +54,28 @@ public class SearchPageLevel1 extends FunctionalTestCase {
     public void shouldSearchPageAsWelcomePage() {
         isSearchForm();
     }
+
+    @Test
+    public void shouldCutStringWhenSearchTextMaxLength() {
+        submitSearchTextWithLength(1000);
+
+        assertEquals(SearchByTextScenario.SEARCH_TEXT_MAX_LENGTH, getText().length());
+    }
+
+    protected void submitSearchTextWithLength(int length) {
+        char[] chars = new char[length];
+        Arrays.fill(chars, 'q');
+        enterText(new String(chars));
+        search();
+    }
+
+    @Test
+    public void shouldNotChangeStringWhenSearchTextIsLessThanMaxLength() {
+        submitSearchTextWithLength(199);
+
+        assertEquals(199, getText().length());
+    }
+
 
     @Test
     public void shouldFoundSomeRecordsWhenSearchItByPartOfDescription() {
@@ -153,6 +177,13 @@ public class SearchPageLevel1 extends FunctionalTestCase {
     protected void enterText(String string) {
         searchText.clear();
         searchText.sendKeys(string);
+    }
+
+    protected String getText() {
+        String tag = searchText.toString();
+        String from = "value=\"";
+        String to = "\" maxlength";
+        return tag.substring(tag.indexOf(from) + from.length() , tag.indexOf(to));
     }
 
     protected void search() {

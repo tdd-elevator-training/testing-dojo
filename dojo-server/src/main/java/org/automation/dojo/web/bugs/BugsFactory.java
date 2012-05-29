@@ -1,9 +1,8 @@
 package org.automation.dojo.web.bugs;
 
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import org.reflections.Reflections;
+
+import java.util.*;
 
 import static org.fest.reflect.core.Reflection.constructor;
 
@@ -12,22 +11,10 @@ public class BugsFactory {
     private static Map<Class, Bug<?>> bugs = new HashMap<Class, Bug<?>>();
     private static int id = 0;
 
-    static {
-        registerBug(NullBug.class);
+    private static Set<Class<? extends Bug>> getAllBugsInPackage() {
+        Reflections reflections = new Reflections(BugsFactory.class.getPackage().getName());
 
-        registerBug(NoResultWhenExpectedBug.class);
-        registerBug(AddSomeOtherElementIfListNotEmptyBug.class);
-        registerBug(FoundNotExistsProductBug.class);
-
-        registerBug(AddExistingItemWithPriceLessThanEnteredBug.class);
-        registerBug(AddExistingItemWithPriceMoreThanEnteredBug.class);
-        registerBug(DisabledPriceValidationBug.class);
-
-        registerBug(BrokenSortingBug.class);
-        registerBug(IgnorePriceSortingOrderBug.class);
-
-        registerBug(SomeRecordsWillNotAddToCart.class);
-        registerBug(BrokenChartSumBug.class);
+        return reflections.getSubTypesOf(Bug.class);
     }
 
     private static <T extends Bug<?>> void registerBug(Class<T> bugClass) {
@@ -38,6 +25,16 @@ public class BugsFactory {
     }
 
     public static <T extends Bug<?>> T getBug(Class<T> bugClass) {
+        if (bugs.size() == 0) {
+            Set<Class<? extends Bug>> bugs = getAllBugsInPackage();
+
+            for (Class<? extends Bug> bug : bugs) {
+                registerBug(bug);
+            }
+        }
+        if (!bugs.containsKey(bugClass)) {
+            throw new IllegalStateException(String.format("Bug %s not found. Please register bug at BugsFactory", bugClass));
+        }
         return (T) bugs.get(bugClass);
     }
 

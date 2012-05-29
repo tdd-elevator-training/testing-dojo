@@ -3,22 +3,27 @@ package org.automation.dojo.web.bugs;
 import org.junit.Test;
 
 import static junit.framework.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 public class BugFactoryTest {
     
     @Test
     public void shouldUniqueIds(){
-        assertEquals(1, BugsFactory.getBug(NullBug.class).getId());
+        assertNotNull(BugsFactory.getBug(NullBug.class));
 
-        assertEquals(2, BugsFactory.getBug(NoResultWhenExpectedBug.class).getId());
-        assertEquals(3, BugsFactory.getBug(AddSomeOtherElementIfListNotEmptyBug.class).getId());
-        assertEquals(4, BugsFactory.getBug(FoundNotExistsProductBug.class).getId());
+        assertNotNull(BugsFactory.getBug(NoResultWhenExpectedBug.class));
+        assertNotNull(BugsFactory.getBug(AddSomeOtherElementIfListNotEmptyBug.class));
+        assertNotNull(BugsFactory.getBug(FoundNotExistsProductBug.class));
+        assertNotNull(BugsFactory.getBug(NoSearchTextMaxLengthBug.class));
 
-        assertEquals(5, BugsFactory.getBug(AddExistingItemWithPriceLessThanEnteredBug.class).getId());
-        assertEquals(6, BugsFactory.getBug(AddExistingItemWithPriceMoreThanEnteredBug.class).getId());
-        assertEquals(7, BugsFactory.getBug(DisabledPriceValidationBug.class).getId());
+        assertNotNull(BugsFactory.getBug(AddExistingItemWithPriceLessThanEnteredBug.class));
+        assertNotNull(BugsFactory.getBug(AddExistingItemWithPriceMoreThanEnteredBug.class));
+        assertNotNull(BugsFactory.getBug(DisabledPriceValidationBug.class));
 
-        assertEquals(8, BugsFactory.getBug(BrokenSortingBug.class).getId());
-        assertEquals(9, BugsFactory.getBug(IgnorePriceSortingOrderBug.class).getId());
+        assertNotNull(BugsFactory.getBug(BrokenSortingBug.class));
+        assertNotNull(BugsFactory.getBug(IgnorePriceSortingOrderBug.class));
+
     }
+
+    
 }

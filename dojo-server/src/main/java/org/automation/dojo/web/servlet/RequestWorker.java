@@ -53,4 +53,6 @@ public interface RequestWorker {
     void setTotalSum(double price);
 
     void setValidatePriceNumber(boolean isEnabled);
+
+    void setSearchTextMaxLength(int maxLength);
 }

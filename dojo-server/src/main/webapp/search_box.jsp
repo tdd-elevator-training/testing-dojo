@@ -24,7 +24,7 @@
 			<table id="search_box">
  				<tr>
   					<td>Please enter text to find</td>
-  					<td><input type="text" name="search_text" id="search_text" value="${search_text}"/></td>
+                    <td><input type="text" name="search_text" id="search_text" value="${search_text}" maxLength="${search_text_max_length}"/></td>
   					<td>
   					    <select name="price_search_option" id="price_search_option">
   					        <c:forEach items="${requestScope.price_search_options}" var="search_option" varStatus="status">
@@ -36,7 +36,7 @@
       			            </c:forEach>
                         </select>
                     </td>
-                    <td><input type="text" name="price" id="price" value="${price}" onBlur="validatePrice();"/></td>
+                    <td><input type="text" name="price" id="price" value="${price}" maxLength="10" onBlur="validatePrice();"/></td>
                     <td><span id="validation_info"></span></td>
                     <td><input type="submit" value="Search" id="search_button"/></td>
  				</tr>

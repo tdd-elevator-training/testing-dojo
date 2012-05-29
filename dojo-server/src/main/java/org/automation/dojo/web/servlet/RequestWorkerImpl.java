@@ -177,5 +177,10 @@ public class RequestWorkerImpl implements RequestWorker {
         request.setAttribute("validate_price_number", isEnabled);
     }
 
+    @Override
+    public void setSearchTextMaxLength(int maxLength) {
+        request.setAttribute("search_text_max_length", maxLength);
+    }
+
 
 }

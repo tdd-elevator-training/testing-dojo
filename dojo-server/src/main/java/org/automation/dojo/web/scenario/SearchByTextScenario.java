@@ -7,10 +7,11 @@ import org.automation.dojo.web.model.Record;
 import org.automation.dojo.web.model.ShopService;
 import org.automation.dojo.web.servlet.RequestWorker;
 
-import java.util.Arrays;
 import java.util.List;
 
 public class SearchByTextScenario extends BasicScenario<RequestWorker> {
+
+    public static final int SEARCH_TEXT_MAX_LENGTH = 200;
 
     public SearchByTextScenario(int id, String description, BugsQueue bugsQueue) {
         super(id, description, bugsQueue);
@@ -26,6 +27,7 @@ public class SearchByTextScenario extends BasicScenario<RequestWorker> {
         ShopService service = ApplicationContextLocator.getInstance().getBean("shopService");
 
         request.saveSearchTextState();
+        request.setSearchTextMaxLength(SEARCH_TEXT_MAX_LENGTH);
 
         String foundString = request.getSearchText();
         if (foundString != null) {
@@ -46,7 +48,8 @@ public class SearchByTextScenario extends BasicScenario<RequestWorker> {
     public List<? extends Bug> getPossibleBugs() {
         return BugsFactory.getBugs(NoResultWhenExpectedBug.class,
                 AddSomeOtherElementIfListNotEmptyBug.class,
-                FoundNotExistsProductBug.class);
+                FoundNotExistsProductBug.class,
+                NoSearchTextMaxLengthBug.class);
     }
 
 }
