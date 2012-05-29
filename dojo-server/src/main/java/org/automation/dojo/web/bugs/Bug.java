@@ -22,6 +22,10 @@ public class Bug<T> implements Serializable {
         return id;
     }
 
+    public boolean isNull() {
+        return this instanceof NullBug;
+    }
+
     public void setWeight(int weight) {
         this.weight = weight;
     }

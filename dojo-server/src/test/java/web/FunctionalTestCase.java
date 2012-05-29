@@ -25,6 +25,17 @@ public abstract class FunctionalTestCase {
     private static String baseUrl;
     private ReleaseEngine releaseEngine;
 
+    public void join() {
+        System.out.println(baseUrl);
+        System.out.println("major - " + releaseEngine.getMajorInfo());
+        System.out.println("minor - " + releaseEngine.getMinorInfo());
+        try {
+            ServerRunner.getInstance().join();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     @Before
     public void init() throws Exception {
         int port = ServerRunner.getInstance().start();
@@ -56,12 +67,13 @@ public abstract class FunctionalTestCase {
 
     private void switchToMinorRelease(String minorRelease) {
         int countLoop = 0;
+        final int MAX = 5000;
         do {
             releaseEngine.nextMinorRelease();
             countLoop++;
-        } while (!minorRelease.equals(releaseEngine.getMinorInfo()) && countLoop < 1000);
-        if (countLoop == 10000) {
-            throw new IllegalArgumentException(minorRelease + " not found");
+        } while (!minorRelease.equals(releaseEngine.getMinorInfo()) && countLoop < MAX);
+        if (countLoop == MAX) {
+            throw new IllegalArgumentException("Release " + minorRelease + " not found");
         }
     }
 
