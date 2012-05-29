@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
  * @author serhiy.zelenin
  */
 @Controller
-@RequestMapping("/admin")
+@RequestMapping("/admin31415")
 public class Admin {
     @Autowired
     private ConfigurationService configurationService;
