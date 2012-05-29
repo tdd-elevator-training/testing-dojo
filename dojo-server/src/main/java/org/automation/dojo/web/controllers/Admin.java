@@ -14,8 +14,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
  * @author serhiy.zelenin
  */
 @Controller
-@RequestMapping("/admin31415")
+@RequestMapping("/" + Admin.ADMIN_PAGE)
 public class Admin {
+    public final static String ADMIN_PAGE = "admin31415";
+
     @Autowired
     private ConfigurationService configurationService;
 
@@ -24,7 +26,7 @@ public class Admin {
 
     @Autowired
     private ReleaseEngine releaseEngine;
-    
+
     @RequestMapping(method = RequestMethod.GET)
     public String settingsForm(Model model) {
         model.addAttribute("configuration", configurationService);
@@ -34,6 +36,7 @@ public class Admin {
         model.addAttribute("minorInfo", releaseEngine.getMinorInfo());
         model.addAttribute("majorInfo", releaseEngine.getMajorInfo());
         model.addAttribute("release", releaseEngine.getCurrentRelease());
+        model.addAttribute("adminPage", ADMIN_PAGE);
         return "admin";
     }
 
@@ -41,15 +44,15 @@ public class Admin {
     public String submitSettingsForm(ConfigurationService configuration, BindingResult result) {
         if (configuration.getMinorReleaseFrequency() < 1) {
             result.reject("minorReleaseFrequency", "Minor release frequency is too low");
-            return "redirect:/admin";
+            return redirectAdminPage();
         }
         if (configuration.getPenaltyTimeOut() < 0) {
             result.reject("penaltyTimeOut", "Time out can not be less than 0");
-            return "redirect:/admin";
+            return redirectAdminPage();
         }
         if (configuration.getPenaltyValue() < 0) {
             result.reject("penaltyTimeOut", "Penalty can not be negative");
-            return "redirect:/admin";
+            return redirectAdminPage();
         }
         configurationService.setMinorReleaseFrequency(configuration.getMinorReleaseFrequency());
         configurationService.setPenaltyValue(configuration.getPenaltyValue());
@@ -58,32 +61,36 @@ public class Admin {
         configurationService.setLiarWeight(configuration.getLiarWeight());
         configurationService.setExceptionWeight(configuration.getExceptionWeight());
         configurationService.adjustChanges();
-        return "redirect:/admin";
+        return redirectAdminPage();
     }
 
     @RequestMapping("/nextMajor")
     public String nextMajor() {
         releaseEngine.nextMajorRelease();
-        return "redirect:/admin";
+        return redirectAdminPage();
     }
 
     @RequestMapping("/nextMinor")
     public String nextMinor() {
         releaseEngine.nextMinorRelease();
-        return "redirect:/admin";
+        return redirectAdminPage();
     }
 
     @RequestMapping("/pause")
     public String pause() {
         configurationService.setPaused(true);
         configurationService.adjustChanges();
-        return "redirect:/admin";
+        return redirectAdminPage();
     }
 
     @RequestMapping("/resume")
     public String resume() {
         configurationService.setPaused(false);
         configurationService.adjustChanges();
-        return "redirect:/admin";
+        return redirectAdminPage();
+    }
+
+    private String redirectAdminPage() {
+        return "redirect:/" + ADMIN_PAGE;
     }
 }

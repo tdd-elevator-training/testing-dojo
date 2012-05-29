@@ -2,7 +2,7 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <h3>Admin page</h3>
-<form:form commandName="configuration" action="admin" method="POST">
+<form:form commandName="configuration" action="${adminPage}" method="POST">
     <table>
         <tr>
             <td><form:errors path="minorReleaseFrequency"/></td>
@@ -32,8 +32,8 @@
             <td>Exception weight : <form:input path="exceptionWeight"/></td>
         </tr>
         <tr>
-            <td><c:if test="${configuration.paused}"><a href="/admin/resume">Resume Game</a></c:if>
-                <c:if test="${!configuration.paused}"><a href="/admin/pause">Pause Game</a></c:if></td>
+            <td><c:if test="${configuration.paused}"><a href="/${adminPage}/resume">Resume Game</a></c:if>
+                <c:if test="${!configuration.paused}"><a href="/${adminPage}/pause">Pause Game</a></c:if></td>
         </tr>
         <tr>
             <td colspan="3">
@@ -51,12 +51,12 @@ Next penlty tick at: ${configuration.nextPenaltyTickTime} <br>
     <tr>
         <td>Current major release</td>
         <td>${majorNumber}</td>
-        <td><a name="next_major" href="<c:url value="/admin/nextMajor"/>">Next major</a></td>
+        <td><a name="next_major" href="<c:url value="/${adminPage}/nextMajor"/>">Next major</a></td>
     </tr>
     <tr>
         <td>Current minor release</td>
         <td>${minorNumber}</td>
-        <td><a name="next_minor" href="<c:url value="/admin/nextMinor"/>">Next minor</a></td>
+        <td><a name="next_minor" href="<c:url value="/${adminPage}/nextMinor"/>">Next minor</a></td>
     </tr>
 </table>
 <br/>
