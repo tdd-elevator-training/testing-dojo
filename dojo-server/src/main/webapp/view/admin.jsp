@@ -1,6 +1,7 @@
 <%--@elvariable id="release" type="org.automation.dojo.ReleaseEngine"--%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<h3>Admin page</h3>
 <form:form commandName="configuration" action="admin" method="POST">
     <table>
         <tr>
@@ -44,8 +45,8 @@
 <br/>
 Release info
 <span id="indicator">Now we have major ${majorNumber} and minor ${minorInfo}</span> </br>
-Next Release in: ${configuration.nextReleaseRemaining} <br>
-Next Penlty tick at: ${configuration.nextPenaltyTickTime} <br>
+Next release in: ${configuration.nextReleaseRemaining} <br>
+Next penlty tick at: ${configuration.nextPenaltyTickTime} <br>
 <table>
     <tr>
         <td>Current major release</td>
@@ -70,7 +71,7 @@ Current scenarios
         </tr>
     </c:forEach>
 </table>
-
+</br>
 Registered players:
 <table>
     <tr>
