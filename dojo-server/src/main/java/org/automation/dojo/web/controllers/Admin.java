@@ -29,7 +29,7 @@ public class Admin {
     public String settingsForm(Model model) {
         model.addAttribute("configuration", configurationService);
         model.addAttribute("players", logService.getRegisteredPlayers());
-        model.addAttribute("majorNumber", releaseEngine.getMajorNumber());
+        model.addAttribute("majorNumber", releaseEngine.getMajorNumber() + 1);
         model.addAttribute("minorNumber", releaseEngine.getMinorNumber());
         model.addAttribute("minorInfo", releaseEngine.getMinorInfo());
         model.addAttribute("majorInfo", releaseEngine.getMajorInfo());

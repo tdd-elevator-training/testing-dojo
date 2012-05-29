@@ -10,9 +10,9 @@
         <link rel="stylesheet" type="text/css" href="/resources/style/dojo.css">
     </head>
 	<body>
-    Next Release in: ${configuration.nextReleaseRemaining} <br>
-    <a href="/scenarios">Scenarios implemented in current release</a> <br/>
-	Logs for ${playerName}:<br>
+    <h3>Logs</h3>
+        <jsp:include page="releaseInfo.jsp"/>
+	    Logs for ${playerName}:<br>
 	    <table id="table-logs">
 	        <thead>
 	            <th>Scenario</th><th>Score</th><th>Description</th><th>Log type</th>

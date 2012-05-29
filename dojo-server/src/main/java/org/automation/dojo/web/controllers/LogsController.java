@@ -44,6 +44,8 @@ public class LogsController {
         model.addAttribute("releaseLogs", releaseLogs);
         model.addAttribute("playerName", playerName);
         model.addAttribute("configuration", configurationService);
+        model.addAttribute("majorNumber", releaseEngine.getMajorNumber() + 1);
+        model.addAttribute("minorNumber", releaseEngine.getMinorNumber());
         return "logs";
     }
 

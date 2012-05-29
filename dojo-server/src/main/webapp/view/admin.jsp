@@ -48,12 +48,12 @@ Next Release in: ${configuration.nextReleaseRemaining} <br>
 Next Penlty tick at: ${configuration.nextPenaltyTickTime} <br>
 <table>
     <tr>
-        <td>Current Major Release</td>
+        <td>Current major release</td>
         <td>${majorNumber}</td>
         <td><a name="next_major" href="<c:url value="/admin/nextMajor"/>">Next major</a></td>
     </tr>
     <tr>
-        <td>Current Minor Release</td>
+        <td>Current minor release</td>
         <td>${minorNumber}</td>
         <td><a name="next_minor" href="<c:url value="/admin/nextMinor"/>">Next minor</a></td>
     </tr>

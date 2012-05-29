@@ -10,8 +10,8 @@
         <link rel="stylesheet" type="text/css" href="/resources/style/dojo.css">
 	</head>
 	<body>
-	Leader Board<br>
-    Next Release in: ${configuration.nextReleaseRemaining} <br>
+	    <h3>Leader Board</h3>
+        <jsp:include page="releaseInfo.jsp"/>
 	    <table id="table-logs">
             <thead>
                 <th>#</th><th>Player</th><th>Total Score</th>
