@@ -58,7 +58,7 @@ public class ReleasesPage extends FunctionalTestCase {
 
     @Test
     public void shouldMajorRelease0WithoutBugsAtStart(){
-        assertMach("Now we have major 0 and minor " +
+        assertMach("Now we have major 1 and minor " +
                 "\\[Scenario SearchByTextScenario with bug NullBug\\]",
                 indicator.getText());
     }
@@ -67,7 +67,7 @@ public class ReleasesPage extends FunctionalTestCase {
     public void shouldSwitchMajorWhenClick() {
         goTo(nextMajor.getAttribute("href"));
 
-        assertMach("Now we have major 1 and minor " +
+        assertMach("Now we have major 2 and minor " +
                 "\\[Scenario SearchByTextScenario with bug NullBug, " +
                 "Scenario SearchByPriceScenario with bug NullBug, " +
                 "Scenario PriceSortingAscDescScenario with bug NullBug\\]",
@@ -78,7 +78,7 @@ public class ReleasesPage extends FunctionalTestCase {
     public void shouldSwitchMinorWhenClickForMajor0() {
         goTo(nextMinor.getAttribute("href"));
 
-        assertMach("Now we have major 0 and minor " +
+        assertMach("Now we have major 1 and minor " +
                 "\\[Scenario SearchByTextScenario with bug .*\\]",
                 indicator.getText());
     }
@@ -88,7 +88,7 @@ public class ReleasesPage extends FunctionalTestCase {
         goTo(nextMajor.getAttribute("href"));
         goTo(nextMinor.getAttribute("href"));
 
-        assertMach("Now we have major 1 and minor " +
+        assertMach("Now we have major 2 and minor " +
                 "\\[Scenario SearchByTextScenario with bug .*" +
                 "Scenario SearchByPriceScenario with bug .*, " +
                 "Scenario PriceSortingAscDescScenario with bug .*\\]",
@@ -97,13 +97,13 @@ public class ReleasesPage extends FunctionalTestCase {
 
     @Test
     public void shouldStopIfNoMoreMajorRevisions() {
-        assertMach("Now we have major 0 and minor " +
+        assertMach("Now we have major 1 and minor " +
                 "\\[Scenario SearchByTextScenario with bug NullBug\\]",
                 indicator.getText());
 
         goTo(nextMajor.getAttribute("href"));
 
-        assertMach("Now we have major 1 and minor " +
+        assertMach("Now we have major 2 and minor " +
                 "\\[Scenario SearchByTextScenario with bug NullBug, " +
                 "Scenario SearchByPriceScenario with bug NullBug, " +
                 "Scenario PriceSortingAscDescScenario with bug NullBug\\]",
@@ -111,7 +111,7 @@ public class ReleasesPage extends FunctionalTestCase {
 
         goTo(nextMajor.getAttribute("href"));
 
-        assertMach("Now we have major 2 and minor " +
+        assertMach("Now we have major 3 and minor " +
                 "\\[Scenario SearchByTextScenario with bug NullBug, " +
                 "Scenario SearchByPriceScenario with bug NullBug, " +
                 "Scenario PriceSortingAscDescScenario with bug NullBug, " +
@@ -122,7 +122,7 @@ public class ReleasesPage extends FunctionalTestCase {
         goTo(nextMajor.getAttribute("href"));
         goTo(nextMajor.getAttribute("href"));
 
-        assertMach("Now we have major 2 and minor " +
+        assertMach("Now we have major 3 and minor " +
                 "\\[Scenario SearchByTextScenario with bug NullBug, " +
                 "Scenario SearchByPriceScenario with bug NullBug, " +
                 "Scenario PriceSortingAscDescScenario with bug NullBug, " +
