@@ -347,7 +347,7 @@ public class DojoScoreServiceTest extends DojoScoreBaseTest {
     }
 
     private boolean reportScenario(int scenarioId, TestResult testResult) {
-        return scoreService.testResult(PLAYER_NAME, scenarioId, testResult);
+        return scoreService.testResult(PLAYER_NAME, scenarioId, testResult, 123L);
     }
 
 

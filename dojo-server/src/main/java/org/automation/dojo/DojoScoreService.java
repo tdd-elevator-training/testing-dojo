@@ -32,7 +32,7 @@ public class DojoScoreService implements ScoreService {
         this.configurationService = configurationService;
     }
 
-    public boolean testResult(String clientName, int scenarioNumber, TestResult testResult) {
+    public boolean testResult(String clientName, int scenarioNumber, TestResult testResult, long timeStamp) {
         BasicScenario scenario = releaseEngine.getScenario(scenarioNumber);
         List<GameLog> gameLogs = logService.getGameLogs(clientName, scenario);
         if (testResult == TestResult.EXCEPTION) {

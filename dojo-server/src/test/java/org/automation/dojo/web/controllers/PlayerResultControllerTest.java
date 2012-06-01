@@ -2,6 +2,7 @@ package org.automation.dojo.web.controllers;
 
 import org.automation.dojo.ScoreService;
 import org.automation.dojo.TestResult;
+import org.automation.dojo.TimeService;
 import org.fest.assertions.Index;
 import org.junit.Before;
 import org.junit.Test;
@@ -16,6 +17,7 @@ import org.springframework.mock.web.MockHttpServletResponse;
 
 import javax.servlet.ServletException;
 import java.io.IOException;
+import java.util.Date;
 
 import static junit.framework.Assert.assertEquals;
 import static org.fest.assertions.Assertions.assertThat;
@@ -31,22 +33,27 @@ public class PlayerResultControllerTest {
     private MockHttpServletRequest request;
     private PlayerResultController controller;
 
-    @Mock ScoreService service;
+    @Mock ScoreService scoreService;
+    @Mock TimeService timeService;
+
     @Captor ArgumentCaptor<Integer> scenarioCaptor;
     @Captor ArgumentCaptor<TestResult> testResultCaptor;
     @Captor ArgumentCaptor<String> nameCaptor;
+    @Captor ArgumentCaptor<Long> timeStampCaptor;
 
     @Before
     public void setUp() throws Exception {
         response = new MockHttpServletResponse();
         request = new MockHttpServletRequest();
-        controller = new PlayerResultController(service);
+        when(timeService.now()).thenReturn(new Date());
+        controller = new PlayerResultController(scoreService, timeService);
     }
 
 
     @Test
     public void shouldReturnSucceedWhenScenarioPassed() throws IOException, ServletException {
-        when(service.testResult(anyString(), anyInt(), Matchers.<TestResult>anyObject())).thenReturn(true);
+        when(scoreService.testResult(anyString(), anyInt(), Matchers.<TestResult>anyObject(),
+                anyLong())).thenReturn(true);
         request.addParameter("scenario1", "passed");
 
         controller.service(request, response);
@@ -97,7 +104,7 @@ public class PlayerResultControllerTest {
 
     @Test
     public void shouldHaveServiceActualResultsWhenReported() throws IOException, ServletException {
-        when(service.testResult("masha", 1, TestResult.PASSED)).thenReturn(false);
+        when(scoreService.testResult("masha", 1, TestResult.PASSED, timeService.now().getTime())).thenReturn(false);
         setupRequest("masha", "passed");
 
         controller.service(request, response);
@@ -155,12 +162,24 @@ public class PlayerResultControllerTest {
     public void shouldReportForExistingScenariosWhenNonExistenceScenarioInList() throws IOException, ServletException {
         request.addParameter("scenario123", "FAIL");
         request.addParameter("scenario1", "PASS");
-        when(service.testResult(Matchers.<String>any(), eq(123), Matchers.<TestResult>any())).thenThrow(new IllegalArgumentException());
+        when(scoreService.testResult(Matchers.<String>any(), eq(123), Matchers.<TestResult>any(),
+                anyLong())).thenThrow(new IllegalArgumentException());
 
         controller.service(request, response);
 
         captureTestResultValues();
         assertResultReported(null, 1, true, TestResult.PASSED);
+    }
+
+    @Test
+    public void shouldSendTimeWhenReportSeveralResults() throws IOException, ServletException {
+        setupRequest("vasya", "false", "true");
+        when(timeService.now()).thenReturn(new Date(12345L));
+
+        controller.service(request, response);
+
+        captureTestResultValues();
+        assertThat(timeStampCaptor.getAllValues()).contains(12345L, 12345L);
     }
 
     private void assertResultReported(String expectedName, int scenarioNumber, boolean expectedResult,
@@ -173,8 +192,9 @@ public class PlayerResultControllerTest {
 
 
     private void captureTestResultValues() {
-        verify(service, atLeastOnce()).testResult(
-                nameCaptor.capture(), scenarioCaptor.capture(), testResultCaptor.capture());
+        verify(scoreService, atLeastOnce()).testResult(
+                nameCaptor.capture(), scenarioCaptor.capture(), testResultCaptor.capture(),
+                timeStampCaptor.capture());
     }
 
     private void setupRequest(String name, String... scenarioResults) {
