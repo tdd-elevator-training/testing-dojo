@@ -1,7 +1,7 @@
 package org.automation.dojo.web.controllers;
 
 import org.automation.dojo.ScoreService;
-import org.automation.dojo.TestResult;
+import org.automation.dojo.TestStatus;
 import org.automation.dojo.TimeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -55,16 +55,16 @@ public class PlayerResultController {
         response.flushBuffer();
     }
 
-    private TestResult parseResult(String ... values) {
+    private TestStatus parseResult(String ... values) {
         boolean failed = false;
         for (String value : values) {
             if (value.equalsIgnoreCase("exception")) {
-                return TestResult.EXCEPTION;
+                return TestStatus.EXCEPTION;
             }
             failed |= value.equalsIgnoreCase("failed") || value.equalsIgnoreCase("false") || value.equalsIgnoreCase("FAIL");
 
         }
-        return failed ? TestResult.FAILED : TestResult.PASSED;
+        return failed ? TestStatus.FAILED : TestStatus.PASSED;
     }
 
     public void setScoreService(ScoreService scoreService) {

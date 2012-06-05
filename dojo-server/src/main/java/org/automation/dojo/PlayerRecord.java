@@ -18,8 +18,8 @@ public class PlayerRecord {
     private String playerName;
     private Date logTime;
 
-    public PlayerRecord(String playerName, BasicScenario scenario, boolean passed, 
-            int score, String description, Type type) {
+    public PlayerRecord(String playerName, BasicScenario scenario, boolean passed,
+                        int score, String description, Type type) {
         this(playerName, scenario, passed, score, description, type, new Date());
     }
 

@@ -32,7 +32,7 @@ public abstract class DojoScoreBaseTest {
         scoreService = new DojoScoreService(logService, releaseEngine, configurationService);
     }
 
-    protected PlayerRecord captureLogRecord() {
+    protected PlayerRecord captureLastLogRecord() {
         verify(logService, atLeastOnce()).playerLog(recordCaptor.capture());
         return recordCaptor.getValue();
     }

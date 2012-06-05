@@ -33,7 +33,7 @@ public class DojoScoreServiceTickScenariosTest extends DojoScoreBaseTest {
 
         scoreService.tick(100 + PENALTY_TIMEOUT);
 
-        assertCapturedTimeoutRecord(captureLogRecord(), -PENALTY_VALUE, "vasya", scenario(1));
+        assertCapturedTimeoutRecord(captureLastLogRecord(), -PENALTY_VALUE, "vasya", scenario(1));
     }
 
     @Test
@@ -68,7 +68,7 @@ public class DojoScoreServiceTickScenariosTest extends DojoScoreBaseTest {
         scoreService.tick(100 + 2 * PENALTY_TIMEOUT);
 
         verify(logService, times(1)).playerLog(Matchers.<PlayerRecord>anyObject());
-        assertCapturedTimeoutRecord(captureLogRecord(), -PENALTY_VALUE, "petya", scenario);
+        assertCapturedTimeoutRecord(captureLastLogRecord(), -PENALTY_VALUE, "petya", scenario);
     }
 
     @Test
@@ -80,7 +80,7 @@ public class DojoScoreServiceTickScenariosTest extends DojoScoreBaseTest {
 
         scoreService.tick(100 + 2 * PENALTY_TIMEOUT);
 
-        assertCapturedTimeoutRecord(captureLogRecord(), -2 * PENALTY_VALUE, "petya", scenario);
+        assertCapturedTimeoutRecord(captureLastLogRecord(), -2 * PENALTY_VALUE, "petya", scenario);
     }
 
 

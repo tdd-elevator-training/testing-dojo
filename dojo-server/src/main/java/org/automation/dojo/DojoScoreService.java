@@ -26,16 +26,16 @@ public class DojoScoreService implements ScoreService {
     }
 
     public DojoScoreService(LogService logService, ReleaseEngine releaseEngine,
-            ConfigurationService configurationService) {
+                            ConfigurationService configurationService) {
         this.logService = logService;
         this.releaseEngine = releaseEngine;
         this.configurationService = configurationService;
     }
 
-    public boolean testResult(String clientName, int scenarioNumber, TestResult testResult, long timeStamp) {
+    public boolean testResult(String clientName, int scenarioNumber, TestStatus testStatus, long timeStamp) {
         BasicScenario scenario = releaseEngine.getScenario(scenarioNumber);
         List<GameLog> gameLogs = logService.getGameLogs(clientName, scenario);
-        if (testResult == TestResult.EXCEPTION) {
+        if (testStatus == TestStatus.EXCEPTION) {
             logService.playerLog(new PlayerRecord(clientName, scenario, false, -configurationService.getExceptionWeight(),
                     "Exception in test case! Fix it!", PlayerRecord.Type.EXCEPTION));
             return scenario.bugsFree();
@@ -44,7 +44,7 @@ public class DojoScoreService implements ScoreService {
         //last log will be a log for current release
         GameLog currentGame = lastGameLog(gameLogs);
         Bug currentBug = scenario.getBug();
-        boolean testPassed = testResult == TestResult.PASSED;
+        boolean testPassed = testStatus == TestStatus.PASSED;
         if (!testPassed && currentGame.bugReported(currentBug)) {
             logService.playerLog(new PlayerRecord(clientName, scenario, testPassed, 0,
                     "Bug already reported for this Minor Release. " +
@@ -163,4 +163,10 @@ public class DojoScoreService implements ScoreService {
         return null;
     }
 
+    public void suiteResult(TestSuiteResult suite) {
+        List<TestResult> testResults = suite.getTestResults();
+        for (TestResult testResult : testResults) {
+            testResult(suite.getPlayerName(), testResult.getScenarioId(), testResult.getTestStatus(), suite.getTimestamp());
+        }
+    }
 }

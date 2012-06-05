@@ -14,6 +14,7 @@ import java.util.Date;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
+import static junit.framework.Assert.fail;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
 
@@ -31,7 +32,7 @@ public class DojoScoreServiceTest extends DojoScoreBaseTest {
         BasicScenario scenario = setupScenario(1, true);
         setupGameLogs(scenario, gameLog(scenario));
 
-        assertFalse(reportScenario(1, TestResult.FAILED));
+        assertFalse(reportScenario(1, TestStatus.FAILED));
     }
 
     @Test
@@ -39,7 +40,7 @@ public class DojoScoreServiceTest extends DojoScoreBaseTest {
         BasicScenario scenario = setupScenario(1, false);
         setupGameLogs(scenario, gameLog(scenario));
 
-        assertTrue(reportScenario(1, TestResult.FAILED));
+        assertTrue(reportScenario(1, TestStatus.FAILED));
     }
 
     @Test
@@ -47,9 +48,9 @@ public class DojoScoreServiceTest extends DojoScoreBaseTest {
         BasicScenario scenario = setupScenario(1, 88);
         setupGameLogs(scenario, gameLog(scenario));
 
-        reportScenario(1, TestResult.FAILED);
+        reportScenario(1, TestStatus.FAILED);
 
-        PlayerRecord record = captureLogRecord();
+        PlayerRecord record = captureLastLogRecord();
 
         assertEquals(88, record.getScore());
         assertEquals(1, record.getScenario().getId());
@@ -64,9 +65,9 @@ public class DojoScoreServiceTest extends DojoScoreBaseTest {
                 gameLog(scenario, record(scenario, true, 0)),
                 gameLog(scenario)); //new minor release record, no reports yet
 
-        reportScenario(1, TestResult.FAILED);
+        reportScenario(1, TestStatus.FAILED);
 
-        PlayerRecord capturedRecord = captureLogRecord();
+        PlayerRecord capturedRecord = captureLastLogRecord();
         
         assertEquals(100 / 2, capturedRecord.getScore());
     }
@@ -79,9 +80,9 @@ public class DojoScoreServiceTest extends DojoScoreBaseTest {
                 gameLog(scenario, record(scenario, true, 0)),
                 gameLog(scenario)); //new minor release record, no reports yet
 
-        reportScenario(1, TestResult.FAILED);
+        reportScenario(1, TestStatus.FAILED);
 
-        PlayerRecord capturedRecord = captureLogRecord();
+        PlayerRecord capturedRecord = captureLastLogRecord();
 
         assertEquals(100 / 2, capturedRecord.getScore());
     }
@@ -92,9 +93,9 @@ public class DojoScoreServiceTest extends DojoScoreBaseTest {
         setupGameLogs(scenario,
                 gameLog(scenario, record(scenario, false, 100)));
 
-        reportScenario(1, TestResult.FAILED);
+        reportScenario(1, TestStatus.FAILED);
 
-        assertEquals(0, captureLogRecord().getScore());
+        assertEquals(0, captureLastLogRecord().getScore());
     }
 
     @Test
@@ -106,7 +107,7 @@ public class DojoScoreServiceTest extends DojoScoreBaseTest {
 
         scoreService.nextRelease(new Release(scenario));
 
-        PlayerRecord record = captureLogRecord();
+        PlayerRecord record = captureLastLogRecord();
         assertEquals(-100, record.getScore());
         assertTrue(record.isPassed());
     }
@@ -123,7 +124,7 @@ public class DojoScoreServiceTest extends DojoScoreBaseTest {
 
         scoreService.nextRelease(new Release(scenario));
 
-        assertEquals(-50, captureLogRecord().getScore());
+        assertEquals(-50, captureLastLogRecord().getScore());
     }
 
     @Test
@@ -156,10 +157,10 @@ public class DojoScoreServiceTest extends DojoScoreBaseTest {
                 gameLog(scenario, record(scenario(1, 123), false, 123)),
                 gameLog(scenario));
 
-        reportScenario(1, TestResult.FAILED);
+        reportScenario(1, TestStatus.FAILED);
 
         //we report a bug for a bug free scenario
-        PlayerRecord record = captureLogRecord();
+        PlayerRecord record = captureLastLogRecord();
         assertEquals(-30, record.getScore());
         assertFalse(record.isPassed());
     }
@@ -171,10 +172,10 @@ public class DojoScoreServiceTest extends DojoScoreBaseTest {
         setupGameLogs(scenario,
                 gameLog(scenario, record(scenario, false, 123)));
 
-        reportScenario(1, TestResult.PASSED);
+        reportScenario(1, TestStatus.PASSED);
 
         //we report test passed for bugged scenario which failed in the same release
-        PlayerRecord record = captureLogRecord();
+        PlayerRecord record = captureLastLogRecord();
         assertEquals(-30*2, record.getScore());
         assertTrue(record.isPassed());
         assertEquals(PlayerRecord.Type.LIAR, record.getType());
@@ -187,9 +188,9 @@ public class DojoScoreServiceTest extends DojoScoreBaseTest {
                 gameLog(scenario, record(scenario, false, 100)),
                 gameLog(scenario, record(scenario, true, -200, PlayerRecord.Type.LIAR)));
 
-        reportScenario(1, TestResult.PASSED);
+        reportScenario(1, TestStatus.PASSED);
 
-        PlayerRecord record = captureLogRecord();
+        PlayerRecord record = captureLastLogRecord();
         assertEquals(0, record.getScore());
         assertTrue(record.isPassed());
         assertEquals(PlayerRecord.Type.LIAR, record.getType());
@@ -202,9 +203,9 @@ public class DojoScoreServiceTest extends DojoScoreBaseTest {
                 gameLog(scenario, record(scenario, false, 100)),
                 gameLog(scenario, record(scenario, false, -200, PlayerRecord.Type.LIAR)));
 
-        reportScenario(1, TestResult.FAILED);
+        reportScenario(1, TestStatus.FAILED);
 
-        PlayerRecord record = captureLogRecord();
+        PlayerRecord record = captureLastLogRecord();
         assertEquals(0, record.getScore());
         assertEquals(PlayerRecord.Type.LIAR, record.getType());
     }
@@ -215,9 +216,9 @@ public class DojoScoreServiceTest extends DojoScoreBaseTest {
         setupGameLogs(scenario,
                 gameLog(scenario));
 
-        reportScenario(1, TestResult.PASSED);
+        reportScenario(1, TestStatus.PASSED);
 
-        PlayerRecord record = captureLogRecord();
+        PlayerRecord record = captureLastLogRecord();
         assertEquals(-20, record.getScore());
         assertEquals(PlayerRecord.Type.LIAR, record.getType());
     }
@@ -228,9 +229,9 @@ public class DojoScoreServiceTest extends DojoScoreBaseTest {
         setupGameLogs(scenario,
                 gameLog(scenario, record(scenario, true, -100, PlayerRecord.Type.LIAR)));
 
-        reportScenario(1, TestResult.PASSED);
+        reportScenario(1, TestStatus.PASSED);
 
-        PlayerRecord record = captureLogRecord();
+        PlayerRecord record = captureLastLogRecord();
         assertEquals(0, record.getScore());
         assertEquals(PlayerRecord.Type.LIAR, record.getType());
     }
@@ -241,9 +242,9 @@ public class DojoScoreServiceTest extends DojoScoreBaseTest {
         setupGameLogs(scenario,
                 gameLog(scenario));
 
-        reportScenario(1, TestResult.FAILED);
+        reportScenario(1, TestStatus.FAILED);
 
-        PlayerRecord record = captureLogRecord();
+        PlayerRecord record = captureLastLogRecord();
         assertEquals(-20, record.getScore());
         assertEquals(PlayerRecord.Type.LIAR, record.getType());
     }
@@ -254,9 +255,9 @@ public class DojoScoreServiceTest extends DojoScoreBaseTest {
         setupGameLogs(scenario,
                 gameLog(scenario, record(scenario, false, -100, PlayerRecord.Type.LIAR)));
 
-        reportScenario(1, TestResult.FAILED);
+        reportScenario(1, TestStatus.FAILED);
 
-        PlayerRecord record = captureLogRecord();
+        PlayerRecord record = captureLastLogRecord();
         assertEquals(0, record.getScore());
         assertEquals(PlayerRecord.Type.LIAR, record.getType());
     }
@@ -267,9 +268,9 @@ public class DojoScoreServiceTest extends DojoScoreBaseTest {
         setupGameLogs(scenario,
                 gameLog(scenario));
 
-        reportScenario(1, TestResult.PASSED);
+        reportScenario(1, TestStatus.PASSED);
 
-        PlayerRecord record = captureLogRecord();
+        PlayerRecord record = captureLastLogRecord();
         assertEquals(0, record.getScore());
         assertEquals(PlayerRecord.Type.PASSED, record.getType());
     }
@@ -281,9 +282,9 @@ public class DojoScoreServiceTest extends DojoScoreBaseTest {
                 gameLog(scenario, record(scenario(1, 100, 1), false, 100)),
                 gameLog(scenario)); //new minor release record, no reports yet
 
-        reportScenario(1, TestResult.FAILED);
+        reportScenario(1, TestStatus.FAILED);
 
-        PlayerRecord capturedRecord = captureLogRecord();
+        PlayerRecord capturedRecord = captureLastLogRecord();
 
         assertEquals(100, capturedRecord.getScore());
     }
@@ -294,9 +295,9 @@ public class DojoScoreServiceTest extends DojoScoreBaseTest {
         BasicScenario scenario = setupScenario(1, true);
         setupGameLogs(scenario, gameLog(scenario));
 
-        reportScenario(1, TestResult.EXCEPTION);
+        reportScenario(1, TestStatus.EXCEPTION);
 
-        PlayerRecord capturedRecord = captureLogRecord();
+        PlayerRecord capturedRecord = captureLastLogRecord();
 
         assertEquals(-11, capturedRecord.getScore());
         assertEquals(PlayerRecord.Type.EXCEPTION, capturedRecord.getType());
@@ -312,11 +313,61 @@ public class DojoScoreServiceTest extends DojoScoreBaseTest {
                         record(scenario, true, -30, PlayerRecord.Type.LIAR),
                         record(scenario, false, 100, PlayerRecord.Type.VALID_BUG)));
 
-        reportScenario(1, TestResult.FAILED);
+        reportScenario(1, TestStatus.FAILED);
 
-        PlayerRecord record = captureLogRecord();
+        PlayerRecord record = captureLastLogRecord();
         assertEquals(-30 * 2, record.getScore());
         assertEquals(PlayerRecord.Type.LIAR, record.getType());
+    }
+
+    @Test
+    public void shouldNotReportLiarWhenRunningSeveralTests() {
+        BasicScenario scenario = setupScenario(1, true);
+        setupGameLogs(scenario, gameLog(scenario));
+
+        TestSuiteResult suiteResult = new TestSuiteResult(PLAYER_NAME, 111L);
+        suiteResult.addTestResult(1, TestStatus.FAILED);
+        suiteResult.addTestResult(1, TestStatus.PASSED);
+
+        scoreService.suiteResult(suiteResult);
+
+        PlayerRecord record = captureLastLogRecord();
+        assertEquals(0, record.getScore());
+        assertEquals(PlayerRecord.Type.PASSED, record.getType());
+    }
+
+    @Test
+    @Ignore
+    public void shouldNotReportLiarWhenRunningSeveralTestsDifferentScenarios() {
+        BasicScenario scenario = setupScenario(1, true);
+        setupGameLogs(scenario, gameLog(scenario));
+
+        TestSuiteResult suiteResult = new TestSuiteResult(PLAYER_NAME, 111L);
+        suiteResult.addTestResult(1, TestStatus.PASSED);
+        suiteResult.addTestResult(1, TestStatus.FAILED);
+        suiteResult.addTestResult(2, TestStatus.PASSED);
+
+        scoreService.suiteResult(suiteResult);
+
+        fail("Implement!");
+    }
+
+    @Test
+    @Ignore
+    public void shouldReportAllScenariosForSuite() {
+        BasicScenario scenario = setupScenario(1, true);
+        setupGameLogs(scenario, gameLog(scenario));
+
+
+        TestSuiteResult suiteResult = new TestSuiteResult(PLAYER_NAME, 111L);
+        suiteResult.addTestResult(1, TestStatus.FAILED);
+        suiteResult.addTestResult(1, TestStatus.PASSED);
+
+        scoreService.suiteResult(suiteResult);
+
+        PlayerRecord record = captureLastLogRecord();
+        assertEquals(0, record.getScore());
+        assertEquals(PlayerRecord.Type.PASSED, record.getType());
     }
 
     private void setupGameLogs(BasicScenario scenario, GameLog... gameLogs) {
@@ -346,8 +397,12 @@ public class DojoScoreServiceTest extends DojoScoreBaseTest {
         return setupScenario(scenarioId, hasBug ? 100 : 0);
     }
 
-    private boolean reportScenario(int scenarioId, TestResult testResult) {
-        return scoreService.testResult(PLAYER_NAME, scenarioId, testResult, 123L);
+    private boolean reportScenario(int scenarioId, TestStatus testStatus) {
+        return reportScenario(scenarioId, testStatus, new Date().getTime());
+    }
+
+    private boolean reportScenario(int scenarioId, TestStatus testStatus, long timeStamp) {
+        return scoreService.testResult(PLAYER_NAME, scenarioId, testStatus, timeStamp);
     }
 
 
