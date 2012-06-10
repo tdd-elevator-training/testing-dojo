@@ -2,8 +2,8 @@ package org.automation.dojo.web.controllers;
 
 import org.automation.dojo.ScoreService;
 import org.automation.dojo.TestStatus;
+import org.automation.dojo.TestSuiteResult;
 import org.automation.dojo.TimeService;
-import org.fest.assertions.Index;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,8 +18,12 @@ import org.springframework.mock.web.MockHttpServletResponse;
 import javax.servlet.ServletException;
 import java.io.IOException;
 import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertFalse;
 import static org.fest.assertions.Assertions.assertThat;
 import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.atLeastOnce;
@@ -41,6 +45,8 @@ public class PlayerResultControllerTest {
     @Captor ArgumentCaptor<String> nameCaptor;
     @Captor ArgumentCaptor<Long> timeStampCaptor;
 
+    @Captor ArgumentCaptor<TestSuiteResult> suiteCaptor;
+
     @Before
     public void setUp() throws Exception {
         response = new MockHttpServletResponse();
@@ -52,13 +58,19 @@ public class PlayerResultControllerTest {
 
     @Test
     public void shouldReturnSucceedWhenScenarioPassed() throws IOException, ServletException {
-        when(scoreService.testResult(anyString(), anyInt(), Matchers.<TestStatus>anyObject(),
-                anyLong())).thenReturn(true);
+        TreeMap<Integer, Boolean> scenariosState = scenariosState(1, true);
+        when(scoreService.suiteResult(Matchers.<TestSuiteResult>anyObject())).thenReturn(scenariosState);
         request.addParameter("scenario1", "passed");
 
         controller.service(request, response);
 
         assertEquals("scenario1=passed", response.getContentAsString().trim());
+    }
+
+    private TreeMap<Integer, Boolean> scenariosState(int scenarioId, boolean passed) {
+        TreeMap<Integer, Boolean> result = new TreeMap<Integer, Boolean>();
+        result.put(scenarioId, passed);
+        return result;
     }
 
     @Test
@@ -68,7 +80,7 @@ public class PlayerResultControllerTest {
         controller.service(request, response);
 
         captureTestResultValues();
-        assertResultReported("vasya", 1, true, TestStatus.PASSED);
+        assertLastResultReported("vasya", 1, true, TestStatus.PASSED);
     }
 
     @Test
@@ -78,7 +90,7 @@ public class PlayerResultControllerTest {
         controller.service(request, response);
 
         captureTestResultValues();
-        assertResultReported("petya", 1, false, TestStatus.FAILED);
+        assertLastResultReported("petya", 1, false, TestStatus.FAILED);
     }
 
     @Test
@@ -88,8 +100,8 @@ public class PlayerResultControllerTest {
         controller.service(request, response);
 
         captureTestResultValues();
-        assertResultReported("petya", 1, true, TestStatus.PASSED);
-        assertResultReported("petya", 2, false, TestStatus.FAILED);
+        assertLastResultReported("petya", 1, true, TestStatus.PASSED);
+        assertLastResultReported("petya", 2, false, TestStatus.FAILED);
     }
 
     @Test
@@ -99,12 +111,12 @@ public class PlayerResultControllerTest {
         controller.service(request, response);
 
         captureTestResultValues();
-        assertResultReported("petya", 1, false, TestStatus.EXCEPTION);
+        assertLastResultReported("petya", 1, false, TestStatus.EXCEPTION);
     }
 
     @Test
     public void shouldHaveServiceActualResultsWhenReported() throws IOException, ServletException {
-        when(scoreService.testResult("masha", 1, TestStatus.PASSED, timeService.now().getTime())).thenReturn(false);
+        when(scoreService.suiteResult(Matchers.<TestSuiteResult>anyObject())).thenReturn(scenariosState(1, false));
         setupRequest("masha", "passed");
 
         controller.service(request, response);
@@ -121,8 +133,8 @@ public class PlayerResultControllerTest {
         controller.service(request, response);
 
         captureTestResultValues();
-        assertResultReported(null, 5, true, TestStatus.PASSED);
-        assertResultReported(null, 11, false, TestStatus.FAILED);
+        assertLastResultReported(null, 5, true, TestStatus.PASSED);
+        assertLastResultReported(null, 11, false, TestStatus.FAILED);
     }
 
     @Test
@@ -133,7 +145,7 @@ public class PlayerResultControllerTest {
         controller.service(request, response);
 
         captureTestResultValues();
-        assertResultReported(null, 1, false, TestStatus.FAILED);
+        assertLastResultReported(null, 1, false, TestStatus.FAILED);
     }
 
     @Test
@@ -145,7 +157,7 @@ public class PlayerResultControllerTest {
         controller.service(request, response);
 
         captureTestResultValues();
-        assertResultReported(null, 1, false, TestStatus.EXCEPTION);
+        assertLastResultReported(null, 1, false, TestStatus.EXCEPTION);
     }
 
     @Test
@@ -155,21 +167,9 @@ public class PlayerResultControllerTest {
         controller.service(request, response);
 
         captureTestResultValues();
-        assertResultReported(null, 1, true, TestStatus.FAILED);
+        assertLastResultReported(null, 1, true, TestStatus.FAILED);
     }
 
-    @Test
-    public void shouldReportForExistingScenariosWhenNonExistenceScenarioInList() throws IOException, ServletException {
-        request.addParameter("scenario123", "FAIL");
-        request.addParameter("scenario1", "PASS");
-        when(scoreService.testResult(Matchers.<String>any(), eq(123), Matchers.<TestStatus>any(),
-                anyLong())).thenThrow(new IllegalArgumentException());
-
-        controller.service(request, response);
-
-        captureTestResultValues();
-        assertResultReported(null, 1, true, TestStatus.PASSED);
-    }
 
     @Test
     public void shouldSendTimeWhenReportSeveralResults() throws IOException, ServletException {
@@ -179,22 +179,23 @@ public class PlayerResultControllerTest {
         controller.service(request, response);
 
         captureTestResultValues();
-        assertThat(timeStampCaptor.getAllValues()).contains(12345L, 12345L);
+        TestSuiteResult suite = suiteCaptor.getValue();
+        assertThat(suite.getTimestamp()).isEqualTo(12345L);
+        Map<Integer,List<TestStatus>> scenarioResults = suite.getScenarioResults();
+        assertEquals(2, scenarioResults.size());
     }
 
-    private void assertResultReported(String expectedName, int scenarioNumber, boolean expectedResult,
-            TestStatus expectedTestStatus) {
-        int index = scenarioCaptor.getAllValues().indexOf(scenarioNumber);
-        assertThat(scenarioCaptor.getAllValues()).contains(scenarioNumber, Index.atIndex(index));
-        assertThat(nameCaptor.getAllValues()).contains(expectedName, Index.atIndex(index));
-        assertThat(testResultCaptor.getAllValues()).contains(expectedTestStatus, Index.atIndex(index));
+    private void assertLastResultReported(String expectedName, int scenarioNumber, boolean expectedResult,
+                                          TestStatus expectedTestStatus) {
+        TestSuiteResult suite = suiteCaptor.getValue();
+        assertEquals(expectedName, suite.getPlayerName());
+        List<TestStatus> testStatuses = suite.getScenarioResults().get(scenarioNumber);
+        assertEquals(expectedTestStatus, testStatuses.get(testStatuses.size() - 1));
     }
 
 
     private void captureTestResultValues() {
-        verify(scoreService, atLeastOnce()).testResult(
-                nameCaptor.capture(), scenarioCaptor.capture(), testResultCaptor.capture(),
-                timeStampCaptor.capture());
+        verify(scoreService, atLeastOnce()).suiteResult(suiteCaptor.capture());
     }
 
     private void setupRequest(String name, String... scenarioResults) {

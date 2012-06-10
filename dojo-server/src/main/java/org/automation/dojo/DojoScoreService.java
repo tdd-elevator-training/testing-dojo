@@ -30,62 +30,6 @@ public class DojoScoreService implements ScoreService {
         this.configurationService = configurationService;
     }
 
-    public boolean testResult(String clientName, int scenarioNumber, TestStatus testStatus, long timeStamp) {
-        BasicScenario scenario = releaseEngine.getScenario(scenarioNumber);
-        List<GameLog> gameLogs = logService.getGameLogs(clientName, scenario);
-        if (testStatus == TestStatus.EXCEPTION) {
-            logService.playerLog(new PlayerRecord(clientName, scenario, false, -configurationService.getExceptionWeight(),
-                    "Exception in test case! Fix it!", PlayerRecord.Type.EXCEPTION));
-            return scenario.bugsFree();
-        }
-
-        //last log will be a log for current release
-        GameLog currentGame = lastGameLog(gameLogs);
-        Bug currentBug = scenario.getBug();
-        boolean testPassed = testStatus == TestStatus.PASSED;
-        if (!testPassed && currentGame.bugReported(currentBug)) {
-            logService.playerLog(new PlayerRecord(clientName, scenario, testPassed, 0,
-                    "Bug already reported for this Minor Release. " +
-                            "Bug #" + currentBug.getId(), PlayerRecord.Type.DUPLICATE));
-            return scenario.bugsFree();
-        }
-
-        List<PlayerRecord> reportedBugs = findFailedRecords(gameLogs, scenario.getBug());
-        boolean reportMismatchedWithScenarioState = testPassed ^ scenario.bugsFree();
-        boolean isLiar = reportMismatchedWithScenarioState && !reportedBugs.isEmpty();
-
-        if (isLiar) {
-            Bug reportedBug = reportedBugs.get(reportedBugs.size() - 1).getScenario().getBug();
-            int reportedWeight = currentGame.liarReported() ? 0 : configurationService.getLiarWeight();
-            logService.playerLog(new PlayerRecord(clientName, scenario, testPassed, -2 * reportedWeight,
-                    "Liar! Current scenario #" + scenario.getId() +
-                            (scenario.bugsFree() ? " is bugs free." : " contains bug.") +
-                            "Previously reported bug #" + reportedBug.getId(), PlayerRecord.Type.LIAR));
-            return scenario.bugsFree();
-        }
-
-        if (reportMismatchedWithScenarioState) {
-            logService.playerLog(new PlayerRecord(clientName, scenario, testPassed,
-                    currentGame.liarReported() ? 0 : -configurationService.getLiarWeight(),
-                    "Fix the test! It shows wrong result. Current scenario #" + scenario.getId() +
-                            (scenario.bugsFree() ? " is bugs free." : " contains bug."), PlayerRecord.Type.LIAR));
-            return scenario.bugsFree();
-        }
-
-        if (testPassed && scenario.bugsFree()) {
-            logService.playerLog(new PlayerRecord(clientName, scenario, testPassed, 0,
-                    "Good! No bugs reported for bugs free scenario", PlayerRecord.Type.PASSED));
-            return scenario.bugsFree();
-        }
-
-        int weight = currentBug.getWeight();
-        int score = weight / (reportedBugs.size() + 1);
-        logService.playerLog(
-                new PlayerRecord(clientName, scenario, testPassed, score, "Scores for bug #" + currentBug.getId() +
-                        " scenario #" + scenario.getId(), PlayerRecord.Type.VALID_BUG));
-        return scenario.bugsFree();
-    }
-
     private List<PlayerRecord> findFailedRecords(List<GameLog> gameLogs, Bug bug) {
         ArrayList<PlayerRecord> result = new ArrayList<PlayerRecord>();
         for (GameLog gameLog : gameLogs) {
@@ -161,6 +105,7 @@ public class DojoScoreService implements ScoreService {
         return null;
     }
 
+    @Override
     public Map<Integer, Boolean> suiteResult(TestSuiteResult suite) {
         Map<Integer, Boolean> result = new TreeMap<Integer, Boolean>();
         Map<Integer,List<TestStatus>> scenariosResults = suite.getScenarioResults();
@@ -175,71 +120,75 @@ public class DojoScoreService implements ScoreService {
             if (gameLogs.isEmpty()) {
                 continue;
             }
-            GameLog currentGame = lastGameLog(gameLogs);
-            Bug currentBug = scenario.getBug();
-            boolean liarReported = currentGame.liarReported();
-            TestStatus suiteStatus = suite.getStatusForScenario(scenarioId);
-            boolean bugReported = currentGame.bugReported(currentBug);
-            boolean liarReportedSuite = false;
-            boolean bugReportedSuite = false;
-            List<PlayerRecord> reportedBugs = findFailedRecords(gameLogs, scenario.getBug());
-
-            List<TestStatus> testResults = scenarioResults.getValue();
-            for (TestStatus testStatus : testResults) {
-                boolean testPassed = testStatus == TestStatus.PASSED;
-                if (testPassed && scenario.bugsFree()) {
-                    logService.playerLog(new PlayerRecord(suite.getPlayerName(), scenario, true, 0,
-                            "Good! No bugs reported for bugs free scenario", PlayerRecord.Type.PASSED));
-                    continue;
-                }
-
-                boolean suiteFailed = suiteStatus == TestStatus.FAILED;
-                if (testPassed && suiteFailed && !scenario.bugsFree()) {
-                    logService.playerLog(new PlayerRecord(suite.getPlayerName(), scenario, testPassed, 0,
-                            "Passed! I see another test failed the scenario", PlayerRecord.Type.PASSED));
-                    continue;
-                }
-
-                boolean reportMismatchedWithScenarioState = testPassed ^ scenario.bugsFree();
-                boolean isLiar = reportMismatchedWithScenarioState && !reportedBugs.isEmpty();
-
-                //Valid bug has been reported for this release but now scenario is passed. Should be punished twice.
-                int liarWeight = liarReported || liarReportedSuite? 0 : configurationService.getLiarWeight();
-                if (isLiar) {
-                    Bug reportedBug = reportedBugs.get(reportedBugs.size() - 1).getScenario().getBug();
-                    logService.playerLog(new PlayerRecord(suite.getPlayerName(), scenario, testPassed, -2 * liarWeight,
-                            "Liar! Current scenario #" + scenario.getId() +
-                                    (scenario.bugsFree() ? " is bugs free." : " contains bug.") +
-                                    "Previously reported bug #" + reportedBug.getId(), PlayerRecord.Type.LIAR));
-                    liarReportedSuite = true;
-                    continue;
-                }
-
-                if (reportMismatchedWithScenarioState) {
-                    logService.playerLog(new PlayerRecord(suite.getPlayerName(), scenario, testPassed,
-                            -liarWeight,
-                            "Fix the test! It shows wrong result. Current scenario #" + scenario.getId() +
-                                    (scenario.bugsFree() ? " is bugs free." : " contains bug."), PlayerRecord.Type.LIAR));
-                    liarReportedSuite = true;
-                    continue;
-                }
-
-
-                if (!testPassed && (bugReported || bugReportedSuite)) {
-                    logService.playerLog(new PlayerRecord(suite.getPlayerName(), scenario, testPassed, 0,
-                            "Bug already reported for this Minor Release. " +
-                                    "Bug #" + currentBug.getId(), PlayerRecord.Type.DUPLICATE));
-                    continue;
-                }
-
-                int weight = currentBug.getWeight();
-                int score = weight / (reportedBugs.size() + 1);
-                logService.playerLog(
-                        new PlayerRecord(suite.getPlayerName(), scenario, testPassed, score, "Scores for bug #" + currentBug.getId() +
-                                " scenario #" + scenario.getId(), PlayerRecord.Type.VALID_BUG));
-                bugReportedSuite = true;
-            }
+            reportScenarioResults(suite, scenarioResults.getValue(), scenario, gameLogs);
         }
         return result;
+    }
+
+    private void reportScenarioResults(TestSuiteResult suite, List<TestStatus> testResults,
+                                       BasicScenario scenario, List<GameLog> gameLogs) {
+        GameLog currentGame = lastGameLog(gameLogs);
+        Bug currentBug = scenario.getBug();
+        boolean liarReported = currentGame.liarReported();
+        TestStatus suiteStatus = suite.getStatusForScenario(scenario.getId());
+        boolean bugReported = currentGame.bugReported(currentBug);
+        boolean liarReportedSuite = false;
+        boolean bugReportedSuite = false;
+        List<PlayerRecord> reportedBugs = findFailedRecords(gameLogs, scenario.getBug());
+
+        for (TestStatus testStatus : testResults) {
+            boolean testPassed = testStatus == TestStatus.PASSED;
+            if (testPassed && scenario.bugsFree()) {
+                logService.playerLog(new PlayerRecord(suite.getPlayerName(), scenario, true, 0,
+                        "Good! No bugs reported for bugs free scenario", PlayerRecord.Type.PASSED));
+                continue;
+            }
+
+            boolean suiteFailed = suiteStatus == TestStatus.FAILED;
+            if (testPassed && suiteFailed && !scenario.bugsFree()) {
+                logService.playerLog(new PlayerRecord(suite.getPlayerName(), scenario, testPassed, 0,
+                        "Passed! I see another test failed the scenario", PlayerRecord.Type.PASSED));
+                continue;
+            }
+
+            boolean reportMismatchedWithScenarioState = testPassed ^ scenario.bugsFree();
+            boolean isLiar = reportMismatchedWithScenarioState && !reportedBugs.isEmpty();
+
+            //Valid bug has been reported for this release but now scenario is passed. Should be punished twice.
+            int liarWeight = liarReported || liarReportedSuite? 0 : configurationService.getLiarWeight();
+            if (isLiar) {
+                Bug reportedBug = reportedBugs.get(reportedBugs.size() - 1).getScenario().getBug();
+                logService.playerLog(new PlayerRecord(suite.getPlayerName(), scenario, testPassed, -2 * liarWeight,
+                        "Liar! Current scenario #" + scenario.getId() +
+                                (scenario.bugsFree() ? " is bugs free." : " contains bug.") +
+                                "Previously reported bug #" + reportedBug.getId(), PlayerRecord.Type.LIAR));
+                liarReportedSuite = true;
+                continue;
+            }
+
+            if (reportMismatchedWithScenarioState) {
+                logService.playerLog(new PlayerRecord(suite.getPlayerName(), scenario, testPassed,
+                        -liarWeight,
+                        "Fix the test! It shows wrong result. Current scenario #" + scenario.getId() +
+                                (scenario.bugsFree() ? " is bugs free." : " contains bug."), PlayerRecord.Type.LIAR));
+                liarReportedSuite = true;
+                continue;
+            }
+
+
+            if (!testPassed && (bugReported || bugReportedSuite)) {
+                logService.playerLog(new PlayerRecord(suite.getPlayerName(), scenario, testPassed, 0,
+                        "Bug already reported for this Minor Release. " +
+                                "Bug #" + currentBug.getId(), PlayerRecord.Type.DUPLICATE));
+                continue;
+            }
+
+            int weight = currentBug.getWeight();
+            int score = weight / (reportedBugs.size() + 1);
+            logService.playerLog(
+                    new PlayerRecord(suite.getPlayerName(), scenario, testPassed, score, "Scores for bug #" + currentBug.getId() +
+                            " scenario #" + scenario.getId(), PlayerRecord.Type.VALID_BUG));
+            bugReportedSuite = true;
+        }
     }
 }
