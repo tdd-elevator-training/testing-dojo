@@ -24,6 +24,7 @@ import java.util.TreeMap;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
+import static junit.framework.Assert.assertTrue;
 import static org.fest.assertions.Assertions.assertThat;
 import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.atLeastOnce;
@@ -183,6 +184,19 @@ public class PlayerResultControllerTest {
         assertThat(suite.getTimestamp()).isEqualTo(12345L);
         Map<Integer,List<TestStatus>> scenarioResults = suite.getScenarioResults();
         assertEquals(2, scenarioResults.size());
+    }
+
+    @Test
+    public void shouldReturnScenarioStatusesForSeveralScenarios() throws IOException, ServletException {
+        setupRequest("vasya", "false", "true");
+        TreeMap<Integer, Boolean> scenarioStates = scenariosState(1, true);
+        scenarioStates.put(2, false);
+        when(scoreService.suiteResult(Matchers.<TestSuiteResult>anyObject())).thenReturn(scenarioStates);
+
+        controller.service(request, response);
+
+        assertTrue(response.getContentAsString().contains("scenario1=passed"));
+        assertTrue(response.getContentAsString().contains("scenario2=failed"));
     }
 
     private void assertLastResultReported(String expectedName, int scenarioNumber, boolean expectedResult,
