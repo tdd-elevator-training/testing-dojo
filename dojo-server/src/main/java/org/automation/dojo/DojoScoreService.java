@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class DojoScoreService implements ScoreService {
@@ -164,9 +165,74 @@ public class DojoScoreService implements ScoreService {
     }
 
     public void suiteResult(TestSuiteResult suite) {
-        List<TestResult> testResults = suite.getTestResults();
-        for (TestResult testResult : testResults) {
-            testResult(suite.getPlayerName(), testResult.getScenarioId(), testResult.getTestStatus(), suite.getTimestamp());
+        Map<Integer,List<TestStatus>> scenariosResults = suite.getScenarioResults();
+        for (Map.Entry<Integer, List<TestStatus>> scenarioResults : scenariosResults.entrySet()) {
+            Integer scenarioId = scenarioResults.getKey();
+            BasicScenario scenario = releaseEngine.getScenario(scenarioId);
+            List<GameLog> gameLogs = logService.getGameLogs(suite.getPlayerName(), scenario);
+            GameLog currentGame = lastGameLog(gameLogs);
+            Bug currentBug = scenario.getBug();
+            boolean liarReported = currentGame.liarReported();
+            TestStatus suiteStatus = suite.getStatusForScenario(scenarioId);
+            boolean bugReported = currentGame.bugReported(currentBug);
+            boolean liarReportedSuite = false;
+            boolean bugReportedSuite = false;
+            List<PlayerRecord> reportedBugs = findFailedRecords(gameLogs, scenario.getBug());
+
+            List<TestStatus> testResults = scenarioResults.getValue();
+            for (TestStatus testStatus : testResults) {
+                boolean testPassed = testStatus == TestStatus.PASSED;
+                if (testPassed && scenario.bugsFree()) {
+                    logService.playerLog(new PlayerRecord(suite.getPlayerName(), scenario, true, 0,
+                            "Good! No bugs reported for bugs free scenario", PlayerRecord.Type.PASSED));
+                    continue;
+                }
+
+                boolean suiteFailed = suiteStatus == TestStatus.FAILED;
+                if (testPassed && suiteFailed && !scenario.bugsFree()) {
+                    logService.playerLog(new PlayerRecord(suite.getPlayerName(), scenario, testPassed, 0,
+                            "Passed! I see another test failed the scenario", PlayerRecord.Type.PASSED));
+                    continue;
+                }
+
+                boolean reportMismatchedWithScenarioState = testPassed ^ scenario.bugsFree();
+                boolean isLiar = reportMismatchedWithScenarioState && !reportedBugs.isEmpty();
+
+                //Valid bug has been reported for this release but now scenario is passed. Should be punished twice.
+                int liarWeight = liarReported || liarReportedSuite? 0 : configurationService.getLiarWeight();
+                if (isLiar) {
+                    Bug reportedBug = reportedBugs.get(reportedBugs.size() - 1).getScenario().getBug();
+                    logService.playerLog(new PlayerRecord(suite.getPlayerName(), scenario, testPassed, -2 * liarWeight,
+                            "Liar! Current scenario #" + scenario.getId() +
+                                    (scenario.bugsFree() ? " is bugs free." : " contains bug.") +
+                                    "Previously reported bug #" + reportedBug.getId(), PlayerRecord.Type.LIAR));
+                    liarReportedSuite = true;
+                    continue;
+                }
+
+                if (reportMismatchedWithScenarioState) {
+                    logService.playerLog(new PlayerRecord(suite.getPlayerName(), scenario, testPassed,
+                            -liarWeight,
+                            "Fix the test! It shows wrong result. Current scenario #" + scenario.getId() +
+                                    (scenario.bugsFree() ? " is bugs free." : " contains bug."), PlayerRecord.Type.LIAR));
+                    liarReportedSuite = true;
+                    continue;
+                }
+
+
+                if (!testPassed && (bugReported || bugReportedSuite)) {
+                    logService.playerLog(new PlayerRecord(suite.getPlayerName(), scenario, testPassed, 0,
+                            "Bug already reported for this Minor Release. " +
+                                    "Bug #" + currentBug.getId(), PlayerRecord.Type.DUPLICATE));
+                    continue;
+                }
+
+                int weight = currentBug.getWeight();
+                int score = weight / (reportedBugs.size() + 1);
+                logService.playerLog(
+                        new PlayerRecord(suite.getPlayerName(), scenario, testPassed, score, "Scores for bug #" + currentBug.getId() +
+                                " scenario #" + scenario.getId(), PlayerRecord.Type.VALID_BUG));
+            }
         }
     }
 }

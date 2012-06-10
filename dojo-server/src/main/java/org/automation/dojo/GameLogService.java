@@ -40,6 +40,11 @@ public class GameLogService implements LogService {
         }
     }
 
+    @Override
+    public void playerLog2(List<PlayerRecord> records) {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
+
     public List<GameLog> getGameLogs(final String player, final BasicScenario scenario) {
         lock.readLock().lock();
         try {

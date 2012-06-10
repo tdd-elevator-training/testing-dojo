@@ -40,7 +40,7 @@ public class ApplicationContextLocatorTest {
 
     @Test
     public void shouldLoadReleaseEngineById(){
-        assertNotNull(instance.getBean("releaseEngine"));
+        assertNotNull(instance.getBean("releaseEngineMock"));
     }
 
 }

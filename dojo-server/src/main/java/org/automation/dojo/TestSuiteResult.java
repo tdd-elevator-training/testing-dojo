@@ -1,7 +1,9 @@
 package org.automation.dojo;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * User: serhiy.zelenin
@@ -12,7 +14,7 @@ public class TestSuiteResult {
     private String playerName;
     private long timestamp;
 
-    private List<TestResult> testResults = new ArrayList<TestResult>();
+    private Map<Integer, List<TestStatus>> testResults = new HashMap<Integer, List<TestStatus>>();
 
     public TestSuiteResult(String playerName, long timestamp) {
         this.playerName = playerName;
@@ -20,7 +22,12 @@ public class TestSuiteResult {
     }
 
     public void addTestResult(int scenarioId, TestStatus testStatus) {
-        testResults.add(new TestResult(scenarioId, testStatus));
+        List<TestStatus> scenarioResults = testResults.get(scenarioId);
+        if (scenarioResults == null) {
+            scenarioResults = new ArrayList<TestStatus>();
+        }
+        scenarioResults.add(testStatus);
+        testResults.put(scenarioId, scenarioResults);
     }
 
     public String getPlayerName() {
@@ -31,7 +38,17 @@ public class TestSuiteResult {
         return timestamp;
     }
 
-    public List<TestResult> getTestResults() {
+    public Map<Integer, List<TestStatus>> getScenarioResults() {
         return testResults;
+    }
+
+    public TestStatus getStatusForScenario(Integer scenarioId) {
+        List<TestStatus> scenarioResults = testResults.get(scenarioId);
+        for (TestStatus scenarioResult : scenarioResults) {
+            if (scenarioResult == TestStatus.FAILED) {
+                return TestStatus.FAILED;
+            }
+        }
+        return TestStatus.PASSED;
     }
 }

@@ -8,6 +8,7 @@ import org.mockito.Mock;
 
 import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.verify;
@@ -19,6 +20,8 @@ import static org.mockito.Mockito.when;
 public abstract class DojoScoreBaseTest {
     @Captor
     ArgumentCaptor<PlayerRecord> recordCaptor;
+    @Captor
+    ArgumentCaptor<List<PlayerRecord>> recordCaptor2;
     @Mock
     LogService logService;
     @Mock ReleaseEngine releaseEngine;
@@ -36,6 +39,12 @@ public abstract class DojoScoreBaseTest {
         verify(logService, atLeastOnce()).playerLog(recordCaptor.capture());
         return recordCaptor.getValue();
     }
+
+    protected List<PlayerRecord> captureLogRecords() {
+        verify(logService, atLeastOnce()).playerLog(recordCaptor.capture());
+        return recordCaptor.getAllValues();
+    }
+
 
     protected void setupRegisteredPlayers(String... players) {
         when(logService.getRegisteredPlayers()).thenReturn(Arrays.asList(players));
