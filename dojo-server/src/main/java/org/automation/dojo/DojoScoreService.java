@@ -5,10 +5,7 @@ import org.automation.dojo.web.scenario.BasicScenario;
 import org.automation.dojo.web.scenario.Release;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class DojoScoreService implements ScoreService {
@@ -164,12 +161,20 @@ public class DojoScoreService implements ScoreService {
         return null;
     }
 
-    public void suiteResult(TestSuiteResult suite) {
+    public Map<Integer, Boolean> suiteResult(TestSuiteResult suite) {
+        Map<Integer, Boolean> result = new TreeMap<Integer, Boolean>();
         Map<Integer,List<TestStatus>> scenariosResults = suite.getScenarioResults();
         for (Map.Entry<Integer, List<TestStatus>> scenarioResults : scenariosResults.entrySet()) {
             Integer scenarioId = scenarioResults.getKey();
             BasicScenario scenario = releaseEngine.getScenario(scenarioId);
+            if (scenario == null) {
+                continue;
+            }
+            result.put(scenario.getId(), scenario.bugsFree());
             List<GameLog> gameLogs = logService.getGameLogs(suite.getPlayerName(), scenario);
+            if (gameLogs.isEmpty()) {
+                continue;
+            }
             GameLog currentGame = lastGameLog(gameLogs);
             Bug currentBug = scenario.getBug();
             boolean liarReported = currentGame.liarReported();
@@ -232,7 +237,9 @@ public class DojoScoreService implements ScoreService {
                 logService.playerLog(
                         new PlayerRecord(suite.getPlayerName(), scenario, testPassed, score, "Scores for bug #" + currentBug.getId() +
                                 " scenario #" + scenario.getId(), PlayerRecord.Type.VALID_BUG));
+                bugReportedSuite = true;
             }
         }
+        return result;
     }
 }
