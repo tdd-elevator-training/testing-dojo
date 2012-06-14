@@ -14,8 +14,6 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-@ContextConfiguration(locations = {"classpath:/org/automation/dojo/applicationContext.xml"})
-@RunWith(SpringJUnit4ClassRunner.class)
 public class SearchPageLevel1_Bug1 extends SearchPageLevel1 {
 
     @Override

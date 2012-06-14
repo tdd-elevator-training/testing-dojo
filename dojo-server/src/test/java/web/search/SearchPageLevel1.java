@@ -20,8 +20,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-@ContextConfiguration(locations = {"classpath:/org/automation/dojo/applicationContext.xml"})
-@RunWith(SpringJUnit4ClassRunner.class)
 public class SearchPageLevel1 extends FunctionalTestCase {
 
     private WebElement search;

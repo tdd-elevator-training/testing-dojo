@@ -21,8 +21,6 @@ import static org.automation.dojo.web.model.ShopService.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-@ContextConfiguration(locations = {"classpath:/org/automation/dojo/applicationContext.xml"})
-@RunWith(SpringJUnit4ClassRunner.class)
 public class SearchPageLevel2 extends SearchPageLevel1 {
 
     private WebElement price;

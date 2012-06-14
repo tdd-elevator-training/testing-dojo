@@ -22,7 +22,7 @@ public class SearchByPriceScenario extends BasicScenario<RequestWorker> {
 
     @Override
     public String process(RequestWorker request) {
-        ShopService service = ApplicationContextLocator.getInstance().getBean("shopService");
+        ShopService service = ApplicationContextLocator.getBean("shopService");
 
         request.saveSearchPriceState();
         request.setValidatePriceNumber(true);

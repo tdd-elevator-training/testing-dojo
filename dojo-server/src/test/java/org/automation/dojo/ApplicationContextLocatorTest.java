@@ -13,25 +13,12 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import static org.junit.Assert.assertNotNull;
 
-@ContextConfiguration(locations = {"classpath:/org/automation/dojo/applicationContext.xml"})
-@RunWith(SpringJUnit4ClassRunner.class)
 public class ApplicationContextLocatorTest {
 
     @Autowired
     private ApplicationContext context;
 
     private ApplicationContextLocator instance;
-
-    @Before
-    public void initContext() {
-        instance = ApplicationContextLocator.getInstance();
-        instance.setApplicationContext(context);
-    }
-
-    @After
-    public void crearSingleton() {
-        ApplicationContextLocator.clearInstance();
-    }
 
     @Test
     public void shouldLoadReleaseEngineByClass(){

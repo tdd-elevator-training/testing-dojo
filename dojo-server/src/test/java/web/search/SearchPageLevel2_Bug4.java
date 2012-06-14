@@ -19,8 +19,6 @@ import static org.automation.dojo.web.model.ShopService.MORE_THAN;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
-@ContextConfiguration(locations = {"classpath:/org/automation/dojo/applicationContext.xml"})
-@RunWith(SpringJUnit4ClassRunner.class)
 public class SearchPageLevel2_Bug4 extends SearchPageLevel2 {
 
     @Override

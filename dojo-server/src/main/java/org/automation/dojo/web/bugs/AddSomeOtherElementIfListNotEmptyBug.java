@@ -43,7 +43,7 @@ public class AddSomeOtherElementIfListNotEmptyBug extends Bug<RequestWorker> {
     }
 
     private Record findNew(List<Record> list) {
-        ShopService shop = ApplicationContextLocator.getInstance().getBean("shopService");
+        ShopService shop = ApplicationContextLocator.getBean("shopService");
         List<Record> all = shop.selectByText("");
         for (Record record : all) {
             if (!list.contains(record)) {

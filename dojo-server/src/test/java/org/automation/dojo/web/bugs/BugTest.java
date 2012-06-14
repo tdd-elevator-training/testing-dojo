@@ -36,14 +36,14 @@ public class BugTest {
         shop = mock(ShopService.class);
         when(shop.selectByText(anyString())).thenReturn(Arrays.asList(record1, record2, record3, record4));
 
-        ApplicationContextLocator.getInstance().mock("shopService", shop);
+        ApplicationContextLocator.mock("shopService", shop);
 
         request = mock(RequestWorker.class);
     }
 
     @After
     public void after() {
-        ApplicationContextLocator.getInstance().mock("shopService", null);
+        ApplicationContextLocator.mock("shopService", null);
     }
 
     protected void assertElementInResultList(Record... records) {

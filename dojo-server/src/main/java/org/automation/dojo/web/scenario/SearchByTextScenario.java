@@ -24,7 +24,7 @@ public class SearchByTextScenario extends BasicScenario<RequestWorker> {
 
     @Override
     public String process(RequestWorker request) {
-        ShopService service = ApplicationContextLocator.getInstance().getBean("shopService");
+        ShopService service = ApplicationContextLocator.getBean("shopService");
 
         request.saveSearchTextState();
         request.setSearchTextMaxLength(SEARCH_TEXT_MAX_LENGTH);

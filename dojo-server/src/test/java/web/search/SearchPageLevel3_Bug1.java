@@ -15,8 +15,6 @@ import java.util.List;
 
 import static org.junit.Assert.*;
 
-@ContextConfiguration(locations = {"classpath:/org/automation/dojo/applicationContext.xml"})
-@RunWith(SpringJUnit4ClassRunner.class)
 public class SearchPageLevel3_Bug1 extends SearchPageLevel3 {
 
     @Override

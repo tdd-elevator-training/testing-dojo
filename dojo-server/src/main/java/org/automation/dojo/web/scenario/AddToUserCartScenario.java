@@ -30,7 +30,7 @@ public class AddToUserCartScenario extends BasicScenario<RequestWorker> {
         request.saveSearchPriceState();
         request.saveSearchPriceSortingState();
 
-        ShopService service = ApplicationContextLocator.getInstance().getBean("shopService");
+        ShopService service = ApplicationContextLocator.getBean("shopService");
 
         UserCart cart = request.getUserCart();
         service.addToUserCart(cart, request.getRecordIds());

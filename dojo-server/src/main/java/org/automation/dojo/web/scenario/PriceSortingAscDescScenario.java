@@ -23,7 +23,7 @@ public class PriceSortingAscDescScenario extends BasicScenario<RequestWorker> {
 
     @Override
     public String process(RequestWorker request) {
-        ShopService service = ApplicationContextLocator.getInstance().getBean("shopService");
+        ShopService service = ApplicationContextLocator.getBean("shopService");
 
         request.saveSearchPriceSortingState();
 

@@ -21,7 +21,9 @@ public class WorkflowController  extends HttpServlet {
     public void doPost(HttpServletRequest request,
                        HttpServletResponse response) throws ServletException, IOException {
         try {
-            ReleaseEngine engine = ApplicationContextLocator.getInstance().getBean("releaseEngine");
+            clearCartIfNeeded(request);
+
+            ReleaseEngine engine = ApplicationContextLocator.getBean("releaseEngine");
             String url = engine.getCurrentRelease().process(new RequestWorkerImpl(request));
 
             request.getRequestDispatcher(url).forward(request, response);
@@ -29,6 +31,15 @@ public class WorkflowController  extends HttpServlet {
             exception.printStackTrace();
             request.setAttribute("error_message", exception.toString());
             request.getRequestDispatcher("error.jsp").forward(request, response);
+        }
+    }
+
+    /**
+     * Этот метод используется в тестовых целях, иногда просто надо почистить карт между вызовами двух тестов SearchPageLevel3
+     */
+    private void clearCartIfNeeded(HttpServletRequest request) {
+        if (request.getParameter("clear") != null) {
+            request.getSession().setAttribute("cart", null);
         }
     }
 }

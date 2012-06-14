@@ -1,14 +1,19 @@
 package web;
 
 import org.automation.dojo.ApplicationContextLocator;
+import org.automation.dojo.LogService;
 import org.automation.dojo.ReleaseEngine;
+import org.automation.dojo.ScoreService;
 import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.htmlunit.HtmlUnitDriver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 
+import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -17,13 +22,10 @@ import static org.junit.Assert.assertTrue;
 
 public abstract class FunctionalTestCase {
 
-    @Autowired
-    private ApplicationContext context;
-    private ApplicationContextLocator instance;
-
+    protected static int port;
     protected static WebDriver tester;
-    private static String baseUrl;
-    private ReleaseEngine releaseEngine;
+    protected static String baseUrl;
+    private static ReleaseEngine releaseEngine;
 
     public void join() {
         System.out.println(baseUrl);
@@ -36,25 +38,25 @@ public abstract class FunctionalTestCase {
         }
     }
 
-    @Before
-    public void init() throws Exception {
-        int port = ServerRunner.getInstance().start();
+    @BeforeClass
+    public static void init() throws Exception {
+        port = ServerRunner.getInstance().start();
         baseUrl = "http://localhost:" + port + "/Shop";
-
         tester = new HtmlUnitDriver(true);
 
-        instance = ApplicationContextLocator.getInstance();
-        instance.setApplicationContext(context);
-        releaseEngine = (ReleaseEngine) context.getBean("releaseEngine");
+        releaseEngine = ApplicationContextLocator.getBean("releaseEngine");
+    }
 
+    @Before
+    public void setupReleases() throws Exception {
         switchToMajorRelease(getMajorRelease());
-        switchToMinorRelease(getMinorReleaseAsString((List<Class>) getMinorRelease()));
+        switchToMinorRelease(getMinorReleaseAsString((List<Class<? extends Serializable>>) getMinorRelease()));
 
         tester.get(baseUrl + getPageUrl());
         resetAllElements();
     }
 
-    private String getMinorReleaseAsString(List<Class> minorRelease) {
+    protected String getMinorReleaseAsString(List<Class<? extends Serializable>> minorRelease) {
         List<String> result = new LinkedList<String>();
         for (int count = 0; count < minorRelease.size()/2; count++) {
             Class scenarioClass = minorRelease.get(count*2);
@@ -65,9 +67,9 @@ public abstract class FunctionalTestCase {
         return result.toString();
     }
 
-    private void switchToMinorRelease(String minorRelease) {
+    protected void switchToMinorRelease(String minorRelease) {
         int countLoop = 0;
-        final int MAX = 5000;
+        final int MAX = 10000;
         do {
             releaseEngine.nextMinorRelease();
             countLoop++;
@@ -89,9 +91,8 @@ public abstract class FunctionalTestCase {
 
     protected abstract List<?> getMinorRelease();
 
-    @After
-    public void end() throws Exception {
-        ApplicationContextLocator.clearInstance();
+    @AfterClass
+    public static void end() throws Exception {
         ServerRunner.getInstance().stop();
     }
 
@@ -133,7 +134,7 @@ public abstract class FunctionalTestCase {
         String page = getPageText();
         assertFalse(String.format(
                 "Expected page NOT contains '%s'\n" +
-                "but was '%s'.", string, page),
+                        "but was '%s'.", string, page),
                 page.contains(string));
     }
 }

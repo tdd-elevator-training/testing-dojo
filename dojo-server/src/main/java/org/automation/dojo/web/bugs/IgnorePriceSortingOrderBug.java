@@ -16,7 +16,7 @@ public class IgnorePriceSortingOrderBug extends Bug<RequestWorker> {
     @Override
     public RequestWorker apply(RequestWorker result) {
         result.setPriceSortingOrderOption(RequestWorker.ASC);
-        ShopService service = ApplicationContextLocator.getInstance().getBean("shopService");
+        ShopService service = ApplicationContextLocator.getBean("shopService");
         result.setRecords(service.sortByPrice(result.getRecords(), RequestWorker.ASC));
         return result;
     }

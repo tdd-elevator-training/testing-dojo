@@ -3,6 +3,7 @@ package web.search;
 
 import org.automation.dojo.web.bugs.NullBug;
 import org.automation.dojo.web.scenario.*;
+import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.openqa.selenium.By;
@@ -18,8 +19,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
 
-@ContextConfiguration(locations = {"classpath:/org/automation/dojo/applicationContext.xml"})
-@RunWith(SpringJUnit4ClassRunner.class)
 public class SearchPageLevel3 extends SearchPageLevel2 {
 
     @Override
@@ -30,6 +29,11 @@ public class SearchPageLevel3 extends SearchPageLevel2 {
     @Override
     protected void resetAllElements() {
         super.resetAllElements();
+    }
+
+    @After
+    public void clearCart() {
+        tester.get(baseUrl + getPageUrl() + "?clear"); // очищаем cart в сессии юзера, чтобы тесты друг друга не аффектили
     }
 
     protected WebElement getAddToCartButton() {

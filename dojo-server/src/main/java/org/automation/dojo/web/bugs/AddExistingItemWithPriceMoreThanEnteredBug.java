@@ -36,7 +36,7 @@ public class AddExistingItemWithPriceMoreThanEnteredBug extends Bug<RequestWorke
     }
 
     private Record findLessThan(RequestWorker request) {
-        ShopService shop = ApplicationContextLocator.getInstance().getBean("shopService");
+        ShopService shop = ApplicationContextLocator.getBean("shopService");
         List<Record> all = shop.selectByText(request.getSearchText());
         List<Record> filtered = shop.priceFilter(all,
                 ShopService.MORE_THAN, request.getPrice() +
