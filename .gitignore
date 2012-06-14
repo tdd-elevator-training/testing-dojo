@@ -3,3 +3,5 @@
 /template-java/target
 /dojo-server/target
 /java-client/target
+/.idea
+*.iml
