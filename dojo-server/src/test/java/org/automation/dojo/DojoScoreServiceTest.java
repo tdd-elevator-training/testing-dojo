@@ -1,19 +1,14 @@
 package org.automation.dojo;
 
-import junit.framework.Assert;
 import org.automation.dojo.web.bugs.Bug;
 import org.automation.dojo.web.scenario.BasicScenario;
 import org.automation.dojo.web.scenario.Release;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Matchers;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
@@ -412,10 +407,15 @@ public class DojoScoreServiceTest extends DojoScoreBaseTest {
         suiteResult.addTestResult(1, TestStatus.FAILED);
         suiteResult.addTestResult(2, TestStatus.FAILED);
 
-        Map<Integer, Boolean> result = scoreService.suiteResult(suiteResult);
+        BasicScenario scenario1 = scenario(1, 100);
+        setupGameLogs(scenario1, gameLog(scenario1, record(scenario1, false, 100)));
+        BasicScenario scenario2 = scenario(2, 100);
+        setupGameLogs(scenario2, gameLog(scenario2, record(scenario2, false, 100)));
 
-        assertFalse(result.get(1));
-        assertTrue(result.get(2));
+        List<PlayerRecord> result = scoreService.suiteResult(suiteResult);
+
+        assertFalse(result.get(0).isPassed());
+        assertFalse(result.get(1).isPassed());
     }
 
 

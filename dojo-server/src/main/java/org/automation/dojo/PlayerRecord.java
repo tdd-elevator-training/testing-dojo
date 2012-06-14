@@ -8,12 +8,14 @@ import java.util.Date;
  * @author serhiy.zelenin
  */
 public class PlayerRecord {
+
+
     public enum Type{DUPLICATE, VALID_BUG, MISSED, LIAR, TIMEOUT, PASSED, EXCEPTION}
 
     private int score;
     private String description;
     private Type type;
-    private BasicScenario scenario;
+    protected BasicScenario scenario;
     private boolean passed;
     private String playerName;
     private Date logTime;
@@ -65,5 +67,13 @@ public class PlayerRecord {
 
     public void setLogTime(Date logTime) {
         this.logTime = logTime;
+    }
+
+    public String toString() {
+        return String.format("Scenario #%s - %s: %s",
+                scenario.getId(),
+                (scenario.bugsFree() ? "passed" : "failed"),
+                description) +
+            ((score == 0) ? "" : String.format(". You get %s points", ((score >= 0)?"+":"") + String.valueOf(score)));
     }
 }

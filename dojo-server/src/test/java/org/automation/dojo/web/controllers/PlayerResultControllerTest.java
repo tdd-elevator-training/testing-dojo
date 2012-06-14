@@ -1,32 +1,26 @@
 package org.automation.dojo.web.controllers;
 
-import org.automation.dojo.ScoreService;
-import org.automation.dojo.TestStatus;
-import org.automation.dojo.TestSuiteResult;
-import org.automation.dojo.TimeService;
+import org.automation.dojo.*;
+import org.automation.dojo.web.scenario.BasicScenario;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Captor;
-import org.mockito.Matchers;
-import org.mockito.Mock;
+import org.mockito.*;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.mock.web.portlet.MockBaseURL;
 
 import javax.servlet.ServletException;
 import java.io.IOException;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertTrue;
 import static org.fest.assertions.Assertions.assertThat;
-import static org.mockito.Matchers.*;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyObject;
 import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -59,18 +53,26 @@ public class PlayerResultControllerTest {
 
     @Test
     public void shouldReturnSucceedWhenScenarioPassed() throws IOException, ServletException {
-        TreeMap<Integer, Boolean> scenariosState = scenariosState(1, true);
-        when(scoreService.suiteResult(Matchers.<TestSuiteResult>anyObject())).thenReturn(scenariosState);
+        Collection<PlayerRecord> scenariosState = scenariosState(1, true);
+        when(scoreService.suiteResult(any(TestSuiteResult.class))).thenReturn(scenariosState);
         request.addParameter("scenario1", "passed");
 
         controller.service(request, response);
 
-        assertEquals("scenario1=passed", response.getContentAsString().trim());
+        assertThat(response.getContentAsString()).contains("Scenario #1 - passed");
     }
 
-    private TreeMap<Integer, Boolean> scenariosState(int scenarioId, boolean passed) {
-        TreeMap<Integer, Boolean> result = new TreeMap<Integer, Boolean>();
-        result.put(scenarioId, passed);
+    class MockPlayerRecord extends PlayerRecord  {
+        public MockPlayerRecord(int scenarioId, boolean passed, String message) {
+            super(null, Mockito.mock(BasicScenario.class), passed, 0, message, Type.PASSED);
+            when(scenario.bugsFree()).thenReturn(passed);
+            when(scenario.getId()).thenReturn(scenarioId);
+        }
+    }
+
+    private Collection<PlayerRecord> scenariosState(int scenarioId, boolean passed) {
+        Collection<PlayerRecord>  result = new LinkedList<PlayerRecord>();
+        result.add(new MockPlayerRecord(scenarioId, passed, "Some message"));
         return result;
     }
 
@@ -117,13 +119,14 @@ public class PlayerResultControllerTest {
 
     @Test
     public void shouldHaveServiceActualResultsWhenReported() throws IOException, ServletException {
-        when(scoreService.suiteResult(Matchers.<TestSuiteResult>anyObject())).thenReturn(scenariosState(1, false));
+        Collection<PlayerRecord> playerRecords = scenariosState(1, false);
+        when(scoreService.suiteResult(any(TestSuiteResult.class))).thenReturn(playerRecords);
         setupRequest("masha", "passed");
 
         controller.service(request, response);
 
         captureTestResultValues();
-        assertEquals("scenario1=failed", response.getContentAsString().trim());
+        assertThat(response.getContentAsString()).contains("Scenario #1 - failed");
     }
 
     @Test
@@ -189,14 +192,14 @@ public class PlayerResultControllerTest {
     @Test
     public void shouldReturnScenarioStatusesForSeveralScenarios() throws IOException, ServletException {
         setupRequest("vasya", "false", "true");
-        TreeMap<Integer, Boolean> scenarioStates = scenariosState(1, true);
-        scenarioStates.put(2, false);
+        Collection<PlayerRecord> scenarioStates = scenariosState(1, true);
+        scenarioStates.add(new MockPlayerRecord(2, false, "Some other message"));
         when(scoreService.suiteResult(Matchers.<TestSuiteResult>anyObject())).thenReturn(scenarioStates);
 
         controller.service(request, response);
 
-        assertTrue(response.getContentAsString().contains("scenario1=passed"));
-        assertTrue(response.getContentAsString().contains("scenario2=failed"));
+        assertThat(response.getContentAsString()).contains("Scenario #1 - passed");
+        assertThat(response.getContentAsString()).contains("Scenario #2 - failed");
     }
 
     private void assertLastResultReported(String expectedName, int scenarioNumber, boolean expectedResult,

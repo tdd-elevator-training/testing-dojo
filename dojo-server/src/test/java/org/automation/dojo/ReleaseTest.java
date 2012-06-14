@@ -117,7 +117,7 @@ public class ReleaseTest {
         double bugFreeReleaseProbability = (double)countBugFree/(double)countIterations;
         assertTrue("Процент багфришных релизов был " + bugFreeReleaseProbability +
                 "\n а должен был быть ~=1/(количество сценариев в релизе + 1)",
-                0 < bugFreeReleaseProbability && bugFreeReleaseProbability < 0.15);
+                0 < bugFreeReleaseProbability && bugFreeReleaseProbability < 0.2);
         // TODO понять, что за комбиаторика тут получилась, а то неочевидно....
     }
 

@@ -18,6 +18,7 @@ import java.util.Arrays;
 
 import static junit.framework.Assert.fail;
 import static org.fest.assertions.Assertions.assertThat;
+import static org.junit.Assert.assertEquals;
 
 public class DojoTestRunnerTest {
 
@@ -43,6 +44,8 @@ public class DojoTestRunnerTest {
             new DojoTestRunner(NotAnnotatedTest.class);
             fail();
         } catch (InitializationError initializationError) {
+            String message = initializationError.getCauses().get(0).getMessage();
+            assertEquals("Annotation @ReportTo should be defined at a class level", message);
         }
     }
 

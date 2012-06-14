@@ -26,6 +26,7 @@ public abstract class FunctionalTestCase {
     protected static WebDriver tester;
     protected static String baseUrl;
     private static ReleaseEngine releaseEngine;
+    private static LogService logService;
 
     public void join() {
         System.out.println(baseUrl);
@@ -45,6 +46,7 @@ public abstract class FunctionalTestCase {
         tester = new HtmlUnitDriver(true);
 
         releaseEngine = ApplicationContextLocator.getBean("releaseEngine");
+        logService = ApplicationContextLocator.getBean("logService");
     }
 
     @Before
@@ -54,6 +56,10 @@ public abstract class FunctionalTestCase {
 
         tester.get(baseUrl + getPageUrl());
         resetAllElements();
+    }
+
+    public void registerUser(String userName) {
+        logService.registerPlayer(userName);
     }
 
     protected String getMinorReleaseAsString(List<Class<? extends Serializable>> minorRelease) {

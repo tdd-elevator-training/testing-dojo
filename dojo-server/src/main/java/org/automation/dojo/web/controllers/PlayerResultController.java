@@ -1,9 +1,6 @@
 package org.automation.dojo.web.controllers;
 
-import org.automation.dojo.ScoreService;
-import org.automation.dojo.TestStatus;
-import org.automation.dojo.TestSuiteResult;
-import org.automation.dojo.TimeService;
+import org.automation.dojo.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,7 +10,9 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Collection;
 import java.util.Enumeration;
+import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -50,14 +49,19 @@ public class PlayerResultController {
                     suite.addTestResult(Integer.parseInt(matcher.group(1)),
                             parseResult(request.getParameterValues(parameterName)));
                 } catch (IllegalArgumentException e) {
-                    //Scenario not found so skip it
+                    // Scenario not found so skip it
+                    response.getWriter().println(e.getMessage());
                 }
             }
         }
-        Map<Integer,Boolean> scenarioStates = scoreService.suiteResult(suite);
-        for (Map.Entry<Integer, Boolean> scenarioStatus : scenarioStates.entrySet()) {
-            response.getWriter().println("scenario" + scenarioStatus.getKey() + "=" + (scenarioStatus.getValue() ? "passed" : "failed"));
-
+        try {
+            Collection<PlayerRecord> records = scoreService.suiteResult(suite);
+            for (PlayerRecord playerRecord : records) {
+                response.getWriter().println(playerRecord);
+            }
+        } catch (IllegalArgumentException e) {
+            // User not found
+            response.getWriter().println(e.getMessage());
         }
         response.flushBuffer();
     }
