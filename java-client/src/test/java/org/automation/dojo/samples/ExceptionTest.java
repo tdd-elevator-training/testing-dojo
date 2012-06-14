@@ -1,5 +1,8 @@
-package org.automation.dojo;
+package org.automation.dojo.samples;
 
+import org.automation.dojo.DojoTestRunner;
+import org.automation.dojo.ReportTo;
+import org.automation.dojo.Scenario;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 

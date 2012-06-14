@@ -1,13 +1,12 @@
 package org.automation.dojo;
 
+import org.automation.dojo.samples.*;
 import org.fest.assertions.ListAssert;
 import org.fest.assertions.StringAssert;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.Description;
-import org.junit.runner.Result;
 import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunListener;
 import org.junit.runner.notification.RunNotifier;
@@ -90,7 +89,7 @@ public class DojoTestRunnerTest {
     
     @Test
     public void shouldReportFailureWhenNoScenarioAnnotationGiven() throws InitializationError {
-        runTests(NoScenarioAnnotation.class);
+        runTests(NoScenarioAnnotationTest.class);
 
         assertThat(server.getRequest()).isEmpty();
     }
