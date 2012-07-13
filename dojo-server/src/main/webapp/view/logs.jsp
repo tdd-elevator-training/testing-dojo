@@ -7,13 +7,14 @@
         <meta http-equiv="refresh" content="5">
         <meta http-equiv="Content-Type" content="text/html;">
 		<title>Logs for ${playerName}</title>
-        <link rel="stylesheet" type="text/css" href="/resources/style/dojo.css">
+        <link rel="stylesheet" type="text/css" href="/resources/style/bootstrap.css">
     </head>
 	<body>
-    <h3>Logs</h3>
+    <div class="container">
+        <h3>Logs</h3>
         <jsp:include page="releaseInfo.jsp"/>
 	    Logs for ${playerName}:<br>
-	    <table id="table-logs">
+	    <table id="table-logs" class="table table-bordered">
 	        <thead>
 	            <th>Scenario</th><th>Score</th><th>Description</th><th>Log type</th>
 	        </thead>
@@ -29,5 +30,6 @@
                 </c:forEach>
             </c:forEach>
 	    </table>
+    </div>
 	</body>
 </html>

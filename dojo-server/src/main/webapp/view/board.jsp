@@ -7,12 +7,13 @@
         <meta http-equiv="refresh" content="5">
 		<meta http-equiv="Content-Type" content="text/html;">
 		<title>Leader Board</title>
-        <link rel="stylesheet" type="text/css" href="/resources/style/dojo.css">
-	</head>
+        <link href="/resources/style/bootstrap.css" rel="stylesheet">
+    </head>
 	<body>
+    <div class="container">
 	    <h3>Leader Board</h3>
         <jsp:include page="releaseInfo.jsp"/>
-	    <table id="table-logs">
+	    <table id="table-logs" class="table table-striped">
             <thead>
                 <th>#</th><th>Player</th><th>Total Score</th>
             </thead>
@@ -24,5 +25,6 @@
             </c:forEach>
             </tbody>
 	    </table>
+    </div>
 	</body>
 </html>

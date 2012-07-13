@@ -90,6 +90,12 @@ public class Admin {
         return redirectAdminPage();
     }
 
+    @RequestMapping("/clearLogs")
+    public String clearLogs() {
+        logService.clearLogs();
+        return redirectAdminPage();
+    }
+
     private String redirectAdminPage() {
         return "redirect:/" + ADMIN_PAGE;
     }
