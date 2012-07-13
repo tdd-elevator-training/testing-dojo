@@ -418,7 +418,6 @@ public class DojoScoreServiceTest extends DojoScoreBaseTest {
         assertFalse(result.get(1).isPassed());
     }
 
-
     private void assertTypesReported(List<PlayerRecord> records, PlayerRecord.Type... types) {
         assertEquals(types.length, records.size());
         for (int i = 0; i < types.length; i++) {
