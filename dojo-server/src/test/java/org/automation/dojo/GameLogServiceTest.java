@@ -365,4 +365,40 @@ public class GameLogServiceTest {
             return this;
         }
     }
+
+    @Test
+    public void shouldClearAllLogsWhenCallClearOnService () {
+        // given
+        MockScenario scenario = scenario(1);
+        createGameLog(scenario).playerLog(scenario);
+
+        // when
+        gameLogService.clearLogs();
+
+        // then
+        List<GameLog> gameLogs = gameLogService.getGameLogs(CLIENT_NAME, scenario);
+        assertThat(gameLogs.get(0).getPlayerRecords()).isEmpty();
+    }
+
+    @Test
+    public void shouldClearLogsInAllScenariosWhenCallClearOnService () {
+        // given
+        MockScenario scenario = scenario(1);
+        createGameLog(scenario).playerLog(scenario);
+
+        MockScenario scenario2 = scenario(2);
+        createGameLog(scenario2).playerLog(scenario2).playerLog(scenario2).playerLog(scenario2);
+
+        // when
+        gameLogService.clearLogs();
+
+        // then
+        List<GameLog> gameLogs = gameLogService.getGameLogs(CLIENT_NAME, scenario);
+        assertThat(gameLogs.get(0).getPlayerRecords()).isEmpty();
+        assertThat(gameLogs.get(1).getPlayerRecords()).isEmpty();
+
+        List<GameLog> gameLogs2 = gameLogService.getGameLogs(CLIENT_NAME, scenario2);
+        assertThat(gameLogs.get(0).getPlayerRecords()).isEmpty();
+        assertThat(gameLogs.get(1).getPlayerRecords()).isEmpty();
+    }
 }

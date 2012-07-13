@@ -75,4 +75,8 @@ public class ReleaseLog {
         int fromIndex = playerRecords.size() - maxLogRecordsAmount > 0 ? playerRecords.size() - maxLogRecordsAmount : 0;
         return playerRecords.subList(fromIndex, playerRecords.size());
     }
+
+    public void clearRecords() {
+        records.clear();
+    }
 }

@@ -55,7 +55,7 @@ public class TwoScenarios extends AbstractBugReporting {
         assertThat(response).contains("Scenario #1 - passed: Fix the test! It shows wrong result. Current scenario is bugs free. You get -20 points");
 
         assertThat(response).contains("Scenario #2 - failed: Scores for bug #");
-        assertThat(response).contains("You get +50 points");  //TODO этот тест зависит от предыдущего если его запустить отдельно тут будет +100
+        assertThat(response).contains("You get +100 points");
 
         assertThat(response).contains("Scenario #3 - passed: Fix the test! It shows wrong result. Current scenario is bugs free. You get -20 points");
     }

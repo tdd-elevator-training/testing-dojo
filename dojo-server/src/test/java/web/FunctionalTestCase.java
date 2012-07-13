@@ -26,7 +26,7 @@ public abstract class FunctionalTestCase {
     protected static WebDriver tester;
     protected static String baseUrl;
     private static ReleaseEngine releaseEngine;
-    private static LogService logService;
+    protected static LogService logService;
 
     public void join() {
         System.out.println(baseUrl);

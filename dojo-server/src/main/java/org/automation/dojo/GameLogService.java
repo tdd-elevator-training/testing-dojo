@@ -174,4 +174,11 @@ public class GameLogService implements LogService {
             lock.readLock().unlock();
         }
     }
+
+    @Override
+    public void clearLogs() {
+        for (ReleaseLog release : releases) {
+            release.clearRecords();
+        }
+    }
 }

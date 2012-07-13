@@ -29,8 +29,7 @@ public class WithBugs extends AbstractBugReporting {
     public void noBugsReported() throws IOException {
         client.setResult(PASS, 1);
         String response = client.sendResultsToServer();
-        assertThat(response).contains("Scenario #1 - failed: Liar! Current scenario contains bug. Previously reported bug #");
-        assertThat(response).contains("You get -40 points");
+        assertThat(response).contains("Scenario #1 - failed: Fix the test! It shows wrong result. Current scenario contains bug. You get -20 points");
     }
 
     @Test
@@ -38,7 +37,7 @@ public class WithBugs extends AbstractBugReporting {
         client.setResult(FAIL, 1);
         String response = client.sendResultsToServer();
         assertThat(response).contains("Scenario #1 - failed: Scores for bug #");
-        assertThat(response).contains("You get +50 points");
+        assertThat(response).contains("You get +100 points");
     }
 
     @Test
@@ -76,7 +75,7 @@ public class WithBugs extends AbstractBugReporting {
         client.setResult(FAIL, 1);
         String response = client.sendResultsToServer();
         assertThat(response).contains("Scenario #1 - failed: Scores for bug #");
-        assertThat(response).contains("You get +14 points");
+        assertThat(response).contains("You get +50 points");
     }
 
     @Test
@@ -96,6 +95,6 @@ public class WithBugs extends AbstractBugReporting {
         client.addResult(PASS, 1);
         String response = client.sendResultsToServer();
         assertThat(response).contains("Scenario #1 - failed: Scores for bug #");
-        assertThat(response).contains("You get +20 points");
+        assertThat(response).contains("You get +100 points");
     }
 }

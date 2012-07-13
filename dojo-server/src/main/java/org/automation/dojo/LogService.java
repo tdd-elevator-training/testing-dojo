@@ -30,4 +30,6 @@ public interface LogService {
     ReleaseLog getCurrentReleaseLog();
 
     List<ReleaseLogView> getLastReleaseLogsForPlayer(String playerName, int maxLogRecordsAmount);
+
+    void clearLogs();
 }
