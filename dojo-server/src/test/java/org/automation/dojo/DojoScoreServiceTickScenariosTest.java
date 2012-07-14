@@ -1,5 +1,6 @@
 package org.automation.dojo;
 
+import org.automation.dojo.web.scenario.BasicScenario;
 import org.automation.dojo.web.scenario.Release;
 import org.junit.Before;
 import org.junit.Test;
@@ -8,8 +9,10 @@ import org.mockito.Matchers;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.Date;
+import java.util.List;
 
 import static junit.framework.Assert.assertEquals;
+import static org.fest.assertions.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
 /**
@@ -83,17 +86,74 @@ public class DojoScoreServiceTickScenariosTest extends DojoScoreBaseTest {
         assertCapturedTimeoutRecord(captureLastLogRecord(), -2 * PENALTY_VALUE, "petya", scenario);
     }
 
+    @Test
+    public void shouldReportBugForSuperman(){
+        MockScenario scenario = setupScenario(1, true);
+        Release release = setupReleaseWithGameLogs(ScoreService.SUPERMAN, scenario);
+
+        scoreService.reportSuperUsers(release);
+
+        assertCapturedRecord(captureLastLogRecord(), scenario.getBug().getWeight(), ScoreService.SUPERMAN, scenario, PlayerRecord.Type.VALID_BUG);
+    }
+
+    @Test
+    public void shouldReportPassedScenarioForSupermanWhenNoBugs(){
+        MockScenario scenario = setupScenario(1, false);
+        Release release = setupReleaseWithGameLogs(ScoreService.SUPERMAN, scenario);
+
+        scoreService.reportSuperUsers(release);
+
+        assertCapturedRecord(captureLastLogRecord(), 0, ScoreService.SUPERMAN, scenario, PlayerRecord.Type.PASSED);
+    }
+
+    @Test
+    public void shouldIterateScenariosForSupermanWhenReportSuperUsers(){
+        MockScenario scenario1 = setupScenario(1, false);
+        MockScenario scenario2 = setupScenario(2, true);
+        Release release = setupReleaseWithGameLogs(ScoreService.SUPERMAN, scenario1, scenario2);
+
+        scoreService.reportSuperUsers(release);
+
+        verify(logService, atLeastOnce()).playerLog(recordCaptor.capture());
+        List<PlayerRecord> capturedRecords = recordCaptor.getAllValues();
+        assertCapturedRecord(capturedRecords.get(0), 0, ScoreService.SUPERMAN, scenario1, PlayerRecord.Type.PASSED);
+        assertCapturedRecord(capturedRecords.get(1), 100, ScoreService.SUPERMAN, scenario2, PlayerRecord.Type.VALID_BUG);
+    }
+
+    @Test
+    public void shouldIterateScenariosForSuperlooserWhenReportSuperUsers(){
+        MockScenario scenario1 = setupScenario(1, false);
+        MockScenario scenario2 = setupScenario(2, true);
+        Release release = setupReleaseWithGameLogs(ScoreService.LOOSER, scenario1, scenario2);
+
+        scoreService.reportSuperUsers(release);
+
+        verify(logService, atLeastOnce()).playerLog(recordCaptor.capture());
+        List<PlayerRecord> capturedRecords = recordCaptor.getAllValues();
+        assertCapturedRecord(capturedRecords.get(0), -20, ScoreService.LOOSER, scenario1, PlayerRecord.Type.LIAR);
+        assertCapturedRecord(capturedRecords.get(1), -20, ScoreService.LOOSER, scenario2, PlayerRecord.Type.LIAR);
+    }
+
+    private Release setupReleaseWithGameLogs(String playerName, MockScenario... scenario) {
+        setupRegisteredPlayers(playerName);
+        setupGameLogs(playerName, scenario);
+        return setupLastReleaseLog(123, scenario).getRelease();
+    }
 
     private void verifyNoPlayerLogs() {
         verify(logService, never()).playerLog(Matchers.<PlayerRecord>anyObject());
     }
 
     private void assertCapturedTimeoutRecord(PlayerRecord record, int expectedScore, String expectedPlayer,
-            MockScenario expectedScenario) {
+            BasicScenario expectedScenario) {
+        assertCapturedRecord(record, expectedScore, expectedPlayer, expectedScenario, PlayerRecord.Type.TIMEOUT);
+    }
+
+    private void assertCapturedRecord(PlayerRecord record, int expectedScore, String expectedPlayer, BasicScenario expectedScenario, PlayerRecord.Type type) {
         assertEquals(expectedScore, record.getScore());
         assertEquals(expectedPlayer, record.getPlayerName());
         assertEquals(expectedScenario, record.getScenario());
-        assertEquals(PlayerRecord.Type.TIMEOUT, record.getType());
+        assertEquals(type, record.getType());
     }
 
     private ReleaseLog setupLastReleaseLog(int releaseTime, MockScenario... scenario) {

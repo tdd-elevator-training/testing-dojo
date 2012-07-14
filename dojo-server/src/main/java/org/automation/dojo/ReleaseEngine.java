@@ -5,6 +5,10 @@ import org.apache.commons.lang.SerializationUtils;
 import org.automation.dojo.web.scenario.BasicScenario;
 import org.automation.dojo.web.scenario.Release;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationListener;
+import org.springframework.context.event.ApplicationContextEvent;
+import org.springframework.context.event.ContextRefreshedEvent;
+import org.springframework.context.event.ContextStartedEvent;
 import org.springframework.core.io.Resource;
 
 import java.io.IOException;
@@ -17,7 +21,7 @@ import static org.fest.reflect.core.Reflection.constructor;
 /**
  * @author serhiy.zelenin
  */
-public class ReleaseEngine {
+public class ReleaseEngine implements ApplicationListener<ContextRefreshedEvent> {
     private List<Release> releases = new ArrayList<Release>();
     protected int currentReleaseIndex = 0;
 
@@ -91,7 +95,7 @@ public class ReleaseEngine {
 
     public void init() {
         releases.addAll(new ReleaseLoder(scenarioResource).getReleases(bugsQueue));
-        notifyServices();
+//        notifyServices();
     }
 
     public void setScenarioResource(Resource scenarioResource) {
@@ -141,5 +145,10 @@ public class ReleaseEngine {
 
     public String getMajorInfo() {
         return String.valueOf(currentReleaseIndex);
+    }
+
+    @Override
+    public void onApplicationEvent(ContextRefreshedEvent event) {
+        notifyServices();
     }
 }

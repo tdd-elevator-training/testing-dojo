@@ -6,7 +6,6 @@ import org.automation.dojo.web.scenario.Release;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.*;
-import java.util.concurrent.locks.ReentrantLock;
 
 public class DojoScoreService implements ScoreService {
     @Autowired
@@ -18,7 +17,6 @@ public class DojoScoreService implements ScoreService {
     @Autowired
     private ConfigurationService configurationService;
 
-    private ReentrantLock lock = new ReentrantLock();
 
     public DojoScoreService() {
     }
@@ -46,6 +44,10 @@ public class DojoScoreService implements ScoreService {
     }
 
     public void nextRelease(Release previousRelease) {
+//        WARN: This is ugly! rerportSuperUsers needs to be uncommented in order to
+//        report scores for super users. But if you do that tests will run 5 times longer!!!
+        reportSuperUsers(previousRelease);
+        System.out.println("DojoScoreService.nextRelease");
         Collection<String> players = logService.getRegisteredPlayers();
         for (String player : players) {
             List<BasicScenario> scenarios = previousRelease.getScenarios();
@@ -93,6 +95,7 @@ public class DojoScoreService implements ScoreService {
                                 PlayerRecord.Type.TIMEOUT));
             }
         }
+
     }
 
     private PlayerRecord findLastNonTimeoutRecord(List<PlayerRecord> playerRecords) {
@@ -108,7 +111,7 @@ public class DojoScoreService implements ScoreService {
     @Override
     public List<PlayerRecord> suiteResult(TestSuiteResult suite) {
         List<PlayerRecord> result = new LinkedList<PlayerRecord>();
-        Map<Integer,List<TestStatus>> scenariosResults = suite.getScenarioResults();
+        Map<Integer, List<TestStatus>> scenariosResults = suite.getScenarioResults();
         for (Map.Entry<Integer, List<TestStatus>> scenarioResults : scenariosResults.entrySet()) {
             Integer scenarioId = scenarioResults.getKey();
             BasicScenario scenario = releaseEngine.getScenario(scenarioId);
@@ -124,6 +127,25 @@ public class DojoScoreService implements ScoreService {
 
         reportAllResults(result);
         return result;
+    }
+
+    @Override
+    public void reportSuperUsers(Release previousRelease) {
+        ReleaseLog lastReleaseLog = logService.getCurrentReleaseLog();
+        List<BasicScenario> scenarios = previousRelease.getScenarios();
+        reportScenarioForSuperUser(scenarios, new TestSuiteResult(ScoreService.SUPERMAN, System.currentTimeMillis()));
+        reportScenarioForSuperUser(scenarios, new TestSuiteResult(ScoreService.LOOSER, System.currentTimeMillis()));
+    }
+
+    private void reportScenarioForSuperUser(List<BasicScenario> scenarios, TestSuiteResult suite) {
+        for (BasicScenario scenario : scenarios) {
+            if (ScoreService.SUPERMAN.equals(suite.getPlayerName())) {
+                suite.addTestResult(scenario.getId(), scenario.bugsFree() ? TestStatus.PASSED : TestStatus.FAILED);
+            } else {
+                suite.addTestResult(scenario.getId(), scenario.bugsFree() ? TestStatus.FAILED : TestStatus.PASSED);
+            }
+        }
+        suiteResult(suite);
     }
 
     private void reportAllResults(List<PlayerRecord> results) {
@@ -169,7 +191,7 @@ public class DojoScoreService implements ScoreService {
             String scenarioIsBugFree = scenario.bugsFree() ? "is bugs free" : "contains bug";
 
             //Valid bug has been reported for this release but now scenario is passed. Should be punished twice.
-            int liarWeight = liarReported || liarReportedSuite? 0 : configurationService.getLiarWeight();
+            int liarWeight = liarReported || liarReportedSuite ? 0 : configurationService.getLiarWeight();
             if (isLiar) {
                 Bug reportedBug = reportedBugs.get(reportedBugs.size() - 1).getScenario().getBug();
                 result.add(new PlayerRecord(suite.getPlayerName(), scenario, testPassed,

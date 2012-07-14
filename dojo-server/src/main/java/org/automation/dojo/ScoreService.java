@@ -7,9 +7,14 @@ import java.util.Map;
 
 public interface ScoreService {
 
+    String SUPERMAN = "#superman";
+    String LOOSER = "#looser";
+
     void nextRelease(Release previousRelease);
 
     void tick(long currentTime);
 
     Collection<PlayerRecord> suiteResult(TestSuiteResult suite);
+
+    void reportSuperUsers(Release previousRelease);
 }

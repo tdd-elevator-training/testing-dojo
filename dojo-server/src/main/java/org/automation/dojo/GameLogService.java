@@ -167,4 +167,9 @@ public class GameLogService implements LogService {
             release.clearRecords();
         }
     }
+
+    public void init() {
+        registerPlayer(ScoreService.SUPERMAN);
+        registerPlayer(ScoreService.LOOSER);
+    }
 }

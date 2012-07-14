@@ -402,4 +402,12 @@ public class GameLogServiceTest {
         assertThat(gameLogs.get(0).getPlayerRecords()).isEmpty();
         assertThat(gameLogs.get(1).getPlayerRecords()).isEmpty();
     }
+
+    @Test
+    public void shouldCreateSuperManWhenInit(){
+        gameLogService.init();
+
+        assertThat(gameLogService.getRegisteredPlayers()).contains(ScoreService.SUPERMAN, "#looser");
+    }
+
 }

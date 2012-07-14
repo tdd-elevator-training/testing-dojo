@@ -1,6 +1,5 @@
 package org.automation.dojo;
 
-import org.automation.dojo.web.bugs.Bug;
 import org.automation.dojo.web.scenario.BasicScenario;
 import org.automation.dojo.web.scenario.Release;
 import org.junit.Test;
@@ -21,7 +20,6 @@ import static org.mockito.Mockito.*;
  */
 @RunWith(MockitoJUnitRunner.class)
 public class DojoScoreServiceTest extends DojoScoreBaseTest {
-    private static final String PLAYER_NAME = "vasyad";
 
 
     @Test
@@ -260,7 +258,7 @@ public class DojoScoreServiceTest extends DojoScoreBaseTest {
     public void shouldAddCompleteScoreWhenFoundNewBugAfterPassed(){
         BasicScenario scenario = setupScenario(1, 100, 2);
         setupGameLogs(scenario,
-                gameLog(scenario, record(scenario(1, 100, 1), false, 100)),
+                gameLog(scenario, record(scenario(1, 100), false, 100)),
                 gameLog(scenario)); //new minor release record, no reports yet
 
         reportScenarioSuite(1, TestStatus.FAILED);
@@ -309,10 +307,7 @@ public class DojoScoreServiceTest extends DojoScoreBaseTest {
         BasicScenario scenario = setupScenario(1, true);
         setupGameLogs(scenario, gameLog(scenario));
 
-        TestSuiteResult suiteResult = new TestSuiteResult(PLAYER_NAME, 111L);
-        suiteResult.addTestResult(2, TestStatus.PASSED);
-
-        scoreService.suiteResult(suiteResult);
+        reportScenarioSuite(2, TestStatus.PASSED, 111L);
 
         verify(logService, never()).playerLog(recordCaptor.capture());
     }
@@ -418,6 +413,10 @@ public class DojoScoreServiceTest extends DojoScoreBaseTest {
         assertFalse(result.get(1).isPassed());
     }
 
+    @Test
+    public void shouldWhen(){
+
+    }
     private void assertTypesReported(List<PlayerRecord> records, PlayerRecord.Type... types) {
         assertEquals(types.length, records.size());
         for (int i = 0; i < types.length; i++) {
@@ -440,57 +439,5 @@ public class DojoScoreServiceTest extends DojoScoreBaseTest {
         }
     }
 
-    private void setupGameLogs(BasicScenario scenario, GameLog... gameLogs) {
-        when(logService.getGameLogs(PLAYER_NAME, scenario))
-                .thenReturn(Arrays.asList(gameLogs));
-    }
 
-    private GameLog gameLog(BasicScenario scenario,PlayerRecord ... records) {
-        return gameLog(scenario, new Date(), records);
-    }
-    
-    private GameLog gameLog(BasicScenario scenario, Date releaseLog, PlayerRecord ... records) {
-        return new GameLog(scenario, releaseLog, records);
-    }
-
-    private BasicScenario setupScenario(int scenarioId, int bugWeight) {
-        return setupScenario(scenarioId, bugWeight, 1);
-    }
-
-    private BasicScenario setupScenario(int scenarioId, int bugWeight, int bugId) {
-        BasicScenario scenario = scenario(scenarioId, bugWeight, bugId);
-        when(releaseEngine.getScenario(scenarioId)).thenReturn(scenario);
-        return scenario;
-    }
-
-    private BasicScenario setupScenario(int scenarioId, boolean hasBug) {
-        return setupScenario(scenarioId, hasBug ? 100 : 0);
-    }
-
-    private void reportScenarioSuite(int scenarioId, TestStatus testStatus) {
-        reportScenarioSuite(scenarioId, testStatus, new Date().getTime());
-    }
-
-    private void reportScenarioSuite(int scenarioId, TestStatus testStatus, long timeStamp) {
-        TestSuiteResult suite = new TestSuiteResult(PLAYER_NAME, timeStamp);
-        suite.addTestResult(scenarioId, testStatus);
-        scoreService.suiteResult(suite);
-    }
-
-
-    private BasicScenario scenario(int scenarioId, int bugWeight) {
-        return scenario(scenarioId, bugWeight, 1);
-    }
-
-    private BasicScenario scenario(int scenarioId, int bugWeight, int bugId) {
-        BasicScenario scenario = new MockScenario(scenarioId, "", null);
-        if (bugWeight > 0) {
-            Bug bug = new Bug(bugId);
-            bug.setWeight(bugWeight);
-            scenario.setBug(bug);
-        }else{
-            scenario.setBug(Bug.NULL_BUG);
-        }
-        return scenario;
-    }
 }
