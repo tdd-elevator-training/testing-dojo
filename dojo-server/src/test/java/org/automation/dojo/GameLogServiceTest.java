@@ -7,9 +7,10 @@ import org.automation.dojo.web.scenario.BasicScenario;
 import org.automation.dojo.web.scenario.Release;
 import org.fest.assertions.ListAssert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.mockito.stubbing.OngoingStubbing;
@@ -19,6 +20,7 @@ import java.util.List;
 
 import static junit.framework.Assert.*;
 import static org.fest.assertions.Assertions.assertThat;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 /**
@@ -29,23 +31,32 @@ public class GameLogServiceTest {
 
     private static final String CLIENT_NAME = "test";
     private GameLogService gameLogService;
-    @Mock TimeService timeService;
-    
+    @Mock
+    TimeService timeService;
+
+    @Mock
+    private ScoreService scoreService;
+
+    @Captor
+    private ArgumentCaptor<TestSuiteResult> suiteCaptor;
+    private MockScenario scenario1;
+
     @Before
     public void setUp() throws Exception {
         gameLogService = new GameLogService(timeService);
+        scenario1 = scenario(1);
+        gameLogService.createGameLog(new Release(scenario1));
         gameLogService.registerPlayer(CLIENT_NAME);
     }
 
     @Test
     public void shouldStoreGameLogsWhenOneScenario() {
-        MockScenario scenario = scenario(1);
+        //precondition is in setup
 
-        createGameLog(scenario);
+        List<GameLog> gameLogs = gameLogService.getGameLogs("127.0.0.1", scenario1);
 
-        List<GameLog> gameLogs = gameLogService.getGameLogs("127.0.0.1", scenario);
         assertEquals(1, gameLogs.size());
-        assertAllGameLogsForScenario(gameLogs, scenario);
+        assertAllGameLogsForScenario(gameLogs, scenario1);
         Iterables.all(gameLogs, new EmptyPlayerLogs());
     }
 
@@ -55,13 +66,12 @@ public class GameLogServiceTest {
 
     @Test
     public void shouldStoreGameLogsWhenSeveralScenario() {
-        MockScenario scenario1 = scenario(1);
 
         gameLogService.createGameLog(new Release(scenario1, new MockScenario(2, "scenarios", null)));
 
         List<GameLog> gameLogs = gameLogService.getGameLogs("127.0.0.1", scenario1);
 
-        assertEquals(1, gameLogs.size());
+        assertEquals(2, gameLogs.size());
         assertAllGameLogsForScenario(gameLogs, scenario1);
         Iterables.all(gameLogs, new EmptyPlayerLogs());
     }
@@ -85,10 +95,10 @@ public class GameLogServiceTest {
 
         createGameLog(new Release(scenario1, scenario2))
                 .playerLog(scenario1).playerLog(scenario2);
-        
+
         List<GameLog> gameLogs = gameLogService.getGameLogs(CLIENT_NAME, scenario1);
 
-        assertEquals(1, gameLogs.size());
+        assertEquals(2, gameLogs.size());
         assertAllGameLogsForScenario(gameLogs, scenario1);
         assertTrue(Iterables.all(gameLogs, new AllRecordsForScenario(scenario1)));
     }
@@ -100,8 +110,8 @@ public class GameLogServiceTest {
         gameLogService.registerPlayer(CLIENT_NAME);
 
         assertThat(gameLogService.getRegisteredPlayers()).doesNotHaveDuplicates().contains(CLIENT_NAME, "vasya");
-    } 
-    
+    }
+
     @Test
     public void shouldReturnGameLogsForPlayer() {
         createGameLog(new Release(scenario(1), scenario(2)))
@@ -156,7 +166,7 @@ public class GameLogServiceTest {
 
         assertEquals(1, releaseLogs.size());
         ReleaseLogView releaseLog = releaseLogs.get(0);
-        assertEquals(2, releaseLog.getReleaseNumber());
+        assertEquals(3, releaseLog.getReleaseNumber());
         assertReleaseViewLogForScenarios(releaseLog, scenario2, scenario3);
     }
 
@@ -167,12 +177,12 @@ public class GameLogServiceTest {
 
         List<ReleaseLogView> releaseLogs = gameLogService.getLastReleaseLogsForPlayer(CLIENT_NAME, -1);
 
-        assertEquals(1, releaseLogs.size());
+        assertEquals(2, releaseLogs.size());
         assertReleaseViewLogForScenarios(releaseLogs.get(0), scenario1);
     }
 
     @Test
-    public void shouldReturnBoardLogsWhenGameIsNotStarted(){
+    public void shouldReturnBoardLogsWhenGameIsNotStarted() {
         gameLogService.registerPlayer("petya");
         gameLogService.registerPlayer("vasya");
 
@@ -181,7 +191,7 @@ public class GameLogServiceTest {
         assertThat(boardRecords).onProperty("player").contains("petya", "petya", CLIENT_NAME);
     }
 
-    private void assertReleaseViewLogForScenarios(ReleaseLogView releaseLog, MockScenario ... scenarios) {
+    private void assertReleaseViewLogForScenarios(ReleaseLogView releaseLog, MockScenario... scenarios) {
         assertEquals("Release log should contain expected amount of records", scenarios.length, releaseLog.getRecords().size());
         for (int i = 0; i < scenarios.length; i++) {
             assertEquals(scenarios[i], releaseLog.getRecords().get(i).getScenario());
@@ -199,18 +209,18 @@ public class GameLogServiceTest {
     }
 
     @Test
-    public void testShouldRegister(){
+    public void testShouldRegister() {
         assertTrue(gameLogService.registerPlayer("vasya"));
     }
 
     @Test
-    public void testShouldNotRegisterWhenNameAndAddressRegistered(){
+    public void testShouldNotRegisterWhenNameAndAddressRegistered() {
         assertTrue(gameLogService.registerPlayer("vasya"));
         assertFalse(gameLogService.registerPlayer("vasya"));
     }
 
     @Test
-    public void shouldSkipLogWhenPlayerUnregistered(){
+    public void shouldSkipLogWhenPlayerUnregistered() {
         MockScenario scenario = new MockScenario(1, "", null);
         createGameLog(scenario);
         try {
@@ -218,8 +228,8 @@ public class GameLogServiceTest {
             fail();
         } catch (IllegalArgumentException e) {
         }
-    } 
-    
+    }
+
     @Test
     public void shouldGetSortedResultWhenGetBoardRecords() {
         gameLogService.registerPlayer("petya");
@@ -242,7 +252,7 @@ public class GameLogServiceTest {
         List<BoardRecord> boardRecords = gameLogService.getBoardRecords();
 
         assertThat(boardRecords).onProperty("player").containsExactly(CLIENT_NAME, "petya");
-        assertThat(boardRecords).onProperty("total").containsExactly(100+50, 100-1+50-1);
+        assertThat(boardRecords).onProperty("total").containsExactly(100 + 50, 100 - 1 + 50 - 1);
     }
 
     @Test
@@ -253,7 +263,7 @@ public class GameLogServiceTest {
         List<BoardRecord> boardRecords = gameLogService.getBoardRecords();
 
         assertThat(boardRecords).onProperty("player").containsExactly(CLIENT_NAME);
-        assertThat(boardRecords).onProperty("total").containsExactly(100+50);
+        assertThat(boardRecords).onProperty("total").containsExactly(100 + 50);
     }
 
     @Test
@@ -262,7 +272,7 @@ public class GameLogServiceTest {
         MockScenario scenario = scenario(1);
         gameLogService.createGameLog(new Release(scenario));
 
-        assertEquals(100, gameLogService.getGameLogs(CLIENT_NAME, scenario).get(0).getReleaseDateMilis());
+        assertEquals(100, gameLogService.getGameLogs(CLIENT_NAME, scenario).get(1).getReleaseDateMilis());
     }
 
     @Test
@@ -272,12 +282,11 @@ public class GameLogServiceTest {
         createGameLog(scenario).playerLog(CLIENT_NAME, 0);
 
         List<GameLog> gameLogs = gameLogService.getGameLogs(CLIENT_NAME, scenario);
-        assertEquals(123, gameLogs.get(0).getPlayerRecords().get(0).getLogTime());
+        assertEquals(123, gameLogs.get(1).getPlayerRecords().get(0).getLogTime());
     }
 
     @Test
     public void shouldGetRelativeToSuperManAndLooserScore() {
-        gameLogService.registerPlayer("petya");
         gameLogService.registerPlayer(ScoreService.SUPERMAN);
         gameLogService.registerPlayer(ScoreService.LOOSER);
 
@@ -301,6 +310,24 @@ public class GameLogServiceTest {
         List<BoardRecord> boardRecords = gameLogService.getBoardRecords();
 
         assertThat(boardRecords).onProperty("relativeScore").containsExactly(100);
+    }
+
+    @Test
+    public void shouldGiveLooserScoreWhenRegister() {
+        gameLogService.init();
+        MockScenario scenario = scenario(1);
+        gameLogService.createGameLog(new Release(scenario));
+
+        createGameLog(scenario)
+                .playerLog(ScoreService.SUPERMAN, 100)
+                .playerLog(ScoreService.LOOSER, -50).playerLog(ScoreService.LOOSER, -100);
+
+        gameLogService.registerPlayer("vasya");
+
+        List<BoardRecord> boardRecords = gameLogService.getBoardRecords();
+
+        assertThat(boardRecords).onProperty("player").containsSequence(ScoreService.SUPERMAN, CLIENT_NAME, "vasya", ScoreService.LOOSER);
+        assertThat(boardRecords).onProperty("total").containsSequence(100, 0, -50 - 100, -50 - 100);
     }
 
     private OngoingStubbing<Date> setCurrentTime(int currentTimeMilis) {
@@ -360,7 +387,7 @@ public class GameLogServiceTest {
         public boolean apply(GameLog gameLog) {
             return Iterables.all(gameLog.getPlayerRecords(), new Predicate<PlayerRecord>() {
 
-                public boolean apply(PlayerRecord record  ) {
+                public boolean apply(PlayerRecord record) {
                     return record.getScenario().equals(scenario);
                 }
             });
@@ -396,7 +423,7 @@ public class GameLogServiceTest {
     }
 
     @Test
-    public void shouldClearAllLogsWhenCallClearOnService () {
+    public void shouldClearAllLogsWhenCallClearOnService() {
         // given
         MockScenario scenario = scenario(1);
         createGameLog(scenario).playerLog(scenario);
@@ -410,7 +437,7 @@ public class GameLogServiceTest {
     }
 
     @Test
-    public void shouldClearLogsInAllScenariosWhenCallClearOnService () {
+    public void shouldClearLogsInAllScenariosWhenCallClearOnService() {
         // given
         MockScenario scenario = scenario(1);
         createGameLog(scenario).playerLog(scenario);
@@ -432,7 +459,7 @@ public class GameLogServiceTest {
     }
 
     @Test
-    public void shouldCreateSuperManWhenInit(){
+    public void shouldCreateSuperManWhenInit() {
         gameLogService.init();
 
         assertThat(gameLogService.getRegisteredPlayers()).contains(ScoreService.SUPERMAN, ScoreService.LOOSER);

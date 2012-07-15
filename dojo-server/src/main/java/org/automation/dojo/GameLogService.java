@@ -82,10 +82,25 @@ public class GameLogService implements LogService {
                 return false;
             }
             registeredPlayers.add(name);
+            if (isSystemUser(name)) {
+                return true;
+            }
+            logInitialPenalty(name);
             return true;
         } finally {
             lock.writeLock().unlock();
         }
+    }
+
+    private void logInitialPenalty(String name) {
+        List<BoardRecord> records = getBoardRecords();
+        int looserTotal = records.get(records.size() - 1).getTotal();
+        BasicScenario scenario = (BasicScenario) currentRelease.getRelease().getScenarios().get(0);
+        playerLog(new PlayerRecord(name, scenario, false, looserTotal, "Initial join penalty", PlayerRecord.Type.MISSED));
+    }
+
+    private boolean isSystemUser(String name) {
+        return name.equals(ScoreService.LOOSER) || name.equals(ScoreService.SUPERMAN);
     }
 
     public List<BoardRecord> getBoardRecords() {
