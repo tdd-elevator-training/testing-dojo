@@ -269,6 +269,20 @@ public class DojoScoreServiceTest extends DojoScoreBaseTest {
     }
 
     @Test
+    public void shouldNotDecreaseScoreForMultiTestScenarioWhenOneFailed(){
+        BasicScenario scenario = setupScenario(1, 100, 2);
+        setupGameLogs(scenario,
+                gameLog(scenario, record(scenario(1, 100, 1), false, 100)),
+                gameLog(scenario)); //new minor release record, no reports yet
+
+        reportScenarioSuite(1, TestStatus.FAILED);
+
+        PlayerRecord capturedRecord = captureLastLogRecord();
+
+        assertEquals(100, capturedRecord.getScore());
+    }
+
+    @Test
     public void shouldDecreaseWhenTestException() {
         configurationService.setExceptionWeight(11);
         BasicScenario scenario = setupScenario(1, true);

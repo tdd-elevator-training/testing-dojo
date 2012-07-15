@@ -44,8 +44,8 @@ public class DojoScoreService implements ScoreService {
     }
 
     public void nextRelease(Release previousRelease) {
-//        WARN: This is ugly! rerportSuperUsers needs to be uncommented in order to
-//        report scores for super users. But if you do that tests will run 5 times longer!!!
+//        WARN: This is ugly! If you unclomment following line no test will fail
+//        Also integration tests take 5 times longer with it!!!
         reportSuperUsers(previousRelease);
         System.out.println("DojoScoreService.nextRelease");
         Collection<String> players = logService.getRegisteredPlayers();
