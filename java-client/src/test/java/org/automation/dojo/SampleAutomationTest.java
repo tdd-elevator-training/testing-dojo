@@ -21,12 +21,13 @@ public class SampleAutomationTest {
     
     @Before
     public void setUp() {
-        webDriver = new HtmlUnitDriver();
+//        webDriver = new HtmlUnitDriver();
     }
 
     @Test
     @Scenario(1)
     public void searchProductScenario() {
+/*
 
         webDriver.get(baseUrl + "/search");
 
@@ -37,6 +38,13 @@ public class SampleAutomationTest {
         searchText.sendKeys("mouse");
         searchButton.submit();
 
+*/
+        fail();
+    }
+
+    @Test
+    @Scenario(1)
+    public void searchProductScenario1() {
 
     }
 

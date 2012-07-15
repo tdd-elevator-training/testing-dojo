@@ -318,8 +318,7 @@ public class DojoScoreServiceTest extends DojoScoreBaseTest {
 
     @Test
     public void shouldIgnoreReportForNonExistentScenario() {
-        BasicScenario scenario = setupScenario(1, true);
-        setupGameLogs(scenario, gameLog(scenario));
+        when(releaseEngine.getScenario(2)).thenThrow(new IllegalArgumentException());
 
         reportScenarioSuite(2, TestStatus.PASSED, 111L);
 

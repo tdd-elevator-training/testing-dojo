@@ -114,7 +114,12 @@ public class DojoScoreService implements ScoreService {
         Map<Integer, List<TestStatus>> scenariosResults = suite.getScenarioResults();
         for (Map.Entry<Integer, List<TestStatus>> scenarioResults : scenariosResults.entrySet()) {
             Integer scenarioId = scenarioResults.getKey();
-            BasicScenario scenario = releaseEngine.getScenario(scenarioId);
+            BasicScenario scenario = null;
+            try {
+                scenario = releaseEngine.getScenario(scenarioId);
+            } catch (IllegalArgumentException e) {
+                continue;
+            }
             if (scenario == null) {
                 continue;
             }
