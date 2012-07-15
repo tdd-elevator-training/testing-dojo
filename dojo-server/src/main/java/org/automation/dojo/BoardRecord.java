@@ -6,6 +6,7 @@ package org.automation.dojo;
 public class BoardRecord implements Comparable <BoardRecord>{
     private String player;
     private int total;
+    private int relativeScore;
 
     public BoardRecord(String player, int total) {
         this.player = player;
@@ -22,5 +23,13 @@ public class BoardRecord implements Comparable <BoardRecord>{
 
     public int compareTo(BoardRecord record) {
         return record.total - total;
+    }
+
+    public void setRelativeScore(int relativeScore) {
+        this.relativeScore = relativeScore;
+    }
+
+    public int getRelativeScore() {
+        return relativeScore;
     }
 }

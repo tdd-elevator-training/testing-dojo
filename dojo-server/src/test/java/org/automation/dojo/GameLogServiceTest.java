@@ -275,6 +275,34 @@ public class GameLogServiceTest {
         assertEquals(123, gameLogs.get(0).getPlayerRecords().get(0).getLogTime());
     }
 
+    @Test
+    public void shouldGetRelativeToSuperManAndLooserScore() {
+        gameLogService.registerPlayer("petya");
+        gameLogService.registerPlayer(ScoreService.SUPERMAN);
+        gameLogService.registerPlayer(ScoreService.LOOSER);
+
+        MockScenario scenario = scenario(1);
+        createGameLog(scenario)
+                .playerLog(ScoreService.SUPERMAN, 100)
+                .playerLog(ScoreService.LOOSER, -50)
+                .playerLog(CLIENT_NAME, 20);
+
+        List<BoardRecord> boardRecords = gameLogService.getBoardRecords();
+
+        int relativeScore = (int) Math.round((0.0 + 20 + 50) / (100 + 50) * 100);
+        assertThat(boardRecords).onProperty("relativeScore").containsExactly(100, relativeScore, 0);
+    }
+
+    @Test
+    public void shouldNotThrowErrorWhenNoSuperUsers() {
+        MockScenario scenario = scenario(1);
+        createGameLog(scenario).playerLog(CLIENT_NAME, 20);
+
+        List<BoardRecord> boardRecords = gameLogService.getBoardRecords();
+
+        assertThat(boardRecords).onProperty("relativeScore").containsExactly(100);
+    }
+
     private OngoingStubbing<Date> setCurrentTime(int currentTimeMilis) {
         return when(timeService.now()).thenReturn(new Date(currentTimeMilis));
     }

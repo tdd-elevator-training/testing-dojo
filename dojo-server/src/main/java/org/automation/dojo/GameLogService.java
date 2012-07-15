@@ -100,9 +100,22 @@ public class GameLogService implements LogService {
             }
             ArrayList<BoardRecord> result = convertGameScores(gameScores);
             Collections.sort(result);
+            calcRelativeScores(result);
             return result;
         } finally {
             lock.readLock().unlock();
+        }
+    }
+
+    private void calcRelativeScores(ArrayList<BoardRecord> result) {
+        int supermanScore = result.get(0).getTotal();
+        int looserScore = result.get(result.size() - 1).getTotal();
+        int superManAbsoluteValue = supermanScore + Math.abs(looserScore);
+
+        for (BoardRecord record : result) {
+            double percent = (0.0 + record.getTotal() + Math.abs(looserScore))/superManAbsoluteValue;
+            int relativeScore = (int) Math.round((percent * 100));
+            record.setRelativeScore(relativeScore);
         }
     }
 
