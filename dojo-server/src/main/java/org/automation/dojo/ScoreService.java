@@ -7,8 +7,8 @@ import java.util.Map;
 
 public interface ScoreService {
 
-    String SUPERMAN = "#superman";
-    String LOOSER = "#looser";
+    String SUPERMAN = "superman";
+    String LOOSER = "looser";
 
     void nextRelease(Release previousRelease);
 

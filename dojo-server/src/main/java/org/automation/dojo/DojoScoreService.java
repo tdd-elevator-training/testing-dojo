@@ -74,6 +74,9 @@ public class DojoScoreService implements ScoreService {
             return;
         }
         for (String player : players) {
+            if (ScoreService.SUPERMAN.equals(player)) {
+                continue;
+            }
             List<BasicScenario> scenarios = lastReleaseLog.getRelease().getScenarios();
             for (BasicScenario scenario : scenarios) {
                 List<PlayerRecord> playerRecords = lastReleaseLog.getRecordsFor(player, scenario);

@@ -407,7 +407,7 @@ public class GameLogServiceTest {
     public void shouldCreateSuperManWhenInit(){
         gameLogService.init();
 
-        assertThat(gameLogService.getRegisteredPlayers()).contains(ScoreService.SUPERMAN, "#looser");
+        assertThat(gameLogService.getRegisteredPlayers()).contains(ScoreService.SUPERMAN, ScoreService.LOOSER);
     }
 
 }

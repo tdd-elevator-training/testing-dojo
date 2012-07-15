@@ -134,6 +134,16 @@ public class DojoScoreServiceTickScenariosTest extends DojoScoreBaseTest {
         assertCapturedRecord(capturedRecords.get(1), -20, ScoreService.LOOSER, scenario2, PlayerRecord.Type.LIAR);
     }
 
+    @Test
+    public void shouldNotDecreaseScoreWhenSuperman(){
+        setupRegisteredPlayers(ScoreService.SUPERMAN);
+        setupLastReleaseLog(100, scenario(1));
+
+        scoreService.tick(100 + PENALTY_TIMEOUT);
+
+        verifyNoPlayerLogs();
+    }
+
     private Release setupReleaseWithGameLogs(String playerName, MockScenario... scenario) {
         setupRegisteredPlayers(playerName);
         setupGameLogs(playerName, scenario);
