@@ -25,7 +25,7 @@
             <tr>
                 <td>${status.index + 1}</td>
                 <td>
-                    <a href="/logs/${record.player}">
+
                         <c:choose>
                             <c:when test="${status.first}">
                                 <img src="/resources/images/superman_new.png" alt="Superman">
@@ -34,10 +34,12 @@
                                 <img src="/resources/images/tortoise_new.png" alt="Tortoise">
                             </c:when>
                             <c:otherwise>
+                            <a href="/logs/${record.player}">
                                 ${record.player}
+                            </a>
                             </c:otherwise>
                         </c:choose>
-                    </a></td>
+                    </td>
                 <td align="center">
                     <div class="progress">
                         <div class="bar" style="width: ${record.relativeScore}%;"></div>

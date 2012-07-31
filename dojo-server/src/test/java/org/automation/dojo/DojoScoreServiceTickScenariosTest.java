@@ -93,7 +93,8 @@ public class DojoScoreServiceTickScenariosTest extends DojoScoreBaseTest {
 
         scoreService.reportSuperUsers(release);
 
-        assertCapturedRecord(captureLastLogRecord(), scenario.getBug().getWeight(), ScoreService.SUPERMAN, scenario, PlayerRecord.Type.VALID_BUG);
+        assertCapturedRecord(captureLastLogRecord(), scenario.getBug().getWeight(), ScoreService.SUPERMAN,
+                scenario, PlayerRecord.Type.VALID_BUG);
     }
 
     @Test

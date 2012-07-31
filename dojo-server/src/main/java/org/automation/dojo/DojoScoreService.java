@@ -139,7 +139,6 @@ public class DojoScoreService implements ScoreService {
 
     @Override
     public void reportSuperUsers(Release previousRelease) {
-        ReleaseLog lastReleaseLog = logService.getCurrentReleaseLog();
         List<BasicScenario> scenarios = previousRelease.getScenarios();
         reportScenarioForSuperUser(scenarios, new TestSuiteResult(ScoreService.SUPERMAN, System.currentTimeMillis()));
         reportScenarioForSuperUser(scenarios, new TestSuiteResult(ScoreService.LOOSER, System.currentTimeMillis()));
