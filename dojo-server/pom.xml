@@ -17,14 +17,12 @@
             <artifactId>jetty-maven-plugin</artifactId>
             <version>8.1.0.v20120127</version>
         </dependency>
-<!--
         <dependency>
             <groupId>javax</groupId>
             <artifactId>javaee-web-api</artifactId>
             <version>6.0</version>
             <scope>provided</scope>
         </dependency>
--->
         <dependency>
             <groupId>org.reflections</groupId>
             <artifactId>reflections</artifactId>
@@ -46,7 +44,7 @@
         <dependency>
             <groupId>org.automation.dojo</groupId>
             <artifactId>java-client</artifactId>
-            <version>1.0</version>
+            <version>1.1</version>
             <scope>test</scope>
         </dependency>
         <dependency>

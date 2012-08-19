@@ -114,11 +114,6 @@ public class DojoTestRunnerTest {
         assertRequestContains("scenario1=failed");
     }
 
-    private ListAssert assertFailuresHasException(Class<NotAnnotatedTestException> exception) {
-        return assertThat(failures).onProperty("exception").onProperty("class")
-                .isEqualTo(Arrays.asList(exception));
-    }
-
     private void runTests(Class<?> klass) throws InitializationError {
         DojoTestRunner runner = new DojoTestRunner(klass);
         RunNotifier notifier = new RunNotifier();

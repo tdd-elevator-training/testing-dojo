@@ -7,9 +7,10 @@
     <groupId>testing-dojo</groupId>
     <artifactId>testing-dojo</artifactId>
     <version>1.0</version>
+    <packaging>pom</packaging>
     <modules>
-        <module>dojo-server</module>
         <module>java-client</module>
+        <module>dojo-server</module>
         <module>template-java</module>
     </modules>
 

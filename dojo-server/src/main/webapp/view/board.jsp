@@ -1,3 +1,5 @@
+<%@ page import="org.automation.dojo.ScoreService" %>
+<%@ page import="static org.automation.dojo.ScoreService.*" %>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
          pageEncoding="ISO-8859-1" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
@@ -25,12 +27,14 @@
             <tr>
                 <td>${status.index + 1}</td>
                 <td>
+                    <c:set var="superman"><%=SUPERMAN%></c:set>
+                    <c:set var="looser"><%=LOOSER%></c:set>
 
-                        <c:choose>
-                            <c:when test="${status.first}">
+                    <c:choose>
+                            <c:when test="${record.player == superman}">
                                 <img src="/resources/images/superman_new.png" alt="Superman">
                             </c:when>
-                            <c:when test="${status.last}">
+                            <c:when test="${record.player == looser}">
                                 <img src="/resources/images/tortoise_new.png" alt="Tortoise">
                             </c:when>
                             <c:otherwise>
