@@ -13,14 +13,14 @@
 </head>
 <body>
 <div class="container">
-    <h3>Leader Board</h3>
+    <h1>Leader Board</h1>
     <jsp:include page="releaseInfo.jsp"/>
     <table id="table-logs" class="table table-striped">
         <thead>
-        <th width="5%">#</th>
-        <th width="20%">Player</th>
-        <th width="60%">Relative Score</th>
-        <th width="15%">Absolute Score</th>
+        <th width="5%"><h2>#</h2></th>
+        <th width="20%"><h2>Player</h2></th>
+        <th width="60%"><h2>Relative Score</h2></th>
+        <th width="15%"><h2>Absolute Score</h2></th>
         </thead>
         <tbody>
         <c:forEach items="${records}" var="record" varStatus="status">
@@ -39,7 +39,7 @@
                             </c:when>
                             <c:otherwise>
                             <a href="/logs/${record.player}">
-                                ${record.player}
+                                <h1>${record.player}</h1>
                             </a>
                             </c:otherwise>
                         </c:choose>
@@ -50,7 +50,7 @@
                     </div>
                 </td>
                 <td>
-                    ${record.total}
+                    <h1>${record.total}</h1>
                 </td>
             </tr>
         </c:forEach>
