@@ -3,7 +3,7 @@ package org.automation.dojo.web.bugs;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.when;
 
 public class AddSomeOtherElementIfListNotEmptyBugTest extends BugTest {
 

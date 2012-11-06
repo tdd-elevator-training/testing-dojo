@@ -6,14 +6,12 @@ import org.automation.dojo.web.bugs.SomeRecordsWillNotAddToCart;
 import org.automation.dojo.web.scenario.*;
 import org.junit.ComparisonFailure;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 public class SearchPageLevel3_Bug1 extends SearchPageLevel3 {
 

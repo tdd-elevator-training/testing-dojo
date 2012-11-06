@@ -1,6 +1,5 @@
 package org.automation.dojo.web.controllers;
 
-import com.google.inject.internal.Errors;
 import org.automation.dojo.PlayerRecord;
 
 import java.util.List;

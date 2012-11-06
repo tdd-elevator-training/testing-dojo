@@ -1,7 +1,5 @@
 package org.automation.dojo.web.scenario;
 
-import org.automation.dojo.web.servlet.RequestWorker;
-
 public interface Scenario<T> {
     void takeNextBug();
 

@@ -1,22 +1,16 @@
 package org.automation.dojo;
 
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.SerializationUtils;
 import org.automation.dojo.web.scenario.BasicScenario;
 import org.automation.dojo.web.scenario.Release;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
-import org.springframework.context.event.ApplicationContextEvent;
 import org.springframework.context.event.ContextRefreshedEvent;
-import org.springframework.context.event.ContextStartedEvent;
 import org.springframework.core.io.Resource;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
-
-import static org.fest.reflect.core.Reflection.constructor;
 
 /**
  * @author serhiy.zelenin

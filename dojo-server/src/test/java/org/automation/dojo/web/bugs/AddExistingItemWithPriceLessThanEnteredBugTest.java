@@ -3,8 +3,6 @@ package org.automation.dojo.web.bugs;
 import org.junit.Before;
 import org.junit.Test;
 
-import static junit.framework.Assert.assertEquals;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 public class AddExistingItemWithPriceLessThanEnteredBugTest extends BugTest {

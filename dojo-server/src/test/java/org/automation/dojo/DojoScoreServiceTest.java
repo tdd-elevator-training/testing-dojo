@@ -7,11 +7,10 @@ import org.junit.runner.RunWith;
 import org.mockito.Matchers;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import java.util.*;
+import java.util.List;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
-import static junit.framework.Assert.fail;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
 

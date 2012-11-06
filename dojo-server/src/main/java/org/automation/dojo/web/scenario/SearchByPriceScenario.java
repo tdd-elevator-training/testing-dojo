@@ -1,8 +1,8 @@
 package org.automation.dojo.web.scenario;
 
 import org.automation.dojo.ApplicationContextLocator;
-import org.automation.dojo.web.bugs.*;
 import org.automation.dojo.BugsQueue;
+import org.automation.dojo.web.bugs.*;
 import org.automation.dojo.web.model.Record;
 import org.automation.dojo.web.model.ShopService;
 import org.automation.dojo.web.servlet.RequestWorker;

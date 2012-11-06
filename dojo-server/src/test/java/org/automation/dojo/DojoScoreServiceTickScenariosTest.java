@@ -12,7 +12,6 @@ import java.util.Date;
 import java.util.List;
 
 import static junit.framework.Assert.assertEquals;
-import static org.fest.assertions.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
 /**

@@ -1,10 +1,6 @@
 package org.automation.dojo.web.bugs;
 
-import org.automation.dojo.web.model.Record;
 import org.automation.dojo.web.servlet.RequestWorker;
-
-import java.util.List;
-import java.util.Random;
 
 /**
  * Просто отключаем джаваскриптовую валидацию

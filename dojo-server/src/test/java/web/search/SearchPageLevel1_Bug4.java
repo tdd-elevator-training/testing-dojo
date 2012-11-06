@@ -1,19 +1,14 @@
 package web.search;
 
 
-import org.automation.dojo.web.bugs.AddSomeOtherElementIfListNotEmptyBug;
 import org.automation.dojo.web.bugs.NoSearchTextMaxLengthBug;
 import org.automation.dojo.web.scenario.SearchByTextScenario;
-import org.junit.ComparisonFailure;
 import org.junit.Ignore;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.openqa.selenium.NoSuchElementException;
 
 import java.util.Arrays;
 import java.util.List;
-import org.openqa.selenium.NoSuchElementException;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;

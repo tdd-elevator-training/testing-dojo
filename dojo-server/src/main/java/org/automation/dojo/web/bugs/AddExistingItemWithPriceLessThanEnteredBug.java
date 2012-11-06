@@ -5,7 +5,6 @@ import org.automation.dojo.ApplicationContextLocator;
 import org.automation.dojo.web.model.Record;
 import org.automation.dojo.web.model.ShopService;
 import org.automation.dojo.web.servlet.RequestWorker;
-import org.automation.dojo.web.servlet.RequestWorkerImpl;
 
 import java.util.List;
 

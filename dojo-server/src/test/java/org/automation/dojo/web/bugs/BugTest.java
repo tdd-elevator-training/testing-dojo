@@ -6,7 +6,6 @@ import org.automation.dojo.web.model.ShopService;
 import org.automation.dojo.web.servlet.RequestWorker;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Test;
 
 import java.util.Arrays;
 import java.util.LinkedList;

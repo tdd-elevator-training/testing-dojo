@@ -2,7 +2,6 @@ package org.automation.dojo.web.bugs;
 
 import org.junit.Test;
 
-import static junit.framework.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 public class BugFactoryTest {

@@ -1,4 +1,3 @@
-<%@ page import="org.automation.dojo.ScoreService" %>
 <%@ page import="static org.automation.dojo.ScoreService.*" %>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
          pageEncoding="ISO-8859-1" %>

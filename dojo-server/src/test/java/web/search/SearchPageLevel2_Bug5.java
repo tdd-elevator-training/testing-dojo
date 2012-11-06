@@ -7,17 +7,11 @@ import org.automation.dojo.web.scenario.PriceSortingAscDescScenario;
 import org.automation.dojo.web.scenario.SearchByPriceScenario;
 import org.automation.dojo.web.scenario.SearchByTextScenario;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.openqa.selenium.By;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.util.Arrays;
 import java.util.List;
 
 import static org.automation.dojo.web.model.ShopService.MORE_THAN;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 
 public class SearchPageLevel2_Bug5 extends SearchPageLevel2 {
 

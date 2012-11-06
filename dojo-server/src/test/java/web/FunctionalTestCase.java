@@ -3,15 +3,11 @@ package web;
 import org.automation.dojo.ApplicationContextLocator;
 import org.automation.dojo.LogService;
 import org.automation.dojo.ReleaseEngine;
-import org.automation.dojo.ScoreService;
-import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.htmlunit.HtmlUnitDriver;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 
 import java.io.Serializable;
 import java.util.LinkedList;

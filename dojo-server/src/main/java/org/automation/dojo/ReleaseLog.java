@@ -1,8 +1,5 @@
 package org.automation.dojo;
 
-import com.google.common.base.Predicate;
-import com.google.common.collect.Iterables;
-import org.apache.commons.collections.CollectionUtils;
 import org.automation.dojo.web.scenario.BasicScenario;
 import org.automation.dojo.web.scenario.Release;
 

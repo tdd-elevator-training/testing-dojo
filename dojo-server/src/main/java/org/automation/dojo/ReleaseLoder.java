@@ -6,7 +6,6 @@ import org.automation.dojo.web.scenario.Release;
 import org.springframework.core.io.Resource;
 
 import java.io.IOException;
-import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 

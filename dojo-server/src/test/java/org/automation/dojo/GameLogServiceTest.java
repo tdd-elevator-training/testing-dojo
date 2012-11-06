@@ -20,7 +20,6 @@ import java.util.List;
 
 import static junit.framework.Assert.*;
 import static org.fest.assertions.Assertions.assertThat;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 /**

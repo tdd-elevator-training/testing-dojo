@@ -1,7 +1,9 @@
 package org.automation.dojo.web.scenario;
 
 import org.automation.dojo.BugsQueue;
-import org.automation.dojo.web.bugs.*;
+import org.automation.dojo.web.bugs.BrokenChartSumBug;
+import org.automation.dojo.web.bugs.Bug;
+import org.automation.dojo.web.bugs.BugsFactory;
 import org.automation.dojo.web.model.UserCart;
 import org.automation.dojo.web.servlet.RequestWorker;
 

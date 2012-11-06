@@ -1,6 +1,5 @@
 package org.automation.dojo;
 
-import org.automation.dojo.web.model.ShopService;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;

@@ -1,16 +1,12 @@
 package web.search;
 
 
-import org.openqa.selenium.htmlunit.HtmlUnitWebElement;
-import web.FunctionalTestCase;
 import org.automation.dojo.web.bugs.NullBug;
 import org.automation.dojo.web.scenario.SearchByTextScenario;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import web.FunctionalTestCase;
 
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -18,7 +14,6 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 
 public class SearchPageLevel1 extends FunctionalTestCase {
 

@@ -5,19 +5,15 @@ import org.automation.dojo.web.bugs.NullBug;
 import org.automation.dojo.web.scenario.*;
 import org.junit.After;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.util.Arrays;
 import java.util.List;
 
-import static org.automation.dojo.web.model.ShopService.*;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.fail;
+import static org.automation.dojo.web.model.ShopService.LESS_THAN;
+import static org.automation.dojo.web.model.ShopService.MORE_THAN;
+import static org.junit.Assert.*;
 
 public class SearchPageLevel3 extends SearchPageLevel2 {
 

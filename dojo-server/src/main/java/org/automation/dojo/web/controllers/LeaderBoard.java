@@ -1,6 +1,5 @@
 package org.automation.dojo.web.controllers;
 
-import org.automation.dojo.BoardRecord;
 import org.automation.dojo.ConfigurationService;
 import org.automation.dojo.LogService;
 import org.automation.dojo.ReleaseEngine;
@@ -9,8 +8,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-
-import java.util.List;
 
 /**
  * @author serhiy.zelenin
