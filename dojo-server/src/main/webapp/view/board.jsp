@@ -5,7 +5,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-    <meta http-equiv="refresh" content="15">
+    <meta http-equiv="refresh" content="1">
     <meta http-equiv="Content-Type" content="text/html;">
     <title>Leader Board</title>
     <link href="/resources/style/bootstrap.css" rel="stylesheet">
@@ -13,6 +13,7 @@
 <body>
 <div class="container">
     <h1>Leader Board</h1>
+    <jsp:include page="followus.jsp"/>
     <jsp:include page="releaseInfo.jsp"/>
     <table id="table-logs" class="table table-striped">
         <thead>
@@ -49,7 +50,7 @@
                     </div>
                 </td>
                 <td>
-                    <h1>${record.total}</h1>
+                    <h1>${record.total+0</h1>
                 </td>
             </tr>
         </c:forEach>

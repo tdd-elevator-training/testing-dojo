@@ -7,14 +7,18 @@
         <meta http-equiv="refresh" content="5">
         <meta http-equiv="Content-Type" content="text/html;">
 		<title>Scenarios</title>
+        <link href="/resources/style/bootstrap.css" rel="stylesheet">
 	</head>
 	<body>
-	    <table width="100%">
-            <c:forEach items="${scenarios}" var="scenario" varStatus="statusScenario">
-                <tr>
-                    <td>${scenario}</td>
-                </tr>
-            </c:forEach>
-	    </table>
+        <div class="container">
+            <jsp:include page="followus.jsp"/>
+            <table width="100%">
+                <c:forEach items="${scenarios}" var="scenario" varStatus="statusScenario">
+                    <tr>
+                        <td>${scenario}</br></br></td>
+                    </tr>
+                </c:forEach>
+            </table>
+        </div>
 	</body>
 </html>

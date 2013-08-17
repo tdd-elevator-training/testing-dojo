@@ -1,0 +1,1 @@
+<div align="right"><h2>Follow us on <a href="http://facebook.com/groups/codenjoy">Facebook</a></h2></div>

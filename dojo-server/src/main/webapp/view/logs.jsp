@@ -12,6 +12,7 @@
 	<body>
     <div class="container">
         <h3>Logs</h3>
+        <jsp:include page="followus.jsp"/>
         <jsp:include page="releaseInfo.jsp"/>
 	    Logs for ${playerName}:<br>
 	    <table id="table-logs" class="table table-bordered">
