@@ -1,6 +1,9 @@
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+    pageEncoding="ISO-8859-1"%>
 <%--@elvariable id="release" type="org.automation.dojo.ReleaseEngine"--%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<c:set var="ctx" value="${pageContext.request.contextPath}"/>
 
 <html>
 <head>
@@ -41,11 +44,11 @@
                 <td>Exception weight : <form:input path="exceptionWeight"/></td>
             </tr>
             <tr>
-                <td><c:if test="${configuration.paused}"><a href="/${adminPage}/resume">Resume Game</a></c:if>
-                    <c:if test="${!configuration.paused}"><a href="/${adminPage}/pause">Pause Game</a></c:if></td>
+                <td><c:if test="${configuration.paused}"><a href="${ctx}/${adminPage}/resume">Resume Game</a></c:if>
+                    <c:if test="${!configuration.paused}"><a href="${ctx}/${adminPage}/pause">Pause Game</a></c:if></td>
             </tr>
             <tr>
-                <td><a href="/${adminPage}/clearLogs">Clear logs</a></td>
+                <td><a href="${ctx}/${adminPage}/clearLogs">Clear logs</a></td>
             </tr>
 
             <tr>
@@ -68,12 +71,12 @@
         <tr>
             <td>Current major release</td>
             <td>${majorNumber}</td>
-            <td><a name="next_major" href="<c:url value="/${adminPage}/nextMajor"/>">Next major</a></td>
+            <td><a name="next_major" href="${ctx}/${adminPage}/nextMajor">Next major</a></td>
         </tr>
         <tr>
             <td>Current minor release</td>
             <td>${minorNumber}</td>
-            <td><a name="next_minor" href="<c:url value="/${adminPage}/nextMinor"/>">Next minor</a></td>
+            <td><a name="next_minor" href="${ctx}/${adminPage}/nextMinor">Next minor</a></td>
         </tr>
     </table>
     <br/>
@@ -102,7 +105,7 @@
         </tr>
         <c:forEach items="${players}" var="record" varStatus="status">
             <tr>
-                <td><a href="/logs/${record}">${record}</a></td>
+                <td><a href="${ctx}/logs/${record}">${record}</a></td>
             </tr>
         </c:forEach>
     </table>

@@ -2,13 +2,14 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
          pageEncoding="ISO-8859-1" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<c:set var="ctx" value="${pageContext.request.contextPath}"/>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
     <meta http-equiv="refresh" content="1">
     <meta http-equiv="Content-Type" content="text/html;">
     <title>Leader Board</title>
-    <link href="/resources/style/bootstrap.css" rel="stylesheet">
+    <link href="${ctx}/resources/style/bootstrap.css" rel="stylesheet">
 </head>
 <body>
 <div class="container">
@@ -32,13 +33,13 @@
 
                     <c:choose>
                             <c:when test="${record.player == superman}">
-                                <img src="/resources/images/superman_new.png" alt="Superman">
+                                <img src="${ctx}/resources/images/superman_new.png" alt="Superman">
                             </c:when>
                             <c:when test="${record.player == looser}">
-                                <img src="/resources/images/tortoise_new.png" alt="Tortoise">
+                                <img src="${ctx}/resources/images/tortoise_new.png" alt="Tortoise">
                             </c:when>
                             <c:otherwise>
-                            <a href="/logs/${record.player}">
+                            <a href="${ctx}/logs/${record.player}">
                                 <h1>${record.player}</h1>
                             </a>
                             </c:otherwise>
@@ -50,7 +51,7 @@
                     </div>
                 </td>
                 <td>
-                    <h1>${record.total+0</h1>
+                    <h1>${record.total+0}</h1>
                 </td>
             </tr>
         </c:forEach>

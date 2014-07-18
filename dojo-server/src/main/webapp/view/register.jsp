@@ -1,8 +1,12 @@
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+    pageEncoding="ISO-8859-1"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<c:set var="ctx" value="${pageContext.request.contextPath}"/>
 <html>
 <head>
     <title>Registration page</title>
-    <link href="/resources/style/bootstrap.css" rel="stylesheet">
+    <link href="${ctx}/resources/style/bootstrap.css" rel="stylesheet">
 </head>
 <body>
     <div class="container">
