@@ -12,7 +12,7 @@
         <jsp:include page="followus.jsp"/>
         <table>
             <tr>
-                <td><a href="http://dl.dropbox.com/u/22607711/automation-testing-dojo-template-java.zip">Dojo client</a> (<a href="http://codenjoy.com/portal/?p=46#instructions">how to start</a>)</td>
+                <td><a href="${ctx}/resources/files/template-java.zip">Dojo client</a> (<a href="http://codenjoy.com/portal/?p=46#instructions">how to start</a>)</td>
             </tr>
             <tr>
                 <td><a href="${ctx}/register">Registration page</a></td>
