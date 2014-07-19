@@ -16,7 +16,7 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 @RunWith(DojoTestRunner.class)
-@ReportTo(server = "http://127.0.0.1:8080", userName = "JohnDoe")
+@ReportTo(server = "http://tetrisj.jvmhost.net:12270/at-dojo", userName = "Asfasf")
 public class SampleAutomationTest {
     private WebDriver webDriver;
 
@@ -33,10 +33,10 @@ public class SampleAutomationTest {
         openGooglePage();
 
         // When I search by "automated testing dojo"
-        searchBy("automated testing dojo idea");
+        searchBy("automated testing dojo codenjoy");
 
         //Then I see a link to Sergey's blog
-        assertContainsLink("szelenin.blogspot.com");
+        assertContainsLink("codenjoy.com");
     }
 
     @Test
@@ -44,13 +44,13 @@ public class SampleAutomationTest {
     public void shouldBeAbleToClick() {
         //Given google.com page with search results by "automated testing dojo"
         openGooglePage();
-        searchBy("automated testing dojo idea");
+        searchBy("automated testing dojo codenjoy");
 
         // When I click on link for Sergey's blog
-        clickOn("szelenin.blogspot.com");
+        clickOn("codenjoy.com");
 
         //Then Sergey's blog is open
-        assertWeAreAt("http://szelenin.blogspot.com");
+        assertWeAreAt("http://codenjoy.com");
     }
 
     private void assertWeAreAt(String linkAddress) {
