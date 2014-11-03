@@ -51,6 +51,17 @@ public class ReleaseEngine implements ApplicationListener<ContextRefreshedEvent>
         }
     }
 
+    public Release getCurrentBugsFreeRelease() {
+        lock.readLock().lock();
+        try {
+            Release release = (Release) SerializationUtils.clone(releases.get(currentReleaseIndex));
+            release.setNoBug();
+            return release;
+        } finally {
+            lock.readLock().unlock();
+        }
+    }
+
     public void nextMajorRelease() {
         lock.writeLock().lock();
         try {

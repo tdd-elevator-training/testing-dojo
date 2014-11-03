@@ -18,7 +18,10 @@
                 <td><a href="${ctx}/register">Registration page</a></td>
             </tr>
             <tr>
-                <td><a href="${ctx}/search">Application page</a></td>
+                <td><a href="${ctx}/search">Application page (non-stable version)</a></td>
+            </tr>
+            <tr>
+                <td><a href="${ctx}/production">Application page (production server)</a></td>
             </tr>
             <tr>
                 <td><a href="${ctx}/scenarios">Current scenarios</a></td>

@@ -8,7 +8,7 @@
 		<title>Search form</title>
 	</head>
 	<body>		
-        <form name="search" method="post" action="search">
+        <form name="search" method="post" action="${context}">
             <input type="hidden" name="action" value="search">
 			<table id="search_box">
  				<tr>

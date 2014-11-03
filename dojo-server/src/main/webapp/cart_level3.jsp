@@ -8,7 +8,7 @@
 		<title>Search form</title>
 	</head>
 	<body>		
-        <form name="search" method="post" action="search">
+        <form name="search" method="post" action="${context}">
             <input name="price_sorting_order_option" type="hidden" value="${price_sorting_order_option}"/>
             <input type="hidden" name="action" id="action" value="search"/>
 			<jsp:include page="search_box.jsp"/>

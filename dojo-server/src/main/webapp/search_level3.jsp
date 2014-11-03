@@ -14,7 +14,7 @@
         </script>
 	</head>
 	<body>
-        <form name="search" method="post" action="search">
+        <form name="search" method="post" action="${context}">
             <input type="hidden" name="action" id="action" value="search"/>
 			<jsp:include page="search_box.jsp"/>
 

@@ -7,33 +7,28 @@
 
 
     <servlet>
-        <description>Workflow controller</description>
-        <display-name>WorkflowController</display-name>
-        <servlet-name>WorkflowController</servlet-name>
+        <description>Application page</description>
+        <display-name>ApplicationPage</display-name>
+        <servlet-name>ApplicationPage</servlet-name>
         <servlet-class>org.automation.dojo.web.servlet.WorkflowController</servlet-class>
     </servlet>
 
     <servlet-mapping>
-        <servlet-name>WorkflowController</servlet-name>
+        <servlet-name>ApplicationPage</servlet-name>
         <url-pattern>/search</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <description>Production application page</description>
+        <display-name>ProductionApplicationPage</display-name>
+        <servlet-name>ProductionApplicationPage</servlet-name>
+        <servlet-class>org.automation.dojo.web.servlet.BugsFreeWorkflowController</servlet-class>
+    </servlet>
 
-
-<!--
-    <context-param>
-        <param-name>contextConfigLocation</param-name>
-        <param-value>
-            classpath:/org/automation/dojo/applicationContext.xml
-        </param-value>
-    </context-param>
--->
-
-<!--
-    <listener>
-        <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
-    </listener>
--->
+    <servlet-mapping>
+        <servlet-name>ProductionApplicationPage</servlet-name>
+        <url-pattern>/production</url-pattern>
+    </servlet-mapping>
 
     <servlet>
         <servlet-name>appServlet</servlet-name>

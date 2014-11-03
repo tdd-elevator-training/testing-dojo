@@ -2,6 +2,7 @@ package org.automation.dojo.web.servlet;
 
 import org.automation.dojo.ApplicationContextLocator;
 import org.automation.dojo.ReleaseEngine;
+import org.automation.dojo.web.scenario.Release;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -24,8 +25,9 @@ public class WorkflowController  extends HttpServlet {
             clearCartIfNeeded(request);
 
             ReleaseEngine engine = ApplicationContextLocator.getBean("releaseEngine");
-            String url = engine.getCurrentRelease().process(new RequestWorkerImpl(request));
+            String url = getCurrentRelease(engine).process(new RequestWorkerImpl(request));
 
+            request.setAttribute("context", getContext());
             request.getRequestDispatcher(url).forward(request, response);
         } catch (Exception exception) {
             exception.printStackTrace();
@@ -34,10 +36,18 @@ public class WorkflowController  extends HttpServlet {
         }
     }
 
+    protected Release getCurrentRelease(ReleaseEngine engine) {
+        return engine.getCurrentRelease();
+    }
+
+    protected String getContext() {
+        return "search";
+    }
+
     /**
      * Этот метод используется в тестовых целях, иногда просто надо почистить карт между вызовами двух тестов SearchPageLevel3
      */
-    private void clearCartIfNeeded(HttpServletRequest request) {
+    protected void clearCartIfNeeded(HttpServletRequest request) {
         if (request.getParameter("clear") != null) {
             request.getSession().setAttribute("cart", null);
         }
