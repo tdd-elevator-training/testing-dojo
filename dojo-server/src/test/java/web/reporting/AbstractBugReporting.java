@@ -43,10 +43,10 @@ public abstract class AbstractBugReporting extends FunctionalTestCase {
     }
 
     protected void turnBugsOn() {
-        switchToMinorRelease(getMinorReleaseAsString(Arrays.asList(SearchByTextScenario.class, FoundNotExistsProductBug.class)));
+        switchToMinorRelease(Arrays.asList(SearchByTextScenario.class, FoundNotExistsProductBug.class));
     }
 
     protected void turnBugsOff() {
-        switchToMinorRelease(getMinorReleaseAsString(Arrays.asList(SearchByTextScenario.class, NullBug.class)));
+        switchToMinorRelease(Arrays.asList(SearchByTextScenario.class, NullBug.class));
     }
 }

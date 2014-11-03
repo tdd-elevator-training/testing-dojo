@@ -16,6 +16,11 @@ public class ReleaseTest {
 
     private List<BasicScenario> scenarios;
     private Release release;
+    private static ShopBugsQueue bugsQueue;
+    static {
+        bugsQueue = new ShopBugsQueue();
+        bugsQueue.setDice(new RandomDice());
+    }
 
     class MockBug1 extends Bug {
         public MockBug1() {
@@ -37,7 +42,7 @@ public class ReleaseTest {
 
     class MockScenario extends BasicScenario {
         public MockScenario() {
-            super(0, new ShopBugsQueue());
+            super(0, bugsQueue);
         }
 
         @Override
@@ -68,8 +73,6 @@ public class ReleaseTest {
 
         release = new Release(scenarios.toArray(new BasicScenario[0]));
     }
-
-
 
     @Test
     public void shouldOnlyOneScenarioBugPerMinorRelease(){

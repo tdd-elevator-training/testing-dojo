@@ -1,11 +1,14 @@
 package web;
 
-import org.automation.dojo.ApplicationContextLocator;
-import org.automation.dojo.LogService;
-import org.automation.dojo.ReleaseEngine;
+import org.automation.dojo.*;
+import org.automation.dojo.web.bugs.Bug;
+import org.automation.dojo.web.bugs.NullBug;
+import org.automation.dojo.web.scenario.BasicScenario;
+import org.automation.dojo.web.scenario.Release;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.mockito.stubbing.OngoingStubbing;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.htmlunit.HtmlUnitDriver;
 
@@ -15,6 +18,9 @@ import java.util.List;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.anyInt;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public abstract class FunctionalTestCase {
 
@@ -24,6 +30,7 @@ public abstract class FunctionalTestCase {
     private static ReleaseEngine releaseEngine;
     protected static LogService logService;
     public static String CONTEXT = "/at-dojo";
+    protected static Dice dice;
 
     public void join() {
         System.out.println(baseUrl);
@@ -43,13 +50,18 @@ public abstract class FunctionalTestCase {
         tester = new HtmlUnitDriver(true);
 
         releaseEngine = ApplicationContextLocator.getBean("releaseEngine");
+
         logService = ApplicationContextLocator.getBean("logService");
+
+        dice = mock(Dice.class);
+        ShopBugsQueue bugsQueue = ApplicationContextLocator.getBean("bugsQueue");
+        bugsQueue.setDice(dice);
     }
 
     @Before
     public void setupReleases() throws Exception {
         switchToMajorRelease(getMajorRelease());
-        switchToMinorRelease(getMinorReleaseAsString((List<Class<? extends Serializable>>) getMinorRelease()));
+        switchToMinorRelease((List<Class<? extends Serializable>>) getMinorRelease());
 
         tester.get(baseUrl + getPageUrl());
         resetAllElements();
@@ -59,25 +71,48 @@ public abstract class FunctionalTestCase {
         logService.registerPlayer(userName);
     }
 
-    protected String getMinorReleaseAsString(List<Class<? extends Serializable>> minorRelease) {
-        List<String> result = new LinkedList<String>();
-        for (int count = 0; count < minorRelease.size()/2; count++) {
-            Class scenarioClass = minorRelease.get(count*2);
-            Class bugClass = minorRelease.get(count*2 + 1);
-            result.add(String.format("Scenario %s with bug %s",
-                    scenarioClass.getSimpleName(), bugClass.getSimpleName()));
-        }
-        return result.toString();
-    }
+    protected void switchToMinorRelease(List<Class<? extends Serializable>> minorRelease) {
+        Release release = releaseEngine.getCurrentRelease();
+        List<BasicScenario> scenarios = release.getScenarios();
+        List<Integer> randoms = new LinkedList<Integer>();
+        for (int i = 0; i < scenarios.size(); i++) {
+            BasicScenario scenario = scenarios.get(i);
 
-    protected void switchToMinorRelease(String minorRelease) {
-        int countLoop = 0;
-        final int MAX = 10000;
-        do {
-            releaseEngine.nextMinorRelease();
-            countLoop++;
-        } while (!minorRelease.equals(releaseEngine.getMinorInfo()) && countLoop < MAX);
-        if (countLoop == MAX) {
+            Class<Bug> bugToSet = null;
+            for (int j = 0; j < minorRelease.size()/2; j++) {
+                Class<BasicScenario> scenarioToSet = (Class<BasicScenario>) minorRelease.get(j*2);
+
+                if (scenarioToSet.equals(scenario.getClass())) {
+                    bugToSet = (Class<Bug>) minorRelease.get(j * 2 + 1);
+                    break;
+                }
+            }
+
+            if (bugToSet.equals(NullBug.class)) {
+                randoms.add(scenario.getPossibleBugs().size()); // for select NullBug
+            } else {
+                List<? extends Bug> possibleBugs = scenario.getPossibleBugs();
+                for (int j = 0; j < possibleBugs.size(); j++) {
+                    Bug bug = possibleBugs.get(j);
+                    if (bug.getClass().equals(bugToSet)) {
+                        randoms.add(j);
+                        break;
+                    }
+                }
+            }
+        }
+
+        if (randoms.isEmpty()) {
+            throw new RuntimeException("Чето не так");
+        }
+        OngoingStubbing<Integer> when = when(dice.next(anyInt()));
+        for (Integer bugIndex : randoms) {
+            when = when.thenReturn(new Integer(bugIndex.intValue()));
+        }
+
+        releaseEngine.nextMinorRelease();
+
+        if (minorRelease.equals(releaseEngine.getMinorInfo())) {
             throw new IllegalArgumentException("Release " + minorRelease + " not found");
         }
     }

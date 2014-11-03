@@ -78,7 +78,8 @@ public class ReleaseEngine implements ApplicationListener<ContextRefreshedEvent>
         }
     }
 
-    private Release currentRelease() {
+    //WARN!! public for testing only!!!
+    public Release currentRelease() {
         return releases.get(currentReleaseIndex);
     }
 

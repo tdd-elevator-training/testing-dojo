@@ -13,8 +13,11 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import static junit.framework.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.anyInt;
+import static org.mockito.Mockito.when;
 
 public class ReleasesPage extends FunctionalTestCase {
 
@@ -52,8 +55,8 @@ public class ReleasesPage extends FunctionalTestCase {
 
     @Test
     public void shouldMajorRelease0WithoutBugsAtStart(){
-        assertMach("Now we have major 1 and minor " +
-                "\\[Scenario SearchByTextScenario with bug NullBug\\]",
+        assertEquals("Now we have major 1 and minor " +
+                "[Scenario SearchByTextScenario with bug NullBug]",
                 indicator.getText());
     }
 
@@ -61,73 +64,72 @@ public class ReleasesPage extends FunctionalTestCase {
     public void shouldSwitchMajorWhenClick() {
         goTo(nextMajor.getAttribute("href"));
 
-        assertMach("Now we have major 2 and minor " +
-                "\\[Scenario SearchByTextScenario with bug NullBug, " +
+        assertEquals("Now we have major 2 and minor " +
+                "[Scenario SearchByTextScenario with bug NullBug, " +
                 "Scenario SearchByPriceScenario with bug NullBug, " +
-                "Scenario PriceSortingAscDescScenario with bug NullBug\\]",
+                "Scenario PriceSortingAscDescScenario with bug NullBug]",
                 indicator.getText());
     }
 
     @Test
     public void shouldSwitchMinorWhenClickForMajor0() {
+        when(dice.next(anyInt())).thenReturn(0);
+
         goTo(nextMinor.getAttribute("href"));
 
-        assertMach("Now we have major 1 and minor " +
-                "\\[Scenario SearchByTextScenario with bug .*\\]",
+        assertEquals("Now we have major 1 and minor " +
+                "[Scenario SearchByTextScenario with bug NoResultWhenExpectedBug]",
                 indicator.getText());
     }
 
     @Test
     public void shouldSwitchMinorWhenClickForMajor1() {
+        when(dice.next(anyInt())).thenReturn(0);
+
         goTo(nextMajor.getAttribute("href"));
         goTo(nextMinor.getAttribute("href"));
 
-        assertMach("Now we have major 2 and minor " +
-                "\\[Scenario SearchByTextScenario with bug .*" +
-                "Scenario SearchByPriceScenario with bug .*, " +
-                "Scenario PriceSortingAscDescScenario with bug .*\\]",
+        assertEquals("Now we have major 2 and minor " +
+                        "[Scenario SearchByTextScenario with bug NoResultWhenExpectedBug, " +
+                        "Scenario SearchByPriceScenario with bug AddExistingItemWithPriceLessThanEnteredBug, " +
+                        "Scenario PriceSortingAscDescScenario with bug BrokenSortingBug]",
                 indicator.getText());
     }
 
     @Test
     public void shouldStopIfNoMoreMajorRevisions() {
-        assertMach("Now we have major 1 and minor " +
-                "\\[Scenario SearchByTextScenario with bug NullBug\\]",
+        assertEquals("Now we have major 1 and minor " +
+                "[Scenario SearchByTextScenario with bug NullBug]",
                 indicator.getText());
 
         goTo(nextMajor.getAttribute("href"));
 
-        assertMach("Now we have major 2 and minor " +
-                "\\[Scenario SearchByTextScenario with bug NullBug, " +
+        assertEquals("Now we have major 2 and minor " +
+                "[Scenario SearchByTextScenario with bug NullBug, " +
                 "Scenario SearchByPriceScenario with bug NullBug, " +
-                "Scenario PriceSortingAscDescScenario with bug NullBug\\]",
+                "Scenario PriceSortingAscDescScenario with bug NullBug]",
                 indicator.getText());
 
         goTo(nextMajor.getAttribute("href"));
 
-        assertMach("Now we have major 3 and minor " +
-                "\\[Scenario SearchByTextScenario with bug NullBug, " +
-                "Scenario SearchByPriceScenario with bug NullBug, " +
-                "Scenario PriceSortingAscDescScenario with bug NullBug, " +
-                "Scenario AddToUserCartScenario with bug NullBug, " +
-                "Scenario CalculateCartSumScenario with bug NullBug\\]",
-                indicator.getText());
-
-        goTo(nextMajor.getAttribute("href"));
-        goTo(nextMajor.getAttribute("href"));
-
-        assertMach("Now we have major 3 and minor " +
-                "\\[Scenario SearchByTextScenario with bug NullBug, " +
+        assertEquals("Now we have major 3 and minor " +
+                "[Scenario SearchByTextScenario with bug NullBug, " +
                 "Scenario SearchByPriceScenario with bug NullBug, " +
                 "Scenario PriceSortingAscDescScenario with bug NullBug, " +
                 "Scenario AddToUserCartScenario with bug NullBug, " +
-                "Scenario CalculateCartSumScenario with bug NullBug\\]",
+                "Scenario CalculateCartSumScenario with bug NullBug]",
+                indicator.getText());
+
+        goTo(nextMajor.getAttribute("href"));
+        goTo(nextMajor.getAttribute("href"));
+
+        assertEquals("Now we have major 3 and minor " +
+                "[Scenario SearchByTextScenario with bug NullBug, " +
+                "Scenario SearchByPriceScenario with bug NullBug, " +
+                "Scenario PriceSortingAscDescScenario with bug NullBug, " +
+                "Scenario AddToUserCartScenario with bug NullBug, " +
+                "Scenario CalculateCartSumScenario with bug NullBug]",
                 indicator.getText());
     }
 
-    private void assertMach(String regexp, String text) {
-        assertTrue(String.format("\nExpected regexp '%s'\n" +
-                                 "        but was '%s'", regexp, text),
-                Pattern.compile(regexp).matcher(text).matches());
-    }
 }
