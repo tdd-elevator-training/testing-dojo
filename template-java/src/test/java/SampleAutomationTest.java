@@ -9,14 +9,20 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.htmlunit.HtmlUnitDriver;
 
+import java.util.LinkedList;
 import java.util.List;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+class Constants {
+    static final String SERVER = "http://codenjoy.com/at-dojo";
+    static final String APP_CONTEXT = "/search";
+}
+
 @RunWith(DojoTestRunner.class)
-@ReportTo(server = "http://tetrisj.jvmhost.net:12270/at-dojo", userName = "Asfasf")
+@ReportTo(server = Constants.SERVER, userName = "apofig")
 public class SampleAutomationTest {
     private WebDriver webDriver;
 
@@ -28,54 +34,56 @@ public class SampleAutomationTest {
 
     @Test
     @Scenario(1)
-    public void searchForItem() {
-        //Given open google.com
-        openGooglePage();
+    public void searchByKeyword() {
+        // given Open application page
+        openPage();
 
-        // When I search by "automated testing dojo"
-        searchBy("automated testing dojo codenjoy");
+        // when I search by "mouse"
+        searchBy("mouse");
 
-        //Then I see a link to Sergey's blog
-        assertContainsLink("codenjoy.com");
+        // then I see all products contains "mouse"
+        assertAllContains("mouse");
     }
 
     @Test
     @Scenario(1)
-    public void shouldBeAbleToClick() {
-        //Given google.com page with search results by "automated testing dojo"
-        openGooglePage();
-        searchBy("automated testing dojo codenjoy");
+    public void searchByAnotherKeyword() {
+        // given Open application page
+        openPage();
 
-        // When I click on link for Sergey's blog
-        clickOn("codenjoy.com");
+        // when I search by "monitor"
+        searchBy("monitor");
 
-        //Then Sergey's blog is open
-        assertWeAreAt("http://codenjoy.com");
+        // then I see all products contains "monitor"
+        assertAllContains("monitor");
     }
 
-    private void assertWeAreAt(String linkAddress) {
-        assertTrue(webDriver.getCurrentUrl().contains(linkAddress));
+    private void openPage() {
+        webDriver.get(Constants.SERVER + Constants.APP_CONTEXT);
     }
 
-    private void clickOn(String linkAddress) {
-        List<WebElement> links = findLinks(linkAddress);
-        links.get(0).click();
+    private void assertAllContains(String address) {
+        List<String> productList = getProductList();
+        for (String el : productList) {
+            assertTrue("Should all contains '" + address + "', but was \n" + productList.toString(),
+                    el.toLowerCase().contains(address));
+        }
     }
 
-    private void openGooglePage() {
-        webDriver.get("http://google.com");
+    private List<String> getProductList() {
+        List<String> result = new LinkedList<String>();
+        for (WebElement el : findElements()) {
+            result.add(el.getText());
+        }
+        return result;
     }
 
-    private void assertContainsLink(String address) {
-        assertFalse(findLinks(address).isEmpty());
-    }
-
-    private List<WebElement> findLinks(String address) {
-        return webDriver.findElements(By.xpath("//a[contains(@href, '" + address + "')]"));
+    private List<WebElement> findElements() {
+        return webDriver.findElements(By.id("element_description"));
     }
 
     private void searchBy(String text) {
-        WebElement searchText = webDriver.findElement(By.name("q"));
+        WebElement searchText = webDriver.findElement(By.id("search_text"));
         searchText.sendKeys(text);
         searchText.submit();
     }
