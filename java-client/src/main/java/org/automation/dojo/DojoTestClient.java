@@ -17,7 +17,6 @@ public class DojoTestClient {
     private final String userName;
     private DefaultHttpClient httpClient;
     private List<NameValuePair> scenariosResults = new ArrayList<NameValuePair>();
-    private String result;
 
     public DojoTestClient(String server, String userName) {
         this.server = server;

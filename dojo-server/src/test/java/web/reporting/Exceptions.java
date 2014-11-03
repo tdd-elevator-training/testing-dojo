@@ -20,7 +20,7 @@ public class Exceptions extends AbstractBugReporting {
 
     @Test
     public void notExistUser() throws IOException {
-        client = new DojoTestClient("http://localhost:" + port + "/Shop", "vasia");
+        client = new DojoTestClient("http://localhost:" + port + CONTEXT, "vasia");
 
         client.setResult(EXCEPTION, 1);
         String response = client.sendResultsToServer();

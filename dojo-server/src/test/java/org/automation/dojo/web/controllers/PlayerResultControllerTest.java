@@ -27,6 +27,7 @@ public class PlayerResultControllerTest {
     private PlayerResultController controller;
 
     @Mock ScoreService scoreService;
+    @Mock ReleaseEngine releaseEngine;
     @Mock TimeService timeService;
 
     @Captor ArgumentCaptor<Integer> scenarioCaptor;
@@ -41,7 +42,7 @@ public class PlayerResultControllerTest {
         response = new MockHttpServletResponse();
         request = new MockHttpServletRequest();
         when(timeService.now()).thenReturn(new Date());
-        controller = new PlayerResultController(scoreService, timeService);
+        controller = new PlayerResultController(scoreService, timeService, releaseEngine);
     }
 
 

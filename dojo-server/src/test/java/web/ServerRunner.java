@@ -29,12 +29,12 @@ public class ServerRunner {
         return f.getParent();
     }
 
-    public int start() throws Exception {
+    public int start(String contextPath) throws Exception {
         stop();
 
         server = new Server(0);
 
-        server.setHandler(loadWebContext());
+        server.setHandler(loadWebContext(contextPath));
         server.start();
         return server.getConnectors()[0].getLocalPort();
     }
@@ -45,10 +45,10 @@ public class ServerRunner {
      * но разберусь TODO
      * @return загруженный вебконтекст
      */
-    private WebAppContext loadWebContext() throws IOException {
+    private WebAppContext loadWebContext(String contextPath) throws IOException {
         Collection<String> urls = Arrays.asList(new String[]{"src/main/webapp", "dojo-server/src/main/webapp"});
         for (String url : urls) {
-            WebAppContext context = new WebAppContext(url, "/Shop");
+            WebAppContext context = new WebAppContext(url, contextPath);
             Resource resource = context.newResource(context.getWar());
             if (resource.exists()) {
                 return context;

@@ -37,7 +37,7 @@ public abstract class AbstractBugReporting extends FunctionalTestCase {
     @Before
     public void setUp () {
         String userName = "apofig";
-        client = new DojoTestClient("http://localhost:" + port + "/Shop", userName);
+        client = new DojoTestClient("http://localhost:" + port + CONTEXT, userName);
         registerUser(userName);
         logService.clearLogs();
     }

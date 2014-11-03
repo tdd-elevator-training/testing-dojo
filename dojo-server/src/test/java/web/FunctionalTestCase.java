@@ -23,6 +23,7 @@ public abstract class FunctionalTestCase {
     protected static String baseUrl;
     private static ReleaseEngine releaseEngine;
     protected static LogService logService;
+    public static String CONTEXT = "/at-dojo";
 
     public void join() {
         System.out.println(baseUrl);
@@ -37,8 +38,8 @@ public abstract class FunctionalTestCase {
 
     @BeforeClass
     public static void init() throws Exception {
-        port = ServerRunner.getInstance().start();
-        baseUrl = "http://localhost:" + port + "/Shop";
+        port = ServerRunner.getInstance().start(CONTEXT);
+        baseUrl = "http://localhost:" + port + CONTEXT;
         tester = new HtmlUnitDriver(true);
 
         releaseEngine = ApplicationContextLocator.getBean("releaseEngine");
@@ -99,8 +100,8 @@ public abstract class FunctionalTestCase {
     }
 
     public void goTo(String url) {
-        if (!url.contains("Shop")) { // TODO hotfix
-            url = url.replace(baseUrl.replace("/Shop", ""), baseUrl);
+        if (!url.contains(CONTEXT)) { // TODO hotfix
+            url = url.replace(baseUrl.replace(CONTEXT, ""), baseUrl);
         }
         if (!url.contains(baseUrl)) {
             url = baseUrl + url;

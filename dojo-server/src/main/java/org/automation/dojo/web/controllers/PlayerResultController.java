@@ -1,6 +1,7 @@
 package org.automation.dojo.web.controllers;
 
 import org.automation.dojo.*;
+import org.automation.dojo.web.scenario.BasicScenario;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,11 +24,15 @@ public class PlayerResultController {
     private ScoreService scoreService;
 
     @Autowired
+    private ReleaseEngine releaseEngine;
+
+    @Autowired
     private TimeService timeService;
     private Pattern pattern = Pattern.compile("scenario(\\d*)", Pattern.CASE_INSENSITIVE);
 
-    public PlayerResultController(ScoreService service, TimeService timeService) {
+    public PlayerResultController(ScoreService service, TimeService timeService, ReleaseEngine releaseEngine) {
         this.scoreService = service;
+        this.releaseEngine = releaseEngine;
         this.timeService = timeService;
     }
 
@@ -44,7 +49,9 @@ public class PlayerResultController {
             Matcher matcher = pattern.matcher(parameterName);
             if (matcher.find()) {
                 try {
-                    suite.addTestResult(Integer.parseInt(matcher.group(1)),
+                    int scenarioId = Integer.parseInt(matcher.group(1));
+                    BasicScenario scenario = releaseEngine.getScenario(scenarioId);
+                    suite.addTestResult(scenarioId,
                             parseResult(request.getParameterValues(parameterName)));
                 } catch (IllegalArgumentException e) {
                     // Scenario not found so skip it
